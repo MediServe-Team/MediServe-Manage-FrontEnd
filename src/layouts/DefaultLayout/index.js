@@ -1,5 +1,8 @@
 import Header from '../components/Header.jsx';
 import SiderBar from '../components/SideBar.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
+import SliderCarousel from '../components/SliderCarousel.jsx';
+import {SLIDER_CONTENT} from '../../constants/sliderContent.js'
 
 function DefaultLayout ({children}) {
     return (
@@ -9,6 +12,10 @@ function DefaultLayout ({children}) {
             </div>
             <div className='w-4/5'>
                 <Header/>
+                <div className='my-1 flex gap-3'>
+                    <Breadcrumb listTab={['Home', 'Medicine']}/>
+                    <SliderCarousel contents={SLIDER_CONTENT}/>
+                </div>
                 {children}
             </div>
         </div>
