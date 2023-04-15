@@ -1,7 +1,20 @@
-import routeConfig from '../config/routes.js';
+import routes from '../config/routes.js';
 
-const publicRouters = [];
+// Layouts
+import {DefaultLayout} from '../layouts';
 
-const privateRouters = [];
+// General Page
+import Login from '../pages/Login.jsx'
+
+// Private Page
+import Dashboard from '../pages/Dashboard.jsx'
+
+const publicRouters = [
+    {path: routes.login, component: Login, layout: null}
+];
+
+const privateRouters = [
+    {path: routes.dashboard, component: Dashboard}
+];
 
 export { publicRouters, privateRouters };
