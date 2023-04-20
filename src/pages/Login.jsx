@@ -1,9 +1,41 @@
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAction } from '../features/Auth/AuthSlice';
+import { getUserId } from '../features/Auth/AuthSlice';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { loginSchema } from '../validations/Login';
 import logo from '../assets/images/logo-full.png';
 import background from '../assets/images/login-background.png';
 
 function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(loginSchema) });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // Get userId from auth global state
+  const userId = useSelector(getUserId);
+
+  // Check user login success
+  useEffect(() => {
+    if (userId) navigate('/', { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  const handleSubmitLogin = async (dataForm) => {
+    const { email, password } = dataForm;
+    const result = dispatch(loginAction({ email, password }));
+
+    //handle catch and show error below ...
+    console.log(result.type);
+  };
+
   return (
     <div className={classNames(`w-screen h-screen relative`)}>
       <img className="w-full h-full object-cover" src={background} alt="Ảnh dược sỹ" />
@@ -18,7 +50,7 @@ function Login() {
         >
           {/* Logo */}
           <div className="flex justify-center mt-8">
-            <img src={logo} className="h-[50px]" />
+            <img src={logo} className="h-[50px]" alt="Mediicine" />
           </div>
 
           {/* Divider */}
@@ -29,13 +61,20 @@ function Login() {
           </div>
 
           {/* form submit */}
-          <form action="#" className="mx-5">
+          <form onSubmit={handleSubmit(handleSubmitLogin)} className="mx-5">
             <div className="flex flex-col gap-4 mt-8">
-              <input type="email" className="h-12 px-4 rounded-md" placeholder="Nhập email .." />
-              <input type="password" className="h-12 px-4 rounded-md" placeholder="Nhập mật khẩu .." />
-              <a href="#" className="text-white">
+              <input type="email" {...register('email')} className="h-12 px-4 rounded-md" placeholder="Nhập email .." />
+              <p className="text-body-sm text-red-700">{errors.email?.message}</p>
+              <input
+                type="password"
+                {...register('password')}
+                className="h-12 px-4 rounded-md"
+                placeholder="Nhập mật khẩu .."
+              />
+              <p className="text-body-sm text-red-700">{errors.password?.message}</p>
+              <Link to="http://localhost:3000/forgot-password" className="text-white">
                 Quên mật khẩu?
-              </a>
+              </Link>
             </div>
             <div className="mt-10">
               <button className="bg-dark_primary h-12 w-full rounded-md text-white">Đăng nhập</button>
@@ -43,7 +82,7 @@ function Login() {
           </form>
           <p className="text-white text-center mt-10">
             Liên hệ{' '}
-            <a href="#">
+            <a href="https://www.facebook.com/phuc.hoangvan.77736" target="_blank" rel="noreferrer">
               <u className="font-bold">quản trị viên</u>
             </a>{' '}
             để nhận hỗ trợ!
