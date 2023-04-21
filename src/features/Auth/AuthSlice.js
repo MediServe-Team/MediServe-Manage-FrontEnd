@@ -5,6 +5,7 @@ const initialState = {
   user: {},
   accessToken: '',
   isLoading: false,
+  error: '',
 };
 
 // create action async Login
@@ -13,7 +14,7 @@ export const loginAction = createAsyncThunk('auth/login', async ({ email, passwo
     const response = await loginService(email, password);
     return response.data;
   } catch (err) {
-    return thunkAPI.rejectWithValue(err?.response?.status);
+    return thunkAPI.rejectWithValue(err);
   }
 });
 
@@ -37,12 +38,24 @@ export const AuthSlice = createSlice({
       state.isLoading = false;
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
+      state.error = '';
+      // if(action.payload)
     });
 
     // list pending
     const pendingList = [loginAction.pending];
 
-    // list fi
+    // list reject
+    const rejectList = [loginAction.rejected];
+
+    builder.addMatcher(isAnyOf(...rejectList), (state, action) => {
+      state.isLoading = false;
+      if (action.payload?.code === 'ERR_NETWORK') {
+        state.error = 'Kiểm tra kết nối internet';
+      } else {
+        state.error = action.payload?.message;
+      }
+    });
 
     builder.addMatcher(isAnyOf(...pendingList), (state) => {
       state.isLoading = true;

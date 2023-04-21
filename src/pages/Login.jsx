@@ -15,6 +15,8 @@ function Login() {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm({ resolver: yupResolver(loginSchema) });
   const navigate = useNavigate();
@@ -30,10 +32,17 @@ function Login() {
 
   const handleSubmitLogin = async (dataForm) => {
     const { email, password } = dataForm;
-    const result = dispatch(loginAction({ email, password }));
+    const responseData = await dispatch(loginAction({ email, password }));
 
-    //handle catch and show error below ...
-    console.log(result.type);
+    if (responseData.type === 'auth/login/fulfilled') {
+      if (responseData.payload.status === 200) {
+        clearErrors('password');
+      } else if (responseData.payload.status === 401) {
+        setError('password', { message: 'Đăng nhập sai email hoặc mật khẩu' });
+      } else {
+        setError('password', { message: 'Đăng nhập thất bại' });
+      }
+    }
   };
 
   return (
@@ -76,6 +85,7 @@ function Login() {
                 Quên mật khẩu?
               </Link>
             </div>
+
             <div className="mt-10">
               <button className="bg-dark_primary h-12 w-full rounded-md text-white">Đăng nhập</button>
             </div>
