@@ -8,7 +8,7 @@ module.exports = {
       h3: '24px',
       h4: '20px',
       h5: '16px',
-      h6: '14px'
+      h6: '14px',
     },
     extend: {
       colors: {
@@ -22,4 +22,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

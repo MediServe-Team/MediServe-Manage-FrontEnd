@@ -6,11 +6,12 @@ const routes = {
   stockManage: '/stock',
   createBillIntoStock: '/stock/create-bill',
   historyIntoStock: '/stock/history',
+  profile: '/profile',
 
   categoryManage: '/category',
   medicineList: '/medicine/list',
   medicineDetail: '/medicine/:medicineID',
-  medicineEdit: '/medicine/:medicineID/edit'
+  medicineEdit: '/medicine/:medicineID/edit',
 };
 
 export default routes;
