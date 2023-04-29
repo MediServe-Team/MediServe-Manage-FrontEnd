@@ -27,6 +27,7 @@ function Header() {
 
   const handleClear = () => {
     setSearchValue('');
+    setVisibleResult(false);
     searchInput.current.focus();
   };
 
@@ -100,7 +101,7 @@ function Header() {
         {/* Notify */}
         <div className="relative">
           <IoMdNotificationsOutline className="text-[24px]" />
-          <div className="flex justify-center items-center w-[14px] h-[14px] bg-red-500 rounded-full absolute top-[-4px] right-[-6px] ">
+          <div className="flex justify-center items-center w-[14px] h-[14px] bg-red-500 rounded-full absolute top-[-4px] right-[-6px] animate-bounce ">
             <span className="font-bold text-white text-[10px]">2</span>
           </div>
         </div>

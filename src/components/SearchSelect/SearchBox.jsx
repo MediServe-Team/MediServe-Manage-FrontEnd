@@ -9,7 +9,7 @@ function SearchBox({ value, onChange, onClear, onClick, onKeyDown }, ref) {
   return (
     <div
       className={classNames(
-        'flex items-center h-10 w-[300px] bg-white/40 rounded-2xl shadow-md',
+        'flex items-center h-10 w-[300px] bg-white/40 rounded-2xl shadow-md transition-all duration-100',
         isFocus && 'border-[1px] border-primary bg-white/90',
       )}
     >
@@ -17,7 +17,9 @@ function SearchBox({ value, onChange, onClear, onClick, onKeyDown }, ref) {
         className={classNames('px-3 border-r-primary/30 border-r-[1px]', value && 'cursor-pointer active:opacity-20')}
         onClick={onClick}
       >
-        <BsSearch className={classNames('text-[24px] text-text_blur', value && 'text-[#38B3E1]')} />
+        <BsSearch
+          className={classNames('text-[24px] transition-all duration-300', value ? 'text-primary' : 'text-text_blur')}
+        />
       </div>
 
       {/* input */}
@@ -33,7 +35,10 @@ function SearchBox({ value, onChange, onClear, onClick, onKeyDown }, ref) {
       />
       <div className="px-2">
         <IoIosCloseCircleOutline
-          className={classNames('text-[20px] text-text_blur', value !== '' && 'text-black cursor-pointer')}
+          className={classNames(
+            'text-[20px] transition-all duration-200',
+            value ? 'text-dark_primary cursor-pointer' : 'text-text_blur',
+          )}
           onClick={onClear}
         />
       </div>
