@@ -5,3 +5,28 @@
 * {
   box-sizing: border-box;
 }
+
+.titleInputProfile {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.inputProfile {
+  height: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.375rem;
+  border: solid 2px #a8a8a8;
+  font-size: 14px;
+  width: 100%;
+}
+
+.btnProfile {
+  background-color: #064861;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f7f9f9;
+  border-radius: 0.375rem;
+  text-align: center;
+}
