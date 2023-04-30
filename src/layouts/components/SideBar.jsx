@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
+import { Link, useNavigate } from 'react-router-dom';
+import routes from '../../config/routes';
 import { useTransition, animated } from 'react-spring';
 import logoFull from '../../assets/images/logo-full.png';
 import logo from '../../assets/images/logo.png';
@@ -16,16 +18,16 @@ const MENUS = [
   {
     title: 'Trang chủ',
     icon: ({ className }) => <MdAddHomeWork className={className} />,
-    link: '/',
+    link: routes.dashboard,
   },
   {
     title: 'Quản lý kho',
     icon: ({ className }) => <FaWarehouse className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Nhập kho', link: '/' },
-      { title: 'Lịch sử nhập', link: '/' },
-      { title: 'Kiểm kho', link: '/' },
+      { title: 'Nhập kho', link: routes.stockIntoManage },
+      { title: 'Lịch sử nhập', link: routes.historyStockManage },
+      { title: 'Kiểm kho', link: routes.stockManage },
     ],
   },
   {
@@ -33,8 +35,8 @@ const MENUS = [
     icon: ({ className }) => <GiMedicines className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Thuốc trong hệ thống', link: '/' },
-      { title: 'Thêm thuốc', link: '/' },
+      { title: 'Thuốc trong hệ thống', link: routes.medicineManage },
+      { title: 'Thêm thuốc', link: routes.medicineCreate },
     ],
   },
   {
@@ -42,23 +44,24 @@ const MENUS = [
     icon: ({ className }) => <RiShoppingBag3Fill className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Danh sách sản phẩm', link: '/' },
-      { title: 'Thêm sản phẩm', link: '/' },
+      { title: 'Danh sách sản phẩm', link: routes.productManage },
+      { title: 'Thêm sản phẩm', link: routes.productCreate },
     ],
   },
   {
     title: 'Quản lý liều',
     icon: ({ className }) => <RiBillFill className={className} />,
-    link: '/',
+    link: routes.doseManage,
   },
   {
     title: 'Quản lý danh mục',
     icon: ({ className }) => <TbCategory2 className={className} />,
-    link: '/',
+    link: routes.categoryManage,
   },
   {
     title: 'Quản lý tài khoản',
     icon: ({ className }) => <RiAccountBoxFill className={className} />,
+    // wait handle
     link: '/',
   },
   {
@@ -66,8 +69,8 @@ const MENUS = [
     icon: ({ className }) => <RiShoppingCartFill className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Danh sách hóa đơn', link: '/' },
-      { title: 'Tạo hóa đơn', link: '/' },
+      { title: 'Danh sách hóa đơn', link: routes.billManage },
+      { title: 'Tạo hóa đơn', link: routes.billCreate },
     ],
   },
 ];
@@ -76,6 +79,7 @@ function SideBar() {
   const [expand, setExpand] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(true);
   const [menuOpenId, setMenuOpenId] = useState(-1);
+  const navigate = useNavigate();
 
   const transition = useTransition(expand, {
     from: { opacity: 0, scale: 0 },
@@ -90,7 +94,7 @@ function SideBar() {
 
   const handleOpenSubmenu = (index, link) => {
     if (link) {
-      console.log('navigate too: ' + link);
+      navigate(link);
       setMenuOpenId(index);
     } else {
       if (index === menuOpenId) {
@@ -102,15 +106,6 @@ function SideBar() {
     }
   };
 
-  const handleNavigate = (e, link) => {
-    if (e) {
-      e.stopPropagation();
-    }
-    if (link) {
-      console.log('navigate to:' + link);
-    }
-  };
-
   const handleLogout = () => {
     console.log('logout');
   };
@@ -118,6 +113,7 @@ function SideBar() {
   const renderMenu = () => {
     return MENUS.map((item, index) => {
       const Icon = item.icon;
+
       return (
         <li key={index} onClick={() => handleOpenSubmenu(index, item?.link)}>
           <div
@@ -141,13 +137,14 @@ function SideBar() {
           {menuOpenId === index && openSubmenu && item?.submenu && (
             <ul className={classNames('flex flex-col', !expand && 'hidden')}>
               {item.submenuItem.map((submenu, subIndex) => (
-                <li
+                <Link
                   key={subIndex}
-                  onClick={(e) => handleNavigate(e, submenu.link)}
+                  to={submenu.link}
+                  onClick={(e) => e.stopPropagation()}
                   className="mx-3 pl-[50px] py-2 text-black/80 hover:bg-black/10 hover:text-white rounded-lg transition-all active:scale-95 overflow-hidden"
                 >
                   <span className="whitespace-nowrap">{submenu.title}</span>
-                </li>
+                </Link>
               ))}
             </ul>
           )}
