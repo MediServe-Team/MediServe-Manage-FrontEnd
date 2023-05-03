@@ -30,3 +30,13 @@
   border-radius: 0.375rem;
   text-align: center;
 }
+
+/* style color for DataPicker */
+
+.react-datepicker__header {
+  background-color: rgba(92, 198, 238, 0.3) !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: rgb(92, 198, 238) !important;
+}
