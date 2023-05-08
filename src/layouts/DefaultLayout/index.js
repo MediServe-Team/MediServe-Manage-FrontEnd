@@ -15,7 +15,7 @@ function DefaultLayout({ children }) {
           <Breadcrumb listTab={['Home', 'Medicine']} />
           <SliderCarousel contents={SLIDER_CONTENT} />
         </div>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 min-h-0 ">{children}</div>
       </div>
     </div>
   );

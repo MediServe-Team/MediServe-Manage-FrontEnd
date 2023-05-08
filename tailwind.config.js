@@ -18,6 +18,7 @@ module.exports = {
         tertiary: '#39F5C7',
         text_blur: '#A8A8A8',
         light_gray: '#F7F9F9',
+        danger: '#D41919',
       },
     },
   },

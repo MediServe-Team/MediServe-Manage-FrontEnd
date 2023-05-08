@@ -46,7 +46,7 @@ function SearchToAdd({ value, onChange, types, typeSelected, onClear, onTypeChan
           />
         </div>
       </div>
-      <div className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-[calc(100%+20px)]">
+      <div className="absolute z-50 top-1/2 -translate-y-1/2 right-0 translate-x-[calc(100%+20px)]">
         <TypeSelect typeList={types} selectedIndex={typeSelected} onChange={onTypeChange} />
       </div>
     </div>

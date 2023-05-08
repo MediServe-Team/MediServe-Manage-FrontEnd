@@ -1,11 +1,10 @@
 function GroupItem({ children, title, isDrug }) {
   return (
-    <div className="">
-      <h2 className="font-bold text-h4">Thuốc</h2>
+    <div className="flex flex-col h-full min-h-0">
       {/* heading */}
       <ul className="flex justify-between items-center gap-2 bg-primary/30 rounded-lg text-h5 font-medium px-5 py-[10px]">
         <li className="flex-[4] ">
-          <span>Tên thuốc</span>
+          <span>Tên loại hàng</span>
         </li>
         <li className="flex-[5]   ">
           <span>Số lượng x Quy cách</span>
@@ -31,7 +30,7 @@ function GroupItem({ children, title, isDrug }) {
         <li className="w-[22px]"></li>
       </ul>
       {/* body */}
-      <ul className="flex flex-col gap-2 mt-2">{children}</ul>
+      <ul className="flex h-full flex-col gap-2 mt-2 overflow-y-auto">{children}</ul>
     </div>
   );
 }

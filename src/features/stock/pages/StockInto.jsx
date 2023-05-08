@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { GroupItem, ItemRow } from '../components';
 import { SearchToAdd } from '../../../components/SearchToAdd';
 import { SearchResultItem } from '../components';
+import { default as Button } from '../../../components/Button';
+import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
 
 const TYPES = [
   {
@@ -36,13 +38,14 @@ function StockInto() {
   const handleSearchValueChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
-    if (value != 0) setVisibleResult(true);
+    if (value !== 0) setVisibleResult(true);
     else setVisibleResult(false);
     setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
   };
 
   const handleClearSearch = () => {
     setSearchValue('');
+    setSearchResults([]);
     setVisibleResult(false);
     searchRef.current.focus();
   };
@@ -73,9 +76,9 @@ function StockInto() {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div className="flex-1 bg-white rounded-lg px-10 py-3">
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg px-10 py-2">
         {/* Search product */}
-        <div className="flex justify-center">
+        <div className="flex justify-center bg-inherit pb-3">
           <Tippy
             visible={visibleResult && searchResults.length > 0}
             interactive={true}
@@ -101,7 +104,7 @@ function StockInto() {
           </Tippy>
         </div>
 
-        <div className="overflow-hidden">
+        <div className="flex-1 min-h-0">
           {/* Group */}
           <GroupItem>
             {Array.isArray(merchandises) &&
@@ -109,7 +112,36 @@ function StockInto() {
           </GroupItem>
         </div>
       </div>
-      <div className="h-[80px] bg-white rounded-lg"></div>
+
+      {/* note box */}
+      <div className="flex justify-between items-center h-[80px] bg-white rounded-lg px-10">
+        <div className="flex flex-col w-[400px] gap-1 pb-1">
+          <h5 className="font-medium">Ghi chú</h5>
+          <input type="text" name="" placeholder="Thêm ghi chú" className="border rounded-md p-2 text-h6" />
+        </div>
+
+        {/* Total import price */}
+        <div className="flex flex-col gap-1">
+          <h5 className="font-medium">Tổng giá nhập</h5>
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-red-300 text-red-600">
+            <MdOutlineInput className="text-[22px]" />
+            <span className="font-bold">1.200.000 vnđ</span>
+          </div>
+        </div>
+
+        {/* Total sell price */}
+        <div className="flex flex-col gap-1">
+          <h5 className="font-medium">Tổng giá bán</h5>
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-green-300 text-green-600">
+            <span className="font-bold">1.200.000 vnđ</span>
+            <MdOutlineOutput className="text-[22px]" />
+          </div>
+        </div>
+
+        <div className="">
+          <Button>Nhập kho</Button>
+        </div>
+      </div>
     </div>
   );
 }
