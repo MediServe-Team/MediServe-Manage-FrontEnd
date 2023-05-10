@@ -1,4 +1,4 @@
-function Profile() {
+function AccountCustomerEdit() {
   return (
     <div className="h-[526px] w-full bg-white rounded-xl px-6 py-2 relative">
       <div className="flex">
@@ -92,4 +92,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default AccountCustomerEdit;

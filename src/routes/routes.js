@@ -23,6 +23,8 @@ import { Dose } from '../features/dose/pages';
 
 import { Category } from '../features/category/pages';
 
+import { AccountCustomerEdit } from '../features/account/pages';
+
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
 
@@ -39,6 +41,7 @@ const privateRouters = [
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
+  { path: routes.accountManage, component: AccountCustomerEdit },
   { path: routes.billManage, component: Bill },
   { path: routes.billCreate, component: BillCreate },
 ];
