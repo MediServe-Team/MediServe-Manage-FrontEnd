@@ -44,9 +44,9 @@ function Button(
     bold = false,
     leftIcon,
     rightIcon,
+    circleIcon,
     className,
     disabled,
-    // rounded = [],
     children,
     onClick,
   },
@@ -58,38 +58,49 @@ function Button(
   const checkSize = SIZES.includes(size) ? size : SIZES[0];
   const checkShape = SHAPES.includes(shape) ? shape : SHAPES[0];
 
-  // render text in Button
-  //   const renderText = () => {
-  //     if (checkShape === 'circle' && !icon) {
-  //       return null;
-  //     }
-  //     else if()
-
-  //   };
+  //   render text in Button
+  const renderText = () => {
+    if (checkShape === 'circle')
+      if (!circleIcon) {
+        return null;
+      } else return circleIcon;
+    else if (checkShape === 'rectangle')
+      return (
+        <>
+          {leftIcon}
+          {children}
+          {rightIcon}
+        </>
+      );
+  };
 
   return (
     <button
       className={classNames(
         // style for button
-        'flex justify-center items-center gap-2 transition-all duration-300',
+        'flex justify-center items-center gap-2 shadow-sm transition-all duration-100',
         // style for Type
         {
-          'bg-primary text-white': checkType === 'solid' && checkModifier === 'primary',
-          'bg-danger text-white': checkType === 'solid' && checkModifier === 'danger',
-          'border-primary text-primary': type === 'outline' && checkModifier === 'primary',
-          'bg-danger text-danger': type === 'outline' && checkModifier === 'danger',
-          'border-text_blur bg-slate-200 opacity-50 cursor-default': disabled,
+          'bg-primary text-white hover:opacity-60 active:opacity-100':
+            checkType === 'solid' && checkModifier === 'primary',
+          'bg-danger text-white hover:opacity-60 active:opacity-100':
+            checkType === 'solid' && checkModifier === 'danger',
+          'border-primary text-primary hover:opacity-60 active:opacity-100':
+            checkType === 'outline' && checkModifier === 'primary',
+          'bg-danger text-danger hover:opacity-60 active:opacity-100':
+            checkType === 'outline' && checkModifier === 'danger',
+          'border-text_blur bg-slate-200 cursor-default shadow-none': disabled,
         },
         // style for size
         {
-          'h-[36px]': size === 'small',
-          'h-[44px]': size === 'medium',
-          'h-[52px]': size === 'large',
+          'h-[36px]': checkSize === 'small',
+          'h-[44px]': checkSize === 'medium',
+          'h-[52px]': checkSize === 'large',
         },
         // style for shape
         {
-          'rounded-full': shape === 'circle',
-          'rounded-lg px-[10px]': shape === 'rectangle',
+          'rounded-full aspect-square': checkShape === 'circle',
+          'rounded-lg px-4': checkShape === 'rectangle',
         },
         // bold
         {
@@ -100,12 +111,10 @@ function Button(
       //   style
       style={{ width: width, height: height }}
       //   event
-      onclick={disabled ? () => {} : onClick}
+      onClick={disabled ? () => {} : onClick}
       ref={ref}
     >
-      {leftIcon}
-      {children}
-      {rightIcon}
+      {renderText()}
     </button>
   );
 }

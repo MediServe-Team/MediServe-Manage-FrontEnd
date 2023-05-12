@@ -1,83 +1,173 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import DatePicker from 'react-datepicker';
+import classNames from 'classnames';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CgRemove } from 'react-icons/cg';
+import { ItemRowIntoStockSchema } from '../../../validations/ItemRowIntoStock';
 
-function ItemRow({ onRemove, ...props }) {
+function ItemRow({ onRemove, ...props }, ref) {
+  // const initialData = {
+  //   id: '',
+  //   quantity: null,
+  //   specification: null,
+  //   importPrice: null,
+  //   sellPrice: null,
+  //   manufactureDate: null,
+  //   expDate: null,
+  //   lotNumber: '',
+  //   isMedicine: null,
+  // };
   const [manufactureDate, setManufactureDate] = useState(null);
   const [expDate, setExpDate] = useState(null);
 
+  const {
+    register,
+    control,
+    trigger,
+    clearErrors,
+    getValues,
+    formState: { errors },
+  } = useForm({ mode: 'onChange', resolver: yupResolver(ItemRowIntoStockSchema) });
+
+  useImperativeHandle(ref, () => ({
+    getData: async () => {
+      // trigger validate all field
+      const passValidate = await trigger();
+      if (passValidate) {
+        clearErrors();
+        return getValues();
+      }
+      return null;
+    },
+  }));
+
   return (
     <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
-      {/* name */}
-      <div className="flex-[4] w-0 flex flex-col">
-        <h3 className="font-medium text-ellipsis overflow-hidden">{props.name}</h3>
-        <p className="text-text_blur">{props.packingSpecification}</p>
-      </div>
+      {/* form data ItemRow */}
+      <form className="flex flex-1 justify-between items-center gap-2">
+        {/* name */}
+        <div className="flex-[4] w-0 flex flex-col">
+          <h3 className="font-medium text-ellipsis overflow-hidden" ref={ref}>
+            {props.name}
+          </h3>
+          <p className="text-text_blur">{props.packingSpecification}</p>
+        </div>
 
-      {/* quantity */}
-      <div className="w-0 flex-[5] flex gap-2 items-center ">
-        <input
-          type="text"
-          className="min-w-[50px] max-w-[80px] rounded-md border-[1px] border-primary/20 shadow-inner py-[3px] text-h6 text-center outline-dark_primary"
-        />
-        <span className="text-text_blur">x</span>
-        <input
-          type="text"
-          className="min-w-[50px] max-w-[80px] rounded-md border-[1px] border-primary/20 shadow-inner py-[3px] text-h6 text-center outline-dark_primary"
-        />
-        <span>=</span>
-        <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
-      </div>
+        {/* quantity */}
+        <div className="w-0 flex-[5] flex gap-2 items-center ">
+          <input
+            type="text"
+            {...register('quantity')}
+            className={classNames(
+              'min-w-[50px] max-w-[80px] rounded-md border-[1px]  shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              errors.quantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+            )}
+          />
+          <span className="text-text_blur">x</span>
+          {/* specifications */}
+          <input
+            type="text"
+            {...register('specification')}
+            className={classNames(
+              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              errors.specification?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+            )}
+          />
+          <span>=</span>
+          <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
+        </div>
 
-      {/* import price */}
-      <div className="w-0 flex-[2]">
-        <input
-          type="text"
-          className="min-w-[50px] max-w-[80px] rounded-md border-[1px] border-primary/20 shadow-inner py-[3px] text-h6 text-center outline-dark_primary"
-        />
-      </div>
+        {/* import price */}
+        <div className="w-0 flex-[2]">
+          <input
+            type="text"
+            {...register('importPrice')}
+            className={classNames(
+              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              errors.importPrice?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+            )}
+          />
+        </div>
 
-      {/* sell price */}
-      <div className="w-0 flex-[2]">
-        <input
-          type="text"
-          className="min-w-[50px] max-w-[80px] rounded-md border-[1px] border-primary/20 shadow-inner py-[3px] text-h6 text-center outline-dark_primary"
-        />
-      </div>
+        {/* sell price */}
+        <div className="w-0 flex-[2]">
+          <input
+            type="text"
+            {...register('sellPrice')}
+            className={classNames(
+              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              errors.sellPrice?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+            )}
+          />
+        </div>
 
-      {/* total price */}
-      <span className="w-0 flex-[2]">240.000</span>
+        {/* total price */}
+        <span className="w-0 flex-[2]">240.000</span>
 
-      {/* Date */}
-      <div className="w-0 flex-[2]">
-        <DatePicker
-          className="w-[90px] border-[1px] border-primary/20 shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary"
-          selected={manufactureDate}
-          onChange={(date) => setManufactureDate(date)}
-          maxDate={new Date()}
-          dateFormat="dd/MM/yyyy"
-        />
-      </div>
+        {/* manufacture Date */}
+        <div className="w-0 flex-[2]">
+          <Controller
+            control={control}
+            name="manufactureDate"
+            render={({ field }) => (
+              <DatePicker
+                className={classNames(
+                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
+                  errors.manufactureDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+                )}
+                selected={field?.value}
+                onChange={(date) => {
+                  return field.onChange(date);
+                }}
+                onKeyDown={(e) => {
+                  e.preventDefault();
+                }}
+                maxDate={new Date()}
+                dateFormat="dd/MM/yyyy"
+              />
+            )}
+          />
+        </div>
 
-      {/* Date */}
-      <div className="w-0 flex-[2]">
-        <DatePicker
-          className="w-[90px] border-[1px] border-primary/20 shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary"
-          selected={expDate}
-          onChange={(date) => setExpDate(date)}
-          minDate={new Date()}
-          dateFormat="dd/MM/yyyy"
-        />
-      </div>
+        {/* exp Date */}
+        <div className="w-0 flex-[2]">
+          <Controller
+            control={control}
+            name="expDate"
+            render={({ field }) => (
+              <DatePicker
+                className={classNames(
+                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
+                  errors.expDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+                )}
+                selected={field?.value}
+                onChange={(date) => {
+                  field.onChange(date);
+                }}
+                onKeyDown={(e) => {
+                  e.preventDefault();
+                }}
+                minDate={new Date()}
+                dateFormat="dd/MM/yyyy"
+              />
+            )}
+          />
+        </div>
 
-      {/* Lot number */}
-      <div className="w-0 flex-[2]">
-        <input
-          type="text"
-          className="min-w-[50px] max-w-[80px] rounded-md border-[1px] border-primary/20 shadow-inner py-[3px] text-h6 text-center outline-dark_primary"
-        />
-      </div>
+        {/* Lot number */}
+        <div className="w-0 flex-[2]">
+          <input
+            type="text"
+            {...register('lotNumber')}
+            className={classNames(
+              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              errors.lotNumber?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+            )}
+          />
+        </div>
+      </form>
 
       {/* Remove button */}
       <button
@@ -90,4 +180,4 @@ function ItemRow({ onRemove, ...props }) {
   );
 }
 
-export default ItemRow;
+export default forwardRef(ItemRow);

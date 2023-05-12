@@ -28,6 +28,8 @@ function StockInto() {
   const [searchResults, setSearchResults] = useState([]);
   const [visibleResult, setVisibleResult] = useState(false);
   const searchRef = useRef();
+  // ref to list itemRow
+  const itemRowRef = useRef([]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -55,7 +57,28 @@ function StockInto() {
   };
 
   const handleRemove = (index) => {
-    // remove item
+    const newMerchandises = [...merchandises];
+    newMerchandises.splice(index, 1);
+    setMerchandises(newMerchandises);
+  };
+
+  const handleIntoStock = async () => {
+    let checkValidate = true;
+    const data = await itemRowRef.current.reduce(async (acc, curr) => {
+      const result = await curr.getData();
+      // an item not valid
+      if (!result) {
+        checkValidate = false;
+      }
+      // async fn always return a promise
+      acc = await Promise.resolve(acc);
+      acc.push(result);
+      return acc;
+    }, []);
+
+    if (checkValidate) {
+      console.log(data);
+    }
   };
 
   const renderSearchResult = () => {
@@ -108,7 +131,14 @@ function StockInto() {
           {/* Group */}
           <GroupItem>
             {Array.isArray(merchandises) &&
-              merchandises.map((item, index) => <ItemRow {...item} onRemove={() => handleRemove(index)} key={index} />)}
+              merchandises.map((item, index) => (
+                <ItemRow
+                  {...item}
+                  ref={(el) => (itemRowRef.current[index] = el)}
+                  onRemove={() => handleRemove(index)}
+                  key={index}
+                />
+              ))}
           </GroupItem>
         </div>
       </div>
@@ -139,7 +169,9 @@ function StockInto() {
         </div>
 
         <div className="">
-          <Button>Nhập kho</Button>
+          <Button size={'medium'} bold disabled={!(merchandises.length > 0)} onClick={handleIntoStock}>
+            Nhập kho
+          </Button>
         </div>
       </div>
     </div>
