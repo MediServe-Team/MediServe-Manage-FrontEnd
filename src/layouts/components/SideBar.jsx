@@ -61,8 +61,7 @@ const MENUS = [
   {
     title: 'Quản lý tài khoản',
     icon: ({ className }) => <RiAccountBoxFill className={className} />,
-    // wait handle
-    link: '/',
+    link: routes.accountManage,
   },
   {
     title: 'Bán hàng',
