@@ -65,18 +65,20 @@ function StockInto() {
   const handleIntoStock = async () => {
     let checkValidate = true;
     const data = await itemRowRef.current.reduce(async (acc, curr) => {
-      const result = await curr.getData();
-      // an item not valid
-      if (!result) {
-        checkValidate = false;
+      if (curr) {
+        const result = await curr.getData();
+        // an item not valid
+        if (!result) {
+          checkValidate = false;
+        }
+        // async fn always return a promise
+        acc = await Promise.resolve(acc);
+        acc.push(result);
       }
-      // async fn always return a promise
-      acc = await Promise.resolve(acc);
-      acc.push(result);
       return acc;
     }, []);
-
     if (checkValidate) {
+      // handle call api to post here
       console.log(data);
     }
   };
