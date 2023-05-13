@@ -101,7 +101,7 @@ function StockInto() {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg px-10 py-2">
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg px-10 py-3">
         {/* Search product */}
         <div className="flex justify-center bg-inherit pb-3">
           <Tippy

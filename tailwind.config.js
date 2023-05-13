@@ -17,6 +17,7 @@ module.exports = {
         secondary: '#EA7408',
         tertiary: '#39F5C7',
         text_blur: '#A8A8A8',
+        text_primary: '#064861',
         light_gray: '#F7F9F9',
         danger: '#D41919',
       },
