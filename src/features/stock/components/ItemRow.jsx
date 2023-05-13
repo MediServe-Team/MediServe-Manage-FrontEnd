@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import DatePicker from 'react-datepicker';
 import classNames from 'classnames';
 import { useForm, Controller } from 'react-hook-form';
@@ -19,8 +19,6 @@ function ItemRow({ onRemove, ...props }, ref) {
   //   lotNumber: '',
   //   isMedicine: null,
   // };
-  const [manufactureDate, setManufactureDate] = useState(null);
-  const [expDate, setExpDate] = useState(null);
 
   const {
     register,
