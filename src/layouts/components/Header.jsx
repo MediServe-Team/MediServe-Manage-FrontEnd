@@ -69,7 +69,7 @@ function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center px-10 rounded-2xl shadow-[0_35px_40px_-15px_rgba(0,0,0,0.3)] bg-[#f9f9f9]/30 backdrop-blur-md h-16 relative z-10">
+    <div className="flex justify-between items-center flex-shrink-0  px-10 rounded-2xl shadow-[0_35px_40px_-15px_rgba(0,0,0,0.3)] bg-[#f9f9f9]/30 backdrop-blur-md h-16 relative z-50">
       {/* Search */}
       <Tippy
         visible={visibleResult}

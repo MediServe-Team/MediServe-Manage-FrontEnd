@@ -7,7 +7,7 @@ function SliderCarousel({ contents }) {
     <div className="w-full min-w-0 relative">
       <Swiper
         className="bg-dark_primary rounded-md"
-        autoplay={{ delay: 7000, disableOnInteraction: false }}
+        autoplay={{ delay: 2000, disableOnInteraction: false }}
         modules={[Autoplay]}
         loop={true}
       >
