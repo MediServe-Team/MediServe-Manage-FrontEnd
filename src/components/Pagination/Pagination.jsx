@@ -30,21 +30,24 @@ function Pagination({ pageLength, pageNumber, setPageNumber }) {
     // First number in pagination
     if (pageNumber > 2) {
       listPageNumberRender.push(
-        <li>
-          <button className={classNames(styleBtnNum, styleNormal)}>
+        <li key={1}>
+          <button className={classNames(styleBtnNum, styleNormal)} onClick={() => setPageNumber(1)}>
             <span className="font-semibold text-h5">{1}</span>
           </button>
         </li>,
       );
       if (pageNumber > 3) {
-        listPageNumberRender.push(<DotsItem />);
+        listPageNumberRender.push(<DotsItem key={'preDots'} />);
       }
     }
     // Last number in pagination
     for (let i = beforePage; i <= afterPage; i++) {
       listPageNumberRender.push(
         <li key={i}>
-          <button className={classNames(styleBtnNum, pageNumber === i ? styleActive : styleNormal)}>
+          <button
+            className={classNames(styleBtnNum, pageNumber === i ? styleActive : styleNormal)}
+            onClick={() => setPageNumber(i)}
+          >
             <span className="font-semibold text-h5">{i}</span>
           </button>
         </li>,
@@ -53,11 +56,11 @@ function Pagination({ pageLength, pageNumber, setPageNumber }) {
     // number in last pagination
     if (pageNumber < pageLength - 1) {
       if (pageNumber < pageLength - 2) {
-        listPageNumberRender.push(<DotsItem />);
+        listPageNumberRender.push(<DotsItem key={'nextDots'} />);
       }
       listPageNumberRender.push(
-        <li>
-          <button className={classNames(styleBtnNum, styleNormal)}>
+        <li key={pageLength}>
+          <button className={classNames(styleBtnNum, styleNormal)} onClick={() => setPageNumber(pageLength)}>
             <span className="font-semibold text-h5">{pageLength}</span>
           </button>
         </li>,
