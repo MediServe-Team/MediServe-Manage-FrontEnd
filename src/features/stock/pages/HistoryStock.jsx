@@ -3,6 +3,7 @@ import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Pagination } from '../../../components';
 
 const mockData = [
   {
@@ -120,12 +121,17 @@ function HistoryStock() {
   const [toDate, setToDate] = useState(null);
   const refFromDate = useRef();
   const refToDate = useRef();
+  // pagination
+  const [pageNumber, setPageNumber] = useState(1);
 
   return (
     <div className="h-full flex flex-col bg-white rounded-lg px-10 py-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-text_primary text-h5 font-bold">Lịch sử nhập kho</h2>
+
+        {/* Filter  */}
         <div className="flex gap-10 mr-10">
+          {/* from date */}
           <div
             className="flex items-center justify-between border-2 w-[140px] h-[30px] border-gray-400 rounded-[4px] px-2 cursor-pointer"
             onClick={() => refFromDate.current.setOpen(true)}
@@ -145,6 +151,7 @@ function HistoryStock() {
             />
             <IoIosArrowDown className="text-gray-400" />
           </div>
+          {/* to date */}
           <div
             className="flex items-center justify-between border-2 w-[140px] h-[30px] border-gray-400 rounded-[4px] px-2 cursor-pointer"
             onClick={() => refToDate.current.setOpen(true)}
@@ -166,6 +173,8 @@ function HistoryStock() {
           </div>
         </div>
       </div>
+
+      {/* list bill item */}
       <div className="flex-1 pt-3 overflow-auto">
         <div className="flex flex-col gap-5">
           {mockData.map((groupItem, index) => {
@@ -178,6 +187,10 @@ function HistoryStock() {
             );
           })}
         </div>
+      </div>
+
+      <div className="mt-5 flex justify-center items-center">
+        <Pagination pageLength={7} pageNumber={pageNumber} setPageNumber={setPageNumber} />
       </div>
     </div>
   );
