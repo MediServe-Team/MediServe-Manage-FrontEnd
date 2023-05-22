@@ -1,1 +1,1 @@
-export { default as AccountCustomerEdit } from './AccountCustomerEdit';
+export { default as Account } from './AddAccount';

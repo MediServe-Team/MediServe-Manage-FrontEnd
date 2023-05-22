@@ -23,10 +23,11 @@ import { Dose } from '../features/dose/pages';
 
 import { Category } from '../features/category/pages';
 
-import { AccountCustomerEdit } from '../features/account/pages';
+import { Account } from '../features/account/pages';
 
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
+import { Profile } from '../features/profile/pages';
 
 const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
@@ -41,9 +42,10 @@ const privateRouters = [
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
-  { path: routes.accountManage, component: AccountCustomerEdit },
+  { path: routes.accountManage, component: Account },
   { path: routes.billManage, component: Bill },
   { path: routes.billCreate, component: BillCreate },
+  { path: routes.profile, component: Profile },
 ];
 
 export { publicRouters, privateRouters };

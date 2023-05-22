@@ -13,6 +13,7 @@ import { RiShoppingBag3Fill, RiBillFill, RiAccountBoxFill, RiShoppingCartFill } 
 import { TbCategory2 } from 'react-icons/tb';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { IoIosExit } from 'react-icons/io';
+import { BsPersonVcardFill } from 'react-icons/bs';
 
 const MENUS = [
   {
@@ -71,6 +72,11 @@ const MENUS = [
       { title: 'Danh sách hóa đơn', link: routes.billManage },
       { title: 'Tạo hóa đơn', link: routes.billCreate },
     ],
+  },
+  {
+    title: 'Thông tin cá nhân',
+    icon: ({ className }) => <BsPersonVcardFill className={className} />,
+    link: routes.profile,
   },
 ];
 
