@@ -21,6 +21,8 @@ const routes = {
 
   billManage: '/bills',
   billCreate: '/bills/create',
+
+  profile: '/profile',
 };
 
 export default routes;

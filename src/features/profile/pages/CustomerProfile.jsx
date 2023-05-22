@@ -1,6 +1,6 @@
 import { BsPencilSquare } from 'react-icons/bs';
 
-function AccountCustomerEdit() {
+function CustomerProfile() {
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-8 relative">
       <div className="flex">
@@ -21,7 +21,7 @@ function AccountCustomerEdit() {
             <h1 className="font-bold text-h4 text-dark_primary mb-2">Ảnh hồ sơ</h1>
             <div>
               <img className="h-[130px] mx-auto" src="https://i.ibb.co/cDz1NGp/86.jpg" alt="Failed" />
-              <button className=" bg-primary rounded-full p-2 absolute right-24 bottom-3">
+              <button className=" bg-primary hover:bg-dark_primary/80 active:bg-dark_primary rounded-full p-2 absolute right-24 bottom-3">
                 <BsPencilSquare className="text-white" />
               </button>
             </div>
@@ -74,7 +74,7 @@ function AccountCustomerEdit() {
 
         <div className="w-2/5">
           <p className="titleInputProfile">Mật khẩu</p>
-          <input className="inputProfile" />
+          <input type="password" className="inputProfile" />
           <div className="mt-7">
             <p className="titleInputProfile">Số điểm tích lũy</p>
             <input className="inputProfile" />
@@ -86,11 +86,13 @@ function AccountCustomerEdit() {
         <div className="w-3/5"></div>
 
         <div className="flex w-2/5 justify-end items-end">
-          <button className="btnProfile px-10 py-2 absolute bottom-4 right-6">Lưu</button>
+          <button className="btnProfile px-10 py-2 absolute bottom-4 right-6 hover:bg-dark_primary/80 active:bg-dark_primary">
+            Lưu
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-export default AccountCustomerEdit;
+export default CustomerProfile;
