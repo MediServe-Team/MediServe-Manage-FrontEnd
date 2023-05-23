@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { MedicineItem } from '../components';
+import { ItemList, MedicineItem, TitleList } from '../components';
 import Tippy from '@tippyjs/react/headless';
 import { SearchToAdd } from '../../../components/SearchToAdd';
 import classNames from 'classnames';
@@ -70,6 +70,8 @@ function Dose() {
     searchRef.current.focus();
   };
 
+  const [listDose, setlistDose] = useState(['1', '2', '3', '4', '5']);
+
   return (
     <div className="h-full flex gap-3">
       {/* Dose */}
@@ -120,7 +122,7 @@ function Dose() {
           ))}
         </div>
 
-        <div className="flex justify-end items-end pt-2 pr-1">
+        <div className="flex justify-end items-end pt-2 pr-1 gap-3">
           <Button type="solid" shape="rectangle" size="medium" modifier="danger" width={80}>
             Hủy
           </Button>
@@ -136,7 +138,7 @@ function Dose() {
           <h3 className="text-h4 text-dark_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
-        <div className="flex justify-center pt-5 relative">
+        <div className="flex justify-center py-5 relative">
           <input className="bg-text_blur/10 w-[600px] h-[40px] pl-12 pr-2 round-lg" placeholder="Tên liều thuốc" />
           <button>
             <BsSearch className="text-text_blur text-h3 absolute left-[70px] top-7" />
@@ -144,6 +146,18 @@ function Dose() {
           <button>
             <BsXCircleFill className="text-text_blur text-h3 absolute right-[70px] top-7" />
           </button>
+        </div>
+        {/* Table of data */}
+        <div className="">
+          {/* Title */}
+          <div className="px-10">
+            <TitleList>
+              {/* Data */}
+              {listDose.map((item) => (
+                <ItemList />
+              ))}
+            </TitleList>
+          </div>
         </div>
       </div>
     </div>
