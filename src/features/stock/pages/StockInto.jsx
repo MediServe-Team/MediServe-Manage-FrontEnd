@@ -6,6 +6,7 @@ import { SearchToAdd } from '../../../components/SearchToAdd';
 import { SearchResultItem } from '../components';
 import { default as Button } from '../../../components/Button';
 import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
+import representImg from '../../../assets/images/medicine.png';
 
 const TYPES = [
   {
@@ -132,7 +133,7 @@ function StockInto() {
         <div className="flex-1 min-h-0">
           {/* Group */}
           <GroupItem>
-            {Array.isArray(merchandises) &&
+            {Array.isArray(merchandises) && merchandises.length > 0 ? (
               merchandises.map((item, index) => (
                 <ItemRow
                   {...item}
@@ -140,7 +141,15 @@ function StockInto() {
                   onRemove={() => handleRemove(index)}
                   key={index}
                 />
-              ))}
+              ))
+            ) : (
+              <div className="flex-1 flex justify-center items-center">
+                <div className="flex flex-col items-center gap-4">
+                  <img src={representImg} alt="medicine app" className="w-[100px] h-[100px]" />
+                  <span className="text-h5 font-medium text-text_blur">Chưa có sản phẩm được thêm!</span>
+                </div>
+              </div>
+            )}
           </GroupItem>
         </div>
       </div>

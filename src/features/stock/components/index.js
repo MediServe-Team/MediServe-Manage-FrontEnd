@@ -4,3 +4,4 @@ export { default as ItemRowReadOnly } from './ItemRowReadOnly.jsx';
 export { default as SearchResultItem } from './SearchResultItem.jsx';
 export { default as GroupByDate } from './GroupByDate.jsx';
 export { default as BillEntered } from './BillEntered.jsx';
+export { default as ProductItem } from './ProductItem.jsx';
