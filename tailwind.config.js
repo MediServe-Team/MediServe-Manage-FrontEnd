@@ -20,6 +20,7 @@ module.exports = {
         text_primary: '#064861',
         light_gray: '#F7F9F9',
         danger: '#D41919',
+        green: '#1FD01C',
       },
     },
   },

@@ -18,11 +18,11 @@ function ItemRowReadOnly({ ...props }) {
 
           {/* quantity & specifications*/}
           <div className="w-0 flex-[5] flex gap-2 items-center ">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               3
             </span>
             <span className="text-text_blur">x</span>
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               3
             </span>
             <span>=</span>
@@ -31,50 +31,50 @@ function ItemRowReadOnly({ ...props }) {
 
           {/* import price */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               3
             </span>
           </div>
 
           {/* sell price */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               3
             </span>
           </div>
 
           {/* total price */}
-          <span className="w-0 flex-[2]">240.000</span>
+          <span className="w-0 flex-[2] font-medium text-secondary">240.000 vnđ</span>
 
           {/* manufacture Date */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               33/33/33
             </span>
           </div>
 
           {/* exp Date */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               3/22/22
             </span>
           </div>
 
           {/* Lot number */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md border-[1px] py-[3px] text-h6 text-center outline-none bg-white">
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
               jabdhbva
             </span>
           </div>
         </div>
 
         {/* Status */}
-        <div className="shadow-md w-[22px] h-[22px] rounded-full bg-tertiary flex justify-center items-center">
-          <BsCheckLg className="text-[18px] text-white" />
+        <div className="shadow-md w-[16px] h-[16px] rounded-full bg-green flex justify-center items-center">
+          <BsCheckLg className="text-[10px] text-white font-bold" />
         </div>
       </div>
       <div className="flex justify-end">
-        <span className="text-tertiary">Đã bán hết</span>
+        <span className="text-green">Đã bán hết</span>
       </div>
     </div>
   );
