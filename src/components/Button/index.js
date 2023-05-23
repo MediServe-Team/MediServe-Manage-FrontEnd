@@ -12,6 +12,7 @@ import classNames from 'classnames';
         - normal
         - medium
         - large
+        - elasticity
     - shape:
         - rectangle
         - circle
@@ -85,15 +86,15 @@ function Button(
             checkType === 'solid' && checkModifier === 'primary',
           'bg-danger text-white hover:opacity-60 active:opacity-100':
             checkType === 'solid' && checkModifier === 'danger',
-          'border-primary text-primary hover:opacity-60 active:opacity-100':
+          'border-primary text-primary border-2 hover:bg-primary/10 active:bg-primary active:text-white transition-colors':
             checkType === 'outline' && checkModifier === 'primary',
-          'bg-danger text-danger hover:opacity-60 active:opacity-100':
+          'border-danger text-danger border-2 hover:opacity-60 active:opacity-100':
             checkType === 'outline' && checkModifier === 'danger',
           'border-text_blur bg-slate-200 cursor-default shadow-none': disabled,
         },
         // style for size
         {
-          'h-[36px]': checkSize === 'small',
+          'h-[36px]': checkSize === 'normal',
           'h-[44px]': checkSize === 'medium',
           'h-[52px]': checkSize === 'large',
         },
