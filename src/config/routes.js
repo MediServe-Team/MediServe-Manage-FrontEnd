@@ -6,6 +6,7 @@ const routes = {
   stockManage: '/stock',
   stockIntoManage: '/stock/into',
   historyStockManage: '/stock/history',
+  stockIntoDetail: '/stock/invoice/:id',
 
   medicineManage: '/medicines',
   medicineCreate: '/medicines/add',
