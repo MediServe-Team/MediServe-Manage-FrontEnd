@@ -12,6 +12,7 @@ import Dashboard from '../pages/Dashboard.jsx';
 import { Stock } from '../features/stock/pages';
 import { HistoryStock } from '../features/stock/pages';
 import { StockInto } from '../features/stock/pages';
+import { StockIntoDetail } from '../features/stock/pages';
 
 import { Medicine } from '../features/medicine/pages';
 import { MedicineCreate } from '../features/medicine/pages';
@@ -35,6 +36,7 @@ const privateRouters = [
   { path: routes.dashboard, component: Dashboard },
   { path: routes.stockManage, component: Stock },
   { path: routes.stockIntoManage, component: StockInto },
+  { path: routes.stockIntoDetail, component: StockIntoDetail },
   { path: routes.historyStockManage, component: HistoryStock },
   { path: routes.medicineManage, component: Medicine },
   { path: routes.medicineCreate, component: MedicineCreate },
