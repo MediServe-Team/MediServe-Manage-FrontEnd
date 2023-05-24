@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function SubNavigate({ navs }) {
   /*
@@ -16,6 +16,36 @@ function SubNavigate({ navs }) {
 
   const COLORS = ['primary', 'green', 'yellow', 'red', 'grey'];
 
+  const styleNavItem = (isActive, color) => {
+    let baseStyle =
+      'border-b-[3px] px-4 flex gap-2 items-center py-2 transition-colors duration-300 hover:opacity-80  ';
+    let activeStyle = '';
+    // check active color
+    if (isActive) {
+      switch (color) {
+        case 'primary':
+          activeStyle = 'border-text_primary';
+          break;
+        case 'green':
+          activeStyle = 'border-tertiary';
+          break;
+        case 'yellow':
+          activeStyle = 'border-secondary/80';
+          break;
+        case 'red':
+          activeStyle = 'border-danger/80';
+          break;
+        case 'grey':
+          activeStyle = 'border-gray-500';
+        default:
+          activeStyle = '';
+      }
+    } else {
+      activeStyle = 'border-transparent';
+    }
+    return baseStyle.concat(activeStyle);
+  };
+
   return (
     <nav>
       <ul className="flex gap-3">
@@ -23,20 +53,7 @@ function SubNavigate({ navs }) {
           const color = COLORS.includes(item.color) ? item.color : COLORS[0];
           return (
             <li>
-              <Link
-                to={item.path}
-                className={classNames(
-                  'border-b-[3px] px-4 flex gap-2 items-center py-2',
-                  // style underline color
-                  {
-                    'border-text_primary': color === 'primary',
-                    'border-tertiary': color === 'green',
-                    'border-secondary/80': color === 'yellow',
-                    'border-danger/80': color === 'red',
-                    'border-gray-500': color === 'grey',
-                  },
-                )}
-              >
+              <NavLink to={item.path} className={({ isActive, isPending }) => styleNavItem(isActive, color)}>
                 <span>{item.name}</span>
                 {item.quantity && (
                   <div
@@ -54,7 +71,7 @@ function SubNavigate({ navs }) {
                     <span className="font-bold text-h6">{item.quantity}</span>
                   </div>
                 )}
-              </Link>
+              </NavLink>
             </li>
           );
         })}
