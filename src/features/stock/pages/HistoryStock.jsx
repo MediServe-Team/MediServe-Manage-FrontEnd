@@ -175,7 +175,7 @@ function HistoryStock() {
       </div>
 
       {/* list bill item */}
-      <div className="flex-1 pt-3 overflow-auto">
+      <div className="flex-1 pt-3 overflow-auto pb-[60px]">
         <div className="flex flex-col gap-5">
           {mockData.map((groupItem, index) => {
             return (
@@ -189,8 +189,10 @@ function HistoryStock() {
         </div>
       </div>
 
-      <div className="mt-5 flex justify-center items-center">
-        <Pagination pageLength={7} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+      <div className="flex justify-center relative">
+        <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
+          <Pagination pageLength={7} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+        </div>
       </div>
     </div>
   );

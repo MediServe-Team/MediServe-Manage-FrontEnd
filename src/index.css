@@ -6,6 +6,16 @@
   box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+  /* background-color: #e6e6e6; */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aae4f9;
+  border-radius: 999px;
+}
+
 .titleInputProfile {
   font-size: 14px;
   font-weight: 600;
