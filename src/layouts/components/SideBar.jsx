@@ -28,7 +28,7 @@ const MENUS = [
     submenuItem: [
       { title: 'Nhập kho', link: routes.stockIntoManage },
       { title: 'Lịch sử nhập', link: routes.historyStockManage },
-      { title: 'Kiểm kho', link: routes.stockManage },
+      { title: 'Kiểm kho', link: routes.stockManageWithFistSubPage },
     ],
   },
   {

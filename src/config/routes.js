@@ -4,6 +4,7 @@ const routes = {
   dashboard: '/',
 
   stockManage: '/stock',
+  stockManageWithFistSubPage: '/stock/all',
   stockIntoManage: '/stock/into',
   historyStockManage: '/stock/history',
   stockIntoDetail: '/stock/invoice/:id',
