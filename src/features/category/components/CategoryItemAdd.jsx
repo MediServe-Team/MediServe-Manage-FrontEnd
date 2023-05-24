@@ -1,5 +1,6 @@
 import { color } from 'framer-motion';
 import { BsCapsule, BsPlusSquareFill } from 'react-icons/bs';
+import CustomSwitch from '../components/CustomSwitch';
 
 import { useState } from 'react';
 import Button from '@mui/material/Button';
@@ -9,10 +10,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 function CategotyItemAdd(props) {
   const num = props.order;
@@ -25,7 +24,8 @@ function CategotyItemAdd(props) {
     colorVar = '#02D09E';
   }
 
-  let darkBlue = '#064861';
+  let darkBlue = '#064861',
+    red = '#D41919';
 
   const [open, setOpen] = useState(false);
 
@@ -65,24 +65,42 @@ function CategotyItemAdd(props) {
         {/* Underline */}
         <div className="border-b-2 border-blue_dark/60 w-11/12 mx-auto"></div>
         {/* Content */}
-        <DialogContent>
-          <TextField autoFocus margin="dense" id="name" label="Tên danh mục" type="text" fullWidth variant="standard" />
-          <TextField margin="dense" id="name" label="Ghi chú" type="text" fullWidth variant="standard" />
+        <DialogContent className="text-center">
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Tên danh mục"
+            type="text"
+            fullWidth
+            variant="standard"
+            style={{ width: '80%' }}
+          />
+          <TextField
+            margin="dense"
+            id="name"
+            label="Ghi chú"
+            type="text"
+            fullWidth
+            variant="standard"
+            style={{ width: '80%' }}
+          />
 
-          <FormControl style={{ marginTop: '1rem' }}>
-            <RadioGroup name="controlled-radio-buttons-group" value={selectedValue} onChange={handleChange} row>
-              <FormControlLabel value="drug" control={<Radio />} label="Thuốc" />
-              <FormControlLabel value="notDrug" control={<Radio />} label="Khác thuốc" />
-            </RadioGroup>
-          </FormControl>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            style={{ marginTop: '2rem' }}
+            className="flex justify-center"
+          >
+            <span className="text-text_blur">Khác</span>
+            <CustomSwitch defaultChecked />
+            <span>Thuốc</span>
+          </Stack>
         </DialogContent>
         {/* Footer */}
-        <DialogActions>
-          <Button
-            variant="outlined"
-            onClick={handleClose}
-            style={{ color: darkBlue, borderColor: darkBlue, borderWidth: 2 }}
-          >
+        <DialogActions style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
+          <Button variant="outlined" onClick={handleClose} style={{ color: red, borderColor: red, borderWidth: 2 }}>
             Quay lại
           </Button>
           <Button variant="contained" onClick={handleClose} style={{ backgroundColor: darkBlue }}>
