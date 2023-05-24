@@ -4,8 +4,9 @@ import Tippy from '@tippyjs/react/headless';
 import { SearchToAdd } from '../../../components/SearchToAdd';
 import classNames from 'classnames';
 import { SearchResultItem } from '../../stock/components';
-import Button from '../../../components/Button';
+// import Button from '../../../components/Button';
 import { BsSearch, BsXCircleFill } from 'react-icons/bs';
+import Button from '@mui/material/Button';
 
 const TYPES = [
   {
@@ -30,6 +31,9 @@ function Dose() {
   const [visibleResult, setVisibleResult] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const searchRef = useRef();
+
+  let red = '#D41919',
+    darkBlue = '#064861';
 
   const handleSelectType = (index) => {
     setSelectedIndex(index);
@@ -75,7 +79,7 @@ function Dose() {
   return (
     <div className="h-full flex gap-3">
       {/* Dose */}
-      <div className="w-2/5 bg-white rounded-lg">
+      <div className="flex flex-col w-2/5 bg-white rounded-lg">
         <header className="border-b-2 border-text_blur/50 h-[50px] pl-6 pt-4 ">
           <h3 className="text-h4 text-dark_primary font-semibold">Tạo liều thuốc</h3>
         </header>
@@ -116,17 +120,17 @@ function Dose() {
         </div>
 
         {/* List medicine */}
-        <div className="px-5 flex flex-col gap-5 overflow-auto h-[320px]">
+        <div className="h-1/2 px-5 flex flex-col gap-5 overflow-auto">
           {listMedicine.map((item) => (
             <MedicineItem />
           ))}
         </div>
 
-        <div className="flex justify-end items-end pt-2 pr-1 gap-3">
-          <Button type="solid" shape="rectangle" size="medium" modifier="danger" width={80}>
+        <div className="flex justify-end items-end gap-3 my-auto mx-auto">
+          <Button variant="outlined" style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem' }}>
             Hủy
           </Button>
-          <Button type="solid" shape="rectangle" size="medium" modifier="primary" width={80}>
+          <Button variant="contained" style={{ backgroundColor: darkBlue, paddingInline: '2rem' }}>
             Lưu
           </Button>
         </div>
