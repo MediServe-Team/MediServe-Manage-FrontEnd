@@ -35,7 +35,7 @@ function BillEntered({ billID, staffID, staffName, totalImport, totalSell, note 
         </div>
       </div>
       <div className="flex flex-col gap-2 justify-between font-bold underline text-text_primary">
-        <Link to={`http://localhost:3000/stock/invoice/${billID}`} className="py-5">
+        <Link to={`/stock/invoice/${billID}`} className="py-5">
           Chi tiết
         </Link>
       </div>
