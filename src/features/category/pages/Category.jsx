@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import CategotyItem from '../components/CategoryItem';
+import CategotyItemAdd from '../components/CategoryItemAdd';
 
 function Category() {
   const [listCategory, setListCategory] = useState([1, 2, 3, 4, 5]);
@@ -13,6 +14,7 @@ function Category() {
         {listCategory.map((item) => (
           <CategotyItem order={item} />
         ))}
+        <CategotyItemAdd order={listCategory.length + 1} />
       </div>
     </div>
   );
