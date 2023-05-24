@@ -14,6 +14,7 @@ function SubNavigate({ navs }) {
   ] 
  */
 
+  //   defind color in props object
   const COLORS = ['primary', 'green', 'yellow', 'red', 'grey'];
 
   const styleNavItem = (isActive, color) => {
@@ -49,11 +50,15 @@ function SubNavigate({ navs }) {
   return (
     <nav>
       <ul className="flex gap-3">
-        {navs.map((item) => {
+        {navs.map((item, index) => {
           const color = COLORS.includes(item.color) ? item.color : COLORS[0];
           return (
             <li>
-              <NavLink to={item.path} className={({ isActive, isPending }) => styleNavItem(isActive, color)}>
+              <NavLink
+                key={index}
+                to={item.path}
+                className={({ isActive, isPending }) => styleNavItem(isActive, color)}
+              >
                 <span>{item.name}</span>
                 {item.quantity && (
                   <div
