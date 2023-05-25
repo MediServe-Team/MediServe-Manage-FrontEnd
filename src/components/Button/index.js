@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import classNames from 'classnames';
+import styled from '@emotion/styled';
 
 /*
     - type: 
@@ -19,6 +20,7 @@ import classNames from 'classnames';
     - disabled
     - width 
     - height
+    - padding
     - bold
     - icon
     - leftIcon
@@ -50,6 +52,7 @@ function Button(
     disabled,
     children,
     onClick,
+    padding,
   },
   ref,
 ) {
@@ -110,7 +113,7 @@ function Button(
         className,
       )}
       //   style
-      style={{ width: width, height: height }}
+      style={{ width: width, height: height, padding: padding }}
       //   event
       onClick={disabled ? () => {} : onClick}
       ref={ref}

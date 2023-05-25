@@ -1,33 +1,19 @@
-import { color } from 'framer-motion';
-import { BsCapsule, BsPlusSquareFill } from 'react-icons/bs';
-import CustomSwitch from '../components/CustomSwitch';
-
-import { useState } from 'react';
-import Button from '@mui/material/Button';
+import DialogTitle from '@mui/material/DialogTitle';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import CustomSwitch from '../../category/components/CustomSwitch';
+import { BsPlusSquareFill } from 'react-icons/bs';
+import Button from '@mui/material/Button';
+import { useState } from 'react';
 
-function CategotyItemAdd(props) {
-  const num = props.order;
-  let colorVar = '';
-  if (num % 3 === 1) {
-    colorVar = '#38B3E1';
-  } else if (num % 3 === 2) {
-    colorVar = '#EE9717';
-  } else {
-    colorVar = '#02D09E';
-  }
+function BtnAddAcc() {
+  const [open, setOpen] = useState(false);
 
   const darkBlue = '#064861',
     red = '#D41919';
-
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -37,21 +23,15 @@ function CategotyItemAdd(props) {
     setOpen(false);
   };
 
-  const [selectedValue, setSelectedValue] = useState('drug');
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
   return (
-    <div className="bg-white h-11/12 w-full rounded-lg mx-auto flex border-[2px]" style={{ borderColor: colorVar }}>
-      <Button onClick={handleClickOpen} className="w-full">
-        <p className="w-1/6 flex justify-center items-center text-h1" style={{ color: colorVar }}>
-          +
-        </p>
-        <p className="text-h6 flex items-center justify-start w-5/6" style={{ color: colorVar }}>
-          Thêm danh mục
-        </p>
+    <div className="bg-white h-1/2 w-3/4 rounded-lg mx-auto flex border-[2px] border-dark_primary">
+      <Button
+        onClick={handleClickOpen}
+        className="flex min-h-0 w-full"
+        style={{ borderWidth: '3px', borderColor: '#1490BF' }}
+      >
+        <p className="flex justify-center items-center text-h1 text-dark_primary pr-2">+</p>
+        <p className="text-h6 flex items-center justify-start text-dark_primary">Thêm tài khoản</p>
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
@@ -112,4 +92,4 @@ function CategotyItemAdd(props) {
   );
 }
 
-export default CategotyItemAdd;
+export default BtnAddAcc;
