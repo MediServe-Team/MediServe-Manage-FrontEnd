@@ -16,7 +16,7 @@ function CategotyItem(props) {
   }
 
   return (
-    <div className="bg-white h-[80px] w-[300px] rounded-lg mx-auto flex border-[2px] " style={{ borderColor: color }}>
+    <div className="bg-white h-11/12 w-full rounded-lg mx-auto flex border-[2px] " style={{ borderColor: color }}>
       <div className="w-1/6 pt-1 pl-1">
         <p
           className="h-1/3 w-1/2 flex items-center justify-center rounded-sm mt-2 ml-2 text-h7 text-white font-medium"

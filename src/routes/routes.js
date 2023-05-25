@@ -32,7 +32,7 @@ import { Dose } from '../features/dose/pages';
 
 import { Category } from '../features/category/pages';
 
-import { Account } from '../features/account/pages';
+import { Account, AccountCustomer, AccountStaff, ManageAccount } from '../features/account/pages';
 
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
@@ -73,7 +73,20 @@ const privateRouters = [
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
-  { path: routes.accountManage, component: Account },
+  {
+    path: routes.accountManage,
+    component: ManageAccount,
+    children: [
+      {
+        path: 'staff',
+        component: AccountStaff,
+      },
+      {
+        path: 'customer',
+        component: AccountCustomer,
+      },
+    ],
+  },
   { path: routes.billManage, component: Bill },
   { path: routes.billCreate, component: BillCreate },
   { path: routes.profile, component: Profile },
