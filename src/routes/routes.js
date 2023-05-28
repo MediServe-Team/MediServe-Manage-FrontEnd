@@ -37,6 +37,7 @@ import { Account, AccountCustomer, AccountStaff, ManageAccount } from '../featur
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
 import { Profile } from '../features/profile/pages';
+import { NoPrescription, Prescription, AvailableDose } from '../features/selling/pages/TabsBillCreate';
 
 const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
@@ -73,22 +74,17 @@ const privateRouters = [
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
+  { path: routes.accountManage, component: ManageAccount },
+  { path: routes.billManage, component: Bill },
   {
-    path: routes.accountManage,
-    component: ManageAccount,
+    path: routes.billCreate,
+    component: BillCreate,
     children: [
-      {
-        path: 'staff',
-        component: AccountStaff,
-      },
-      {
-        path: 'customer',
-        component: AccountCustomer,
-      },
+      { path: 'no-prescription', component: NoPrescription },
+      { path: 'prescription', component: Prescription },
+      { path: 'available-dose', component: AvailableDose },
     ],
   },
-  { path: routes.billManage, component: Bill },
-  { path: routes.billCreate, component: BillCreate },
   { path: routes.profile, component: Profile },
 ];
 

@@ -28,7 +28,7 @@ function CategotyItem(props) {
 
       <div className="flex flex-col w-5/6">
         <div className="flex h-1/2 items-end">
-          <div className="w-4/5 text-h5 font-medium text-blue_dark/90">Thuốc kiểm soát đặc biệt</div>
+          <div className="w-4/5 text-h5 font-medium text-text_primary/90">Thuốc kiểm soát đặc biệt</div>
           <div className="w-1/5 pb-1">
             <BsCapsule />
           </div>

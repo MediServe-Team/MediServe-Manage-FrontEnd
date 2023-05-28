@@ -18,7 +18,7 @@ const TYPES = [
     type: 'medical_supplies',
   },
   {
-    title: 'Thực phẩm chức năng',
+    title: 'TPCN',
     type: 'functional_foods',
   },
 ];
@@ -31,6 +31,7 @@ function Dose() {
   const [visibleResult, setVisibleResult] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const searchRef = useRef();
+  const [searchDose, setSearchDose] = useState('');
 
   let red = '#D41919',
     darkBlue = '#064861';
@@ -74,13 +75,21 @@ function Dose() {
     searchRef.current.focus();
   };
 
+  const handleClearSearchDose = () => {
+    setSearchDose('');
+  };
+
+  const handleSearchDose = (e) => {
+    setSearchDose(e.target.value);
+  };
+
   const [listDose, setlistDose] = useState(['1', '2', '3', '4', '5']);
 
   return (
     <div className="h-full flex gap-3">
       {/* Dose */}
       <div className="flex flex-col w-2/5 bg-white rounded-lg">
-        <header className="border-b-2 border-text_blur/50 h-[50px] pl-6 pt-4 ">
+        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 ">
           <h3 className="text-h4 text-dark_primary font-semibold">Tạo liều thuốc</h3>
         </header>
         {/* Search */}
@@ -110,7 +119,7 @@ function Dose() {
           </Tippy>
         </div>
         {/* Name of dose */}
-        <div className="pl-12 pt-5 pb-7">
+        <div className="mx-auto pt-5 pb-7">
           <h3 className="text-h5 font-semibold">Tên liều thuốc:</h3>
           <input
             type="text"
@@ -138,16 +147,22 @@ function Dose() {
 
       {/* List Dose */}
       <div className="w-3/5 bg-white rounded-lg">
-        <header className="border-b-2 border-text_blur/50 h-[50px] pl-6 pt-4">
+        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4">
           <h3 className="text-h4 text-dark_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
         <div className="flex justify-center py-5 relative">
-          <input className="bg-text_blur/10 w-[600px] h-[40px] pl-12 pr-2 round-lg" placeholder="Tên liều thuốc" />
+          <input
+            type="text"
+            className="bg-text_blur/10 w-[600px] h-[40px] pl-12 pr-12 round-lg"
+            value={searchDose}
+            onChange={handleSearchDose}
+            placeholder="Tên liều thuốc"
+          />
           <button>
             <BsSearch className="text-text_blur text-h3 absolute left-[70px] top-7" />
           </button>
-          <button>
+          <button onClick={handleClearSearchDose}>
             <BsXCircleFill className="text-text_blur text-h3 absolute right-[70px] top-7" />
           </button>
         </div>
