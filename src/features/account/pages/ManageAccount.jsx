@@ -52,7 +52,9 @@ function ManageAccount() {
 
         <div className="flex h-4/6 min-h-0 pt-2 justify-center w-full">
           <div className="flex flex-col h-full overflow-y-auto gap-1 w-full">
-            {listUser.map((item) => (item !== 'customer' ? <StaffItem order={item} /> : <CustomerItem order={item} />))}
+            {listUser.map((item, index) =>
+              item !== 'customer' ? <StaffItem order={item} key={index} /> : <CustomerItem order={item} key={index} />,
+            )}
           </div>
         </div>
 

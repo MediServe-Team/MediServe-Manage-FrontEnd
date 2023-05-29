@@ -53,7 +53,7 @@ function SubNavigate({ navs }) {
         {navs.map((item, index) => {
           const color = COLORS.includes(item.color) ? item.color : COLORS[0];
           return (
-            <li>
+            <li key={index}>
               <NavLink
                 key={index}
                 to={item.path}

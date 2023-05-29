@@ -121,8 +121,8 @@ function Dose() {
 
         {/* List medicine */}
         <div className="h-1/2 px-5 flex flex-col gap-5 overflow-auto">
-          {listMedicine.map((item) => (
-            <MedicineItem />
+          {listMedicine.map((item, index) => (
+            <MedicineItem key={index} />
           ))}
         </div>
 
@@ -157,8 +157,8 @@ function Dose() {
           <div className="px-10">
             <TitleList>
               {/* Data */}
-              {listDose.map((item) => (
-                <ItemList />
+              {listDose.map((item, index) => (
+                <ItemList key={index} />
               ))}
             </TitleList>
           </div>

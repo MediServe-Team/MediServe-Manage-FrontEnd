@@ -11,8 +11,8 @@ function Category() {
       <p className="text-blue_dark font-bold text-h4">Danh mục sản phẩm</p>
       <div className="border-b-2 border-blue_dark/60"></div>
       <div className="grid gap-9 grid-cols-3 grid-rows-3 mt-3 bg-primary/10 rounded-md py-8 px-14 ">
-        {listCategory.map((item) => (
-          <CategotyItem order={item} />
+        {listCategory.map((item, index) => (
+          <CategotyItem order={item} key={index} />
         ))}
         <CategotyItemAdd order={listCategory.length + 1} />
       </div>
