@@ -19,7 +19,7 @@ function SubNavigate({ navs }) {
 
   const styleNavItem = (isActive, color) => {
     let baseStyle =
-      'border-b-[3px] px-4 flex gap-2 items-center py-2 transition-colors duration-300 hover:opacity-80  ';
+      'border-b-[3.5px] px-4 flex gap-2 items-center py-2 transition-colors duration-300 hover:opacity-80  ';
     let activeStyle = '';
     // check active color
     if (isActive) {
@@ -40,7 +40,7 @@ function SubNavigate({ navs }) {
           activeStyle = 'border-gray-500';
           break;
         default:
-          activeStyle = 'o';
+          activeStyle = '';
           break;
       }
     } else {
@@ -55,29 +55,13 @@ function SubNavigate({ navs }) {
         {navs.map((item, index) => {
           const color = COLORS.includes(item.color) ? item.color : COLORS[0];
           return (
-            <li key={index}>
+            <li>
               <NavLink
                 key={index}
                 to={item.path}
                 className={({ isActive, isPending }) => styleNavItem(isActive, color)}
               >
-                <span>{item.name}</span>
-                {item.quantity && (
-                  <div
-                    className={classNames(
-                      ' top-0 right-0 w-[22px] h-[18px] rounded-md flex justify-center items-center',
-                      {
-                        'bg-primary/30 text-primary': color === 'primary',
-                        'bg-tertiary/30 text-tertiary': color === 'green',
-                        'bg-secondary/30 text-secondary': color === 'yellow',
-                        'bg-danger/30 text-danger': color === 'red',
-                        'bg-gray-500/30 text-gray-500': color === 'grey',
-                      },
-                    )}
-                  >
-                    <span className="font-bold text-h6">{item.quantity}</span>
-                  </div>
-                )}
+                <span className="text-[17px] text-text_primary font-medium">{item.name}</span>
               </NavLink>
             </li>
           );

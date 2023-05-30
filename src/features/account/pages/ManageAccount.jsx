@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
-import Button from '@mui/material/Button';
+import Button from '@mui/joy/Button';
 import representImg from '../../../assets/images/GiaTriKhachHang.png';
 
 function ManageAccount() {
@@ -35,7 +35,7 @@ function ManageAccount() {
     <div className="flex h-full">
       <div className="h-full w-1/4 bg-white rounded-2xl mr-3 pt-2">
         <div className="flex flex-col min-h-0 h-1/6 px-7 pb-2">
-          <p className="text-blue_dark font-bold text-h5 text-center min-h-0 flex items-center justify-center">
+          <p className="text-text_primary font-bold text-h5 text-center min-h-0 flex items-center justify-center">
             Tài Khoản
           </p>
           <div className="flex min-h-0 pt-2">
@@ -70,7 +70,7 @@ function ManageAccount() {
           </div>
           <div className="flex flex-col w-[90%] justify-end items-start pl-6">
             <div className="text-black text-h4 font-medium truncate">Hoàng Văn Phúc</div>
-            <div className="text-blue_dark text-h6 font-medium">30 phút trước</div>
+            <div className="text-text_primary text-h6 font-medium">30 phút trước</div>
           </div>
         </div>
 
@@ -90,23 +90,23 @@ function ManageAccount() {
               <div className="flex py-2 px-6 text-h7 min-h-0 min-w-0">
                 <div className="flex flex-col w-1/3 gap-2">
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Tên</p>
+                    <p className="text-text_primary font-medium">Tên</p>
                     <input type="text" className="inputAccount" />
                   </div>
 
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Tên đầy đủ</p>
+                    <p className="text-text_primary font-medium">Tên đầy đủ</p>
                     <input type="text" className="inputAccount" />
                   </div>
 
                   <div className="flex pr-12 gap-5">
                     <div className="flex flex-col w-1/4">
-                      <p className="text-blue_dark font-medium">Tuổi</p>
+                      <p className="text-text_primary font-medium">Tuổi</p>
                       <input type="number" className="inputAccount" />
                     </div>
 
                     <div className="flex flex-col w-3/4">
-                      <p className="text-blue_dark font-medium">Ngày sinh</p>
+                      <p className="text-text_primary font-medium">Ngày sinh</p>
                       <input type="date" className="inputAccount" />
                     </div>
                   </div>
@@ -114,24 +114,24 @@ function ManageAccount() {
 
                 <div className="flex flex-col w-1/3 gap-2">
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Số điện thoại</p>
+                    <p className="text-text_primary font-medium">Số điện thoại</p>
                     <input type="number" className="inputAccount" />
                   </div>
 
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Email</p>
+                    <p className="text-text_primary font-medium">Email</p>
                     <input type="email" className="inputAccount" />
                   </div>
 
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Địa chỉ</p>
+                    <p className="text-text_primary font-medium">Địa chỉ</p>
                     <input type="text" className="inputAccount" />
                   </div>
                 </div>
 
                 <div className="flex flex-col w-1/3 gap-2">
                   <div className="flex flex-col pr-12">
-                    <p className="text-blue_dark font-medium">Số điểm tích lũy</p>
+                    <p className="text-text_primary font-medium">Số điểm tích lũy</p>
                     <input type="number" className="inputAccount" />
                   </div>
                 </div>
@@ -146,15 +146,22 @@ function ManageAccount() {
               <div className="flex w-1/2 justify-end items-end min-h-0 min-w-0 pr-4 pb-3 gap-4">
                 <Button
                   variant="outlined"
-                  style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '0.5rem', fontWeight: 700 }}
-                  size="small"
+                  style={{
+                    color: red,
+                    borderColor: red,
+                    borderWidth: 2,
+                    paddingInline: '0.5rem',
+                    fontSize: '15px',
+                  }}
+                  size="md"
                 >
                   Xóa tài khoản
                 </Button>
                 <Button
-                  variant="contained"
-                  style={{ backgroundColor: darkBlue, paddingInline: '3rem', fontWeight: 700 }}
-                  size="small"
+                  className="hover:opacity-90 active:opacity-100"
+                  variant="solid"
+                  style={{ backgroundColor: darkBlue, paddingInline: '3rem', fontSize: '15px' }}
+                  size="md"
                 >
                   Lưu
                 </Button>

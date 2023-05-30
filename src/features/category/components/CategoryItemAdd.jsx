@@ -60,13 +60,13 @@ function CategotyItemAdd({ order }) {
       <Dialog open={open} onClose={handleClose}>
         {/* Title */}
         <DialogTitle className="flex ">
-          <span className="text-blue_dark my-auto">
+          <span className="text-text_primary my-auto">
             <BsPlusSquareFill />
           </span>
-          <span className="text-blue_dark font-semibold ml-3">Thêm Danh Mục</span>
+          <span className="text-text_primary font-semibold ml-3">Thêm Danh Mục</span>
         </DialogTitle>
         {/* Underline */}
-        <div className="border-b-2 border-blue_dark/60 w-11/12 mx-auto"></div>
+        <div className="border-b-2 border-text_primary/60 w-11/12 mx-auto"></div>
         {/* Content */}
         <DialogContent className="text-center">
           <TextField
@@ -102,7 +102,7 @@ function CategotyItemAdd({ order }) {
           </Stack>
         </DialogContent>
         {/* Footer */}
-        <DialogActions style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
+        <DialogActions className="flex gap-4" style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
           <Button variant="outlined" onClick={handleClose} style={{ color: red, borderColor: red, borderWidth: 2 }}>
             Quay lại
           </Button>

@@ -2,8 +2,8 @@ function TitleList({ children, title, isDrug }) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* heading */}
-      <ul className="flex justify-between items-center gap-2 bg-primary/30 rounded-lg text-h5 font-medium px-2 py-[10px] mb-3">
-        <li className="flex-[1] text-center">
+      <ul className="flex justify-between items-center gap-2 bg-primary/20 rounded-lg text-h5 font-medium px-2 py-[10px] mb-3 text-text_primary">
+        <li className="flex-[1] px-1 text-center">
           <span>#</span>
         </li>
         <li className="flex-[12]   ">

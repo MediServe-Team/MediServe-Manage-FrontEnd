@@ -70,7 +70,7 @@ const MENUS = [
     submenu: true,
     submenuItem: [
       { title: 'Danh sách hóa đơn', link: routes.billManage },
-      { title: 'Tạo hóa đơn', link: routes.billCreate },
+      { title: 'Tạo hóa đơn', link: routes.billCreateWithNoPrescription },
     ],
   },
   {

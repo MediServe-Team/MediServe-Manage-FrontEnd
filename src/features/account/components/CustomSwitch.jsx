@@ -11,7 +11,7 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
       width: 17,
     },
     '& .MuiSwitch-switchBase.Mui-checked': {
-      transform: 'translateX(9px)',
+      transform: 'translateX(25px)',
     },
   },
   '& .MuiSwitch-switchBase': {
