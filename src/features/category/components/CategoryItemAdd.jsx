@@ -13,15 +13,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-function CategotyItemAdd(props) {
-  const num = props.order;
-  let colorVar = '';
-  if (num % 3 === 1) {
-    colorVar = '#38B3E1';
-  } else if (num % 3 === 2) {
-    colorVar = '#EE9717';
-  } else {
-    colorVar = '#02D09E';
+function CategotyItemAdd({ order }) {
+  let stylesColor;
+  switch (order % 3) {
+    case 0:
+      stylesColor = '#38B3E1';
+      break;
+    case 1:
+      stylesColor = '#EE9717';
+      break;
+    default:
+      stylesColor = '#02D09E';
+      break;
   }
 
   const darkBlue = '#064861',
@@ -44,12 +47,12 @@ function CategotyItemAdd(props) {
   };
 
   return (
-    <div className="bg-white h-11/12 w-full rounded-lg mx-auto flex border-[2px]" style={{ borderColor: colorVar }}>
+    <div className="bg-white h-[87px] w-full rounded-lg mx-auto flex border-[2px]" style={{ borderColor: stylesColor }}>
       <Button onClick={handleClickOpen} className="w-full">
-        <p className="w-1/6 flex justify-center items-center text-h1" style={{ color: colorVar }}>
+        <p className="w-1/6 flex justify-center items-center text-h1" style={{ color: stylesColor }}>
           +
         </p>
-        <p className="text-h6 flex items-center justify-start w-5/6" style={{ color: colorVar }}>
+        <p className="text-h6 flex items-center justify-start w-5/6" style={{ color: stylesColor }}>
           Thêm danh mục
         </p>
       </Button>
