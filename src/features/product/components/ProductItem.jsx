@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 
-function MedicineItem() {
+function ProductItem() {
   const [y, setY] = useState(400);
   const [opacity, setOpacity] = useState(0.3);
   const [hiden, setHiden] = useState(true);
@@ -12,7 +12,7 @@ function MedicineItem() {
       <div className="relative overflow-hidden">
         <div className="flex justify-center">
           <img
-            src="https://intriphat.com/wp-content/uploads/2021/07/mau-hop-thuoc-dep-5.jpg"
+            src="https://cdn.tgdd.vn/Products/Images/8758/199005/bang-ca-nhan-do-dinh-cao-urgo-durable-hop-102-mien-thumb-1-2-600x600.jpg"
             alt="thuốc"
             className="object-cover h-[200px]"
           />
@@ -121,4 +121,4 @@ function MedicineItem() {
   );
 }
 
-export default MedicineItem;
+export default ProductItem;

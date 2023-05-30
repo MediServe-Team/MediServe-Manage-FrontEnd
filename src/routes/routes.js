@@ -34,6 +34,7 @@ import {
 
 import { Product } from '../features/product/pages';
 import { ProductCreate } from '../features/product/pages';
+import { ProductAll, Cosmetic, Milk, FunctionalFood } from '../features/product/pages/SubPage';
 
 import { Dose } from '../features/dose/pages';
 
@@ -85,7 +86,28 @@ const privateRouters = [
       { path: 'special', component: MedicineSpecial },
     ],
   },
-  { path: routes.productManage, component: Product },
+  {
+    path: routes.productManage,
+    component: Product,
+    children: [
+      {
+        path: 'all',
+        component: ProductAll,
+      },
+      {
+        path: 'functional-food',
+        component: FunctionalFood,
+      },
+      {
+        path: 'milk',
+        component: Milk,
+      },
+      {
+        path: 'cosmetic',
+        component: Cosmetic,
+      },
+    ],
+  },
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },

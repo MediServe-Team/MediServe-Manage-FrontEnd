@@ -15,6 +15,7 @@ const routes = {
 
   productManage: '/products',
   productCreate: '/products/add',
+  productManageWithFistSubPage: '/products/all',
 
   doseManage: '/doses',
 
