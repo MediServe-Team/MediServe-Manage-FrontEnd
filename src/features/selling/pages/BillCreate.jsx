@@ -44,7 +44,7 @@ function BillCreate() {
 
   return (
     <div className="h-full flex gap-3">
-      <div className="flex flex-col justify-between items-center px-5 bg-white rounded-xl w-[40%]">
+      <div className="flex flex-col justify-between items-center px-5 bg-white rounded-xl w-[40%] max-w-[40%]">
         {/* navigate on page */}
         <div className="flex h-[8%] items-end pt-3 border-b-2 border-text_blur/50">
           <SubNavigate navs={navList} />
@@ -55,7 +55,7 @@ function BillCreate() {
         </div>
       </div>
 
-      <div className="flex flex-col h-full w-[60%] min-w-0 bg-white rounded-xl">
+      <div className="flex flex-col h-full w-[60%] min-w-0 bg-white rounded-xl max-w-[60%]">
         <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 w-full">
           <h3 className="text-h4 text-text_primary font-bold">Tạo hóa đơn</h3>
         </header>

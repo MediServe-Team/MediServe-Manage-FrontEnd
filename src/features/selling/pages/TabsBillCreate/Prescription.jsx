@@ -49,9 +49,9 @@ function Prescription() {
       </div>
 
       {/* List medicine */}
-      <div className="pr-2 flex flex-col gap-5 overflow-y-auto">
-        {listMedicine.map((item) => (
-          <MedicineItem />
+      <div className="pr-2 flex flex-col gap-5 overflow-y-auto w-full">
+        {listMedicine.map((item, index) => (
+          <MedicineItem key={index} />
         ))}
       </div>
 
