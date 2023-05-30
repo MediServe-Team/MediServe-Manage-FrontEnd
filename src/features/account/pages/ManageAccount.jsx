@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
-import Button from '@mui/material/Button';
+import Button from '@mui/joy/Button';
 import representImg from '../../../assets/images/GiaTriKhachHang.png';
 
 function ManageAccount() {
@@ -144,15 +144,22 @@ function ManageAccount() {
               <div className="flex w-1/2 justify-end items-end min-h-0 min-w-0 pr-4 pb-3 gap-4">
                 <Button
                   variant="outlined"
-                  style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '0.5rem', fontWeight: 700 }}
-                  size="small"
+                  style={{
+                    color: red,
+                    borderColor: red,
+                    borderWidth: 2,
+                    paddingInline: '0.5rem',
+                    fontSize: '15px',
+                  }}
+                  size="md"
                 >
                   Xóa tài khoản
                 </Button>
                 <Button
-                  variant="contained"
-                  style={{ backgroundColor: darkBlue, paddingInline: '3rem', fontWeight: 700 }}
-                  size="small"
+                  className="hover:opacity-90 active:opacity-100"
+                  variant="solid"
+                  style={{ backgroundColor: darkBlue, paddingInline: '3rem', fontSize: '15px' }}
+                  size="md"
                 >
                   Lưu
                 </Button>

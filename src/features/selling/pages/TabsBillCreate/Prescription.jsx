@@ -24,12 +24,12 @@ function Prescription() {
       <div className="flex justify-center pt-5 relative gap-1">
         <input
           className="bg-text_blur/10 w-[70%] pl-4 pr-10 rounded-lg py-2"
-          placeholder="Tên liều thuốc"
+          placeholder="Tên thuốc"
           value={searchDose}
           onChange={handleSearchDose}
         />
         <button onClick={handleClearSearchDose}>
-          <BsXCircleFill className="text-text_blur text-h4 absolute right-[26%] top-[37%]" />
+          <BsXCircleFill className="text-text_blur text-h4 absolute right-[26%] top-[50%]" />
         </button>
         <Button
           variant="contained"

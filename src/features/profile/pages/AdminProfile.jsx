@@ -33,11 +33,11 @@ function AdminProfile() {
         <div className="flex w-3/5">
           <div className="w-1/3 pr-14">
             <p className="titleInputProfile">Tên</p>
-            <input className="inputProfile" />
+            <input type="text" className="inputProfile" />
           </div>
           <div className="w-2/3 pr-24">
             <p className="titleInputProfile">Tên đầy đủ</p>
-            <input className="inputProfile" />
+            <input type="text" className="inputProfile" />
           </div>
         </div>
 
@@ -54,20 +54,20 @@ function AdminProfile() {
         <div className="w-3/5">
           <div className="pr-24">
             <p className="titleInputProfile">Địa chỉ thường trú</p>
-            <input className="inputProfile" />
+            <input type="text" className="inputProfile" />
           </div>
           <div className="flex pr-24 mt-5">
             <div className="w-1/6 pr-8">
               <p className="titleInputProfile">Tuổi</p>
-              <input className="inputProfile" />
+              <input type="number" className="inputProfile" />
             </div>
             <div className="w-1/3 pr-8">
               <p className="titleInputProfile">Ngày sinh</p>
-              <input className="inputProfile" />
+              <input type="date" className="inputProfile" />
             </div>
             <div className="w-1/2">
               <p className="titleInputProfile">Số điện thoại</p>
-              <input className="inputProfile" />
+              <input type="number" className="inputProfile" />
             </div>
           </div>
         </div>

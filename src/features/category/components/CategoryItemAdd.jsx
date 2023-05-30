@@ -99,7 +99,7 @@ function CategotyItemAdd(props) {
           </Stack>
         </DialogContent>
         {/* Footer */}
-        <DialogActions style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
+        <DialogActions className="flex gap-4" style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
           <Button variant="outlined" onClick={handleClose} style={{ color: red, borderColor: red, borderWidth: 2 }}>
             Quay lại
           </Button>

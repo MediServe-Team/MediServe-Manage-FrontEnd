@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import { SearchResultItem } from '../../stock/components';
 // import Button from '../../../components/Button';
 import { BsSearch, BsXCircleFill } from 'react-icons/bs';
-import Button from '@mui/material/Button';
+import Button from '@mui/joy/Button';
+import { Opacity } from '@mui/icons-material';
 
 const TYPES = [
   {
@@ -136,10 +137,17 @@ function Dose() {
         </div>
 
         <div className="flex justify-end items-end gap-3 my-auto mx-auto">
-          <Button variant="outlined" style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem' }}>
+          <Button
+            variant="outlined"
+            style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem', fontSize: '16px' }}
+          >
             Hủy
           </Button>
-          <Button variant="contained" style={{ backgroundColor: darkBlue, paddingInline: '2rem' }}>
+          <Button
+            className="hover:opacity-90 active:opacity-100"
+            variant="solid"
+            style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '16px' }}
+          >
             Lưu
           </Button>
         </div>
@@ -151,19 +159,19 @@ function Dose() {
           <h3 className="text-h4 text-dark_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
-        <div className="flex justify-center py-5 relative">
+        <div className="h-[14%] flex justify-center py-5 relative">
           <input
             type="text"
-            className="bg-text_blur/10 w-[600px] h-[40px] pl-12 pr-12 round-lg"
+            className="bg-text_blur/10 w-[84%] h-full pl-12 pr-12 rounded-lg"
             value={searchDose}
             onChange={handleSearchDose}
             placeholder="Tên liều thuốc"
           />
           <button>
-            <BsSearch className="text-text_blur text-h3 absolute left-[70px] top-7" />
+            <BsSearch className="text-text_blur text-h3 absolute left-[9.75%] top-[35%]" />
           </button>
           <button onClick={handleClearSearchDose}>
-            <BsXCircleFill className="text-text_blur text-h3 absolute right-[70px] top-7" />
+            <BsXCircleFill className="text-text_blur text-h3 absolute right-[9.75%] top-[35%]" />
           </button>
         </div>
         {/* Table of data */}
