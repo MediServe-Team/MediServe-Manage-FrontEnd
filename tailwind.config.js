@@ -24,6 +24,32 @@ module.exports = {
         danger: '#D41919',
         green: '#1FD01C',
       },
+      keyframes: {
+        growth: {
+          from: {
+            transform: 'scale(0.7)',
+          },
+          to: {
+            transform: 'scale(1)',
+          },
+        },
+        fadeIn: {
+          from: {
+            opacity: '0',
+          },
+          to: {
+            opacity: '1',
+          },
+        },
+        fadeOut: {
+          from: {
+            opacity: '1',
+          },
+          to: {
+            opacity: '0',
+          },
+        },
+      },
     },
   },
   plugins: [],

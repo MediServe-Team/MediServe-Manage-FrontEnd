@@ -10,10 +10,12 @@ const routes = {
   stockIntoDetail: '/stock/invoice/:id',
 
   medicineManage: '/medicines',
+  medicineManageWithFistSubPage: '/medicines/all',
   medicineCreate: '/medicines/add',
 
   productManage: '/products',
   productCreate: '/products/add',
+  productManageWithFistSubPage: '/products/all',
 
   doseManage: '/doses',
 

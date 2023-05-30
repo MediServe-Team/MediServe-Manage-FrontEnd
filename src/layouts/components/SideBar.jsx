@@ -36,7 +36,7 @@ const MENUS = [
     icon: ({ className }) => <GiMedicines className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Thuốc trong hệ thống', link: routes.medicineManage },
+      { title: 'Thuốc trong hệ thống', link: routes.medicineManageWithFistSubPage },
       { title: 'Thêm thuốc', link: routes.medicineCreate },
     ],
   },
@@ -45,7 +45,7 @@ const MENUS = [
     icon: ({ className }) => <RiShoppingBag3Fill className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Danh sách sản phẩm', link: routes.productManage },
+      { title: 'Danh sách sản phẩm', link: routes.productManageWithFistSubPage },
       { title: 'Thêm sản phẩm', link: routes.productCreate },
     ],
   },
