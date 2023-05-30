@@ -36,7 +36,7 @@ const MENUS = [
     icon: ({ className }) => <GiMedicines className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Thuốc trong hệ thống', link: routes.medicineManage },
+      { title: 'Thuốc trong hệ thống', link: routes.medicineManageWithFistSubPage },
       { title: 'Thêm thuốc', link: routes.medicineCreate },
     ],
   },
