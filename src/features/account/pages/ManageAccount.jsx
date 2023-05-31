@@ -13,7 +13,7 @@ function ManageAccount() {
   const [listUser, setListUser] = useState(['staff', 'customer', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff']);
   const [navList, setNavList] = useState([]);
 
-  let red = '#D41919',
+  let red = '#FF6060',
     darkBlue = '#064861';
 
   useEffect(() => {
