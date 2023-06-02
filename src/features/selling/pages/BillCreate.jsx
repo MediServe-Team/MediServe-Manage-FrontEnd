@@ -204,7 +204,7 @@ function BillCreate() {
                 <TitleListPre>
                   {/* Data */}
                   {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} item={item} />
+                    <ItemListPre key={index} />
                   ))}
                 </TitleListPre>
               </div>
@@ -233,6 +233,7 @@ function BillCreate() {
                   type="text"
                   value="750,000 đ"
                   className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
+                  disabled
                 />
                 <span className="text-tertiary">0 đ</span>
               </div>

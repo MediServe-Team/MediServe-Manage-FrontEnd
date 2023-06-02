@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { IoIosArrowDown } from 'react-icons/io';
 import { Button } from '@mui/joy';
 import { BiFilterAlt } from 'react-icons/bi';
+import { ItemBill, TitleBillList } from '../components';
 
 function Bill() {
   const [fromDate, setFromDate] = useState(null);
@@ -10,6 +11,7 @@ function Bill() {
   const refFromDate = useRef();
   const refToDate = useRef();
   const [activeFilter, setActiveFilter] = useState(false);
+  const [listBill, setListBill] = useState([1, 1, 1, 1, 1]);
 
   let red = 'rgba(255, 96, 96, 1)',
     darkBlue = '#064861';
@@ -19,8 +21,8 @@ function Bill() {
   };
 
   return (
-    <div className="h-full w-full bg-white rounded-xl flex flex-col px-16 pb-16 pt-3">
-      <div className="flex flex-col h-[18%]">
+    <div className="h-full w-full bg-white rounded-xl flex flex-col px-16 pt-2">
+      <div className="flex flex-col h-[17%]">
         <div className={`flex h-1/2 items-start justify-end ${activeFilter ? '' : 'invisible'}`}>
           <div className="flex gap-3 justify-end">
             <input
@@ -131,7 +133,22 @@ function Bill() {
           </div>
         </div>
       </div>
-      <div className="flex h-[82%] bg-yellow-100"></div>
+
+      <div className="flex flex-col h-[75%] bg-white">
+        <div className="h-[13%]">
+          <TitleBillList />
+        </div>
+
+        <div className="h-[87%] flex flex-col gap-3">
+          {listBill.map((item, index) => (
+            <div>
+              <ItemBill key={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col h-[8%] bg-white"></div>
     </div>
   );
 }
