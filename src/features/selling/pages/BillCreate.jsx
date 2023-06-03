@@ -129,7 +129,7 @@ function BillCreate() {
               </button>
             </div>
 
-            <div className="flex w-full h-[65%] border-slate-300 border-2 px-7 py-2">
+            <div className="flex w-full h-[65%] rounded-md border-slate-300 border-2 px-7 py-2">
               <div className="w-2/3 flex flex-col justify-start items-center h-full">
                 <span className="font-medium w-full h-1/2 flex items-center">
                   Họ tên khách hàng<span className="font-normal">: Trần Minh Quang</span>
@@ -158,7 +158,11 @@ function BillCreate() {
             <TitleListMedicine>
               {/* Data */}
               {listMedicine.map((item, index) => (
-                <ItemListMedicine key={index} item={item} />
+                <ItemListMedicine key={index} item={item}>
+                  <button>
+                    <BsX size={25} style={{ color: '#A8A8A8' }} />
+                  </button>
+                </ItemListMedicine>
               ))}
             </TitleListMedicine>
           </div>
@@ -204,7 +208,7 @@ function BillCreate() {
                 <TitleListPre>
                   {/* Data */}
                   {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} item={item} />
+                    <ItemListPre key={index} />
                   ))}
                 </TitleListPre>
               </div>
@@ -233,6 +237,7 @@ function BillCreate() {
                   type="text"
                   value="750,000 đ"
                   className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
+                  disabled
                 />
                 <span className="text-tertiary">0 đ</span>
               </div>

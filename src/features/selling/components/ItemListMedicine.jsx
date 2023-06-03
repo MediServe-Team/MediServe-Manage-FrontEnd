@@ -1,6 +1,6 @@
 import { BsX } from 'react-icons/bs';
 
-function ItemListMedicine({ item }) {
+function ItemListMedicine({ item, children }) {
   return (
     <ul className="flex justify-between items-center bg-text_blur/5 p-2 rounded-lg gap-2 text-h5 px-2 flex-shrink-0 border-2 border-text_blur/30">
       {/* number */}
@@ -26,11 +26,7 @@ function ItemListMedicine({ item }) {
         <span className="text-secondary px-6">50000</span>
       </li>
 
-      <li className="flex flex-[1] justify-center items-center">
-        <button>
-          <BsX size={25} style={{ color: '#A8A8A8' }} />
-        </button>
-      </li>
+      <li className="flex flex-[1] justify-center items-center">{children}</li>
     </ul>
   );
 }
