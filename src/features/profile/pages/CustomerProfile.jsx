@@ -59,7 +59,7 @@ function CustomerProfile() {
           <div className="flex pr-24 mt-7">
             <div className="w-1/6 pr-8">
               <p className="titleInputProfile">Tuổi</p>
-              <input type="number" className="inputProfile" />
+              <input type="number" className="inputProfile" style={{ paddingInline: '0.5rem' }} />
             </div>
             <div className="w-1/3 pr-8">
               <p className="titleInputProfile">Ngày sinh</p>

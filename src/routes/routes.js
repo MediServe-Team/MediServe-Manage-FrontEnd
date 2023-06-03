@@ -24,9 +24,17 @@ import {
 
 import { Medicine } from '../features/medicine/pages';
 import { MedicineCreate } from '../features/medicine/pages';
+// Sub in Medicine manage
+import {
+  MedicineAll,
+  MedicineNonPrescription,
+  MedicinePrescription,
+  MedicineSpecial,
+} from '../features/medicine/pages/SubPage';
 
 import { Product } from '../features/product/pages';
 import { ProductCreate } from '../features/product/pages';
+import { ProductAll, Cosmetic, Milk, FunctionalFood } from '../features/product/pages/SubPage';
 
 import { Dose } from '../features/dose/pages';
 
@@ -68,9 +76,39 @@ const privateRouters = [
   { path: routes.stockIntoManage, component: StockInto },
   { path: routes.stockIntoDetail, component: StockIntoDetail },
   { path: routes.historyStockManage, component: HistoryStock },
-  { path: routes.medicineManage, component: Medicine },
   { path: routes.medicineCreate, component: MedicineCreate },
-  { path: routes.productManage, component: Product },
+  {
+    path: routes.medicineManage,
+    component: Medicine,
+    children: [
+      { path: 'all', component: MedicineAll },
+      { path: 'non-prescription', component: MedicineNonPrescription },
+      { path: 'prescription', component: MedicinePrescription },
+      { path: 'special', component: MedicineSpecial },
+    ],
+  },
+  {
+    path: routes.productManage,
+    component: Product,
+    children: [
+      {
+        path: 'all',
+        component: ProductAll,
+      },
+      {
+        path: 'functional-food',
+        component: FunctionalFood,
+      },
+      {
+        path: 'milk',
+        component: Milk,
+      },
+      {
+        path: 'cosmetic',
+        component: Cosmetic,
+      },
+    ],
+  },
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
