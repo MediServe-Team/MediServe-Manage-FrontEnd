@@ -1,15 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { SubNavigate, ItemListMedicine, TitleListMedicine, TitleListPre, ItemListPre } from '../components';
+import {
+  SubNavigate,
+  ItemListMedicine,
+  TitleListMedicine,
+  TitleListPre,
+  ItemListPre,
+  Medicine,
+  Prescription,
+  Dose,
+} from '../components';
 import Button from '@mui/joy/Button';
 import { TbRefresh } from 'react-icons/tb';
 import { BsX, BsSearch, BsXCircleFill } from 'react-icons/bs';
+import { Modal, ModalClose, ModalDialog, Typography } from '@mui/joy';
 
-function BillCreate() {
+export default function BillCreate() {
   const [navList, setNavList] = useState([]);
   const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
   const [customer, setCustomer] = useState('guest');
   const [searchCustomer, setSearchCustomer] = useState('');
+  const [preview, setPreview] = useState(false);
   let darkBlue = '#064861';
 
   useEffect(() => {
@@ -44,7 +55,7 @@ function BillCreate() {
 
   return (
     <div className="h-full flex gap-3">
-      <div className="flex flex-col justify-between items-center px-5 bg-white rounded-xl w-[40%]">
+      <div className="flex flex-col justify-between items-center px-5 bg-white rounded-xl w-[40%] max-w-[40%]">
         {/* navigate on page */}
         <div className="flex h-[8%] items-end pt-3 border-b-2 border-text_blur/50">
           <SubNavigate navs={navList} />
@@ -55,7 +66,7 @@ function BillCreate() {
         </div>
       </div>
 
-      <div className="flex flex-col h-full w-[60%] min-w-0 bg-white rounded-xl">
+      <div className="flex flex-col h-full w-[60%] min-w-0 bg-white rounded-xl max-w-[60%]">
         <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 w-full">
           <h3 className="text-h4 text-text_primary font-bold">Tạo hóa đơn</h3>
         </header>
@@ -288,6 +299,7 @@ function BillCreate() {
                 color: 'white',
               }}
               size="md"
+              onClick={() => setPreview(true)}
             >
               Xem trước
             </Button>
@@ -308,8 +320,100 @@ function BillCreate() {
           </div>
         </div>
       </div>
+
+      <Modal open={preview} onClose={() => setPreview(false)}>
+        <ModalDialog style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
+          <ModalClose />
+          {/* Header */}
+          <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
+          {/* Info of pharmacy */}
+          <div className="px-2 overflow-y-auto mt-4">
+            <div className="font-semibold">Thông tin nhà dược</div>
+
+            <div className="px-2">
+              <div className="flex">
+                <span>Tên nhà dược</span>
+                <p>: abc</p>
+              </div>
+              <div className="flex">
+                <span>Địa chỉ nhà dược</span>
+                <p>: abc</p>
+              </div>
+              <div className="flex">
+                <span>Thồng tin liên hệ</span>
+                <p>: abc</p>
+              </div>
+            </div>
+
+            <div className="text-h4 font-bold flex justify-center items-center mt-3">HÓA ĐƠN</div>
+            {/* Info of customer */}
+            <div className="flex my-3">
+              <div className="flex flex-col w-[70%]">
+                <span>
+                  Họ tên khách hàng: <span className="font-semibold">Hoàng Văn Phúc</span>
+                </span>
+                <span>
+                  Địa chỉ: <span className="font-semibold">KTX khu A, DHQG tp HCM</span>
+                </span>
+              </div>
+
+              <div className="flex flex-col w-[30%]">
+                <span>
+                  Tuổi: <span className="font-semibold">21</span>
+                </span>
+                <span>
+                  Giới tính: <span className="font-semibold">Nam</span>
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-8">
+              {/* Info of Medicine */}
+              <Medicine />
+              {/* Info of Prescription */}
+              <div className="text-[18px] font-semibold">Kê đơn</div>
+              <Prescription />
+              {/* Info of Dose */}
+              <Dose />
+              {/* Info of Price and Note */}
+              <div className="flex w-full">
+                <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
+                  Thanh toán (VNĐ)
+                </span>
+              </div>
+              <div className="flex w-full">
+                <div className="w-1/2"></div>
+                <div className="flex w-1/2">
+                  <div className="w-1/2 flex flex-col gap-3 font-medium">
+                    <span>Tổng tiền phải trả:</span>
+                    <span>Tiền khách đưa:</span>
+                    <span>Tiền thừa:</span>
+                  </div>
+                  <div className="w-1/2 flex gap-3 flex-col">
+                    <span>750,000 đ</span>
+                    <span>750,000 đ</span>
+                    <span>0 đ</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full">
+                <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
+                <div className=" w-full">
+                  <textarea
+                    name="comment"
+                    id="comment"
+                    cols="30"
+                    rows="3"
+                    className="w-full rounded-md border-text_blur/50 border-2 p-2"
+                    disabled
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ModalDialog>
+      </Modal>
     </div>
   );
 }
-
-export default BillCreate;
