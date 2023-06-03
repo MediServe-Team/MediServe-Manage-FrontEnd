@@ -1,6 +1,7 @@
+import { Children } from 'react';
 import { BsX, BsPencilFill, BsTrashFill } from 'react-icons/bs';
 
-function ItemBill({ item }) {
+function ItemBill({ item, children }) {
   return (
     <ul className="flex justify-between items-center bg-primary/20 p-2 rounded-lg gap-2 text-h5 px-2 flex-shrink-0 border-2 border-text_blur/30 text-text_primary">
       <li className="flex-[1] text-center items-center flex justify-center">
@@ -33,15 +34,11 @@ function ItemBill({ item }) {
           <span>50,000</span>
         </div>
       </li>
-      <li className="flex-[1] items-center flex justify-center text-white">
-        <button className="h-[25px] w-[25px] bg-yellow-400 items-center justify-center flex hover:opacity-80 active:opacity-100">
-          <BsPencilFill />
-        </button>
-      </li>
-      <li className="flex-[1] items-center flex justify-center text-white">
-        <button className="h-[25px] w-[25px] bg-red-400 items-center justify-center flex hover:opacity-80 active:opacity-100">
-          <BsTrashFill />
-        </button>
+      <li
+        className="flex-[2] items-center flex justify-center font-semibold"
+        style={{ textDecorationLine: 'underline' }}
+      >
+        {children}
       </li>
     </ul>
   );

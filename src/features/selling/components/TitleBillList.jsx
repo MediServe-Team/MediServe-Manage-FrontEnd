@@ -24,12 +24,7 @@ function TitleListBill({ children, title, isDrug }) {
         <li className="flex-[5] items-center flex justify-center">
           <span>Tổng Tiền</span>
         </li>
-        <li className="flex-[1] items-center flex justify-center">
-          <span>Sửa</span>
-        </li>
-        <li className="flex-[1] items-center flex justify-center">
-          <span>Xóa</span>
-        </li>
+        <li className="flex-[2] items-center flex justify-center"></li>
       </ul>
     </div>
   );
