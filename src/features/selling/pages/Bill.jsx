@@ -142,12 +142,12 @@ function Bill() {
             </div>
           </div>
         </div>
-
+        {/* Title of List Invoice */}
         <div className="flex flex-col h-[75%] bg-white">
           <div className="h-[13%]">
             <TitleBillList />
           </div>
-
+          {/* List of Invoice */}
           <div className="h-[87%] flex flex-col gap-3">
             {listBill.map((item, index) => (
               <div>
