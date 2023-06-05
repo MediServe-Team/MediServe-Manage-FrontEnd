@@ -30,7 +30,7 @@ function AccountCustomer() {
         <div className="flex justify-center h-[80%] min-h-[80%] w-full py-6">
           <div className="flex flex-col h-full w-[90%] border-text_blur/50 border-2 rounded-xl">
             <div className="flex h-[12%] min-h-0 justify-start pl-3 py-2">
-              <p className="text-h6 rounded-lg flex justify-center items-center p-1.5 bg-tertiary/50">Khách hàng</p>
+              <p className="text-h6 rounded-lg flex justify-center items-center px-3 bg-tertiary/50">Khách hàng</p>
             </div>
 
             <div className="flex flex-col h-[73%] min-h-0">

@@ -9,12 +9,35 @@ import { BiDollar } from 'react-icons/bi';
 import { AccountCustomer, AccountStaff } from '../pages';
 
 function ManageAccount() {
-  const [listUser, setListUser] = useState(['staff', 'customer', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff']);
+  let all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
+  const [listUser, setListUser] = useState(all);
   const [filter, setFilter] = useState('');
   const [role, setRole] = useState('customer');
+  const [filterCustomer, setFilterCustomer] = useState(false);
+  const [filterStaff, setFilterStaff] = useState(false);
 
   let red = '#FF6060',
     darkBlue = '#064861';
+
+  useEffect(() => {
+    if ((filterCustomer === true && filterStaff === true) || (filterCustomer === false && filterStaff === false)) {
+      setListUser(all);
+    } else if (filterCustomer === true) {
+      let result = all.filter((item) => item === 'customer');
+      setListUser(result);
+    } else if (filterStaff === true) {
+      let result = all.filter((item) => item === 'staff');
+      setListUser(result);
+    }
+  }, [all, filterCustomer, filterStaff]);
+
+  const handleFilterCustomer = () => {
+    setFilterCustomer(!filterCustomer);
+  };
+
+  const handleFilterStaff = () => {
+    setFilterStaff(!filterStaff);
+  };
 
   return (
     <div className="flex h-full">
@@ -25,12 +48,12 @@ function ManageAccount() {
             Tài Khoản
           </p>
           <div className="flex min-h-0 pt-2">
-            <Checkbox value="customer" size="small" />
+            <Checkbox value="customer" size="small" onChange={handleFilterCustomer} />
             <p className="text-h6 my-auto">Khách Hàng</p>
           </div>
 
           <div className="flex min-h-0 pb-2">
-            <Checkbox value="staff" size="small" />
+            <Checkbox value="staff" size="small" onChange={handleFilterStaff} />
             <p className="text-h6 my-auto">Nhân Viên</p>
           </div>
           <div className="border-text_blur/60 border-t-2"></div>
@@ -41,18 +64,16 @@ function ManageAccount() {
             {listUser.map((item, index) =>
               item !== 'customer' ? (
                 <button
-                  className="w-full h-full hover:opacity-80 active:opacity-100"
-                  order={item}
-                  key={index}
+                  className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
+                  id={index}
                   onClick={() => setRole('staff')}
                 >
                   <StaffItem order={item} key={index} />
                 </button>
               ) : (
                 <button
-                  className="w-full h-full hover:opacity-80 active:opacity-100"
-                  order={item}
-                  key={index}
+                  className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
+                  id={index}
                   onClick={() => setRole('customer')}
                 >
                   <CustomerItem order={item} key={index} />

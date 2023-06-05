@@ -1,24 +1,18 @@
-export default function TitleShopping({ children, title, isDrug }) {
+export default function TitleDose({ children, title, isDrug }) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* heading */}
       <ul className="flex justify-center items-center gap-3 bg-primary/20 rounded-lg text-h6 font-medium mb-3 py-[10px] pr-1.5 text-text_primary">
         <li className="flex-[10] text-center">
-          <span>Số hóa đơn</span>
+          <span>Mã số</span>
         </li>
-        <li className="flex-[14] text-center">
-          <span>Tên nhân viên</span>
-        </li>
-        <li className="flex-[12] text-center">
-          <span>Tổng tiền</span>
-        </li>
-        <li className="flex-[14] text-center">
-          <span>Ghi chú</span>
+        <li className="flex-[34] text-start">
+          <span>Tên liều thuốc</span>
         </li>
         <li className="flex-[14] text-center">
           <span>Ngày tạo</span>
         </li>
-        <li className="flex-[10] text-center">
+        <li className="flex-[14] text-center">
           <span>Xem chi tiết</span>
         </li>
         {/* <li className="w-[22px]"></li> */}
