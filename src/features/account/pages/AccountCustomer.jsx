@@ -197,7 +197,7 @@ function AccountCustomer() {
           </TitleShopping>
 
           <Modal open={preview} onClose={() => setPreview(false)}>
-            <ModalDialog style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
+            <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
               <ModalClose />
               {/* Header */}
               <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
