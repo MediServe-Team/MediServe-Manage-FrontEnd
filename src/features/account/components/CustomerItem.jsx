@@ -2,7 +2,7 @@ import Button from '../../../components/Button';
 
 function CustomerItem() {
   return (
-    <Button className="bg-white h-1/6 w-11/12 rounded-2xl mx-auto flex flex-shrink-0 px-0" padding={0}>
+    <div className="bg-white h-full w-11/12 mx-auto flex flex-shrink-0 px-0">
       <div className="flex w-3/12 justify-center items-center">
         <div className="bg-[url('https://i.ibb.co/cDz1NGp/86.jpg')] bg-cover h-9 w-9 rounded-full"></div>
       </div>
@@ -21,7 +21,7 @@ function CustomerItem() {
           Khách hàng
         </p>
       </div>
-    </Button>
+    </div>
   );
 }
 

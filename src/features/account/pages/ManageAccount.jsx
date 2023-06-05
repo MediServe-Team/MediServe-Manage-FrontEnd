@@ -4,14 +4,14 @@ import CustomerItem from '../components/CustomerItem';
 import CustomSwitch from '../components/CustomSwitch';
 import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
-import Button from '@mui/joy/Button';
 import { FaShoppingCart } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
-import { AccountCustomer } from '../pages';
+import { AccountCustomer, AccountStaff } from '../pages';
 
 function ManageAccount() {
   const [listUser, setListUser] = useState(['staff', 'customer', 'staff', 'staff', 'staff', 'staff', 'staff', 'staff']);
   const [filter, setFilter] = useState('');
+  const [role, setRole] = useState('customer');
 
   let red = '#FF6060',
     darkBlue = '#064861';
@@ -37,9 +37,27 @@ function ManageAccount() {
         </div>
 
         <div className="flex h-4/6 min-h-0 pt-2 justify-center w-full">
-          <div className="flex flex-col h-full overflow-y-auto gap-1 w-full">
+          <div className="flex flex-col h-full overflow-y-auto gap-5 w-full">
             {listUser.map((item, index) =>
-              item !== 'customer' ? <StaffItem order={item} key={index} /> : <CustomerItem order={item} key={index} />,
+              item !== 'customer' ? (
+                <button
+                  className="w-full h-full hover:opacity-80 active:opacity-100"
+                  order={item}
+                  key={index}
+                  onClick={() => setRole('staff')}
+                >
+                  <StaffItem order={item} key={index} />
+                </button>
+              ) : (
+                <button
+                  className="w-full h-full hover:opacity-80 active:opacity-100"
+                  order={item}
+                  key={index}
+                  onClick={() => setRole('customer')}
+                >
+                  <CustomerItem order={item} key={index} />
+                </button>
+              ),
             )}
           </div>
         </div>
@@ -49,8 +67,12 @@ function ManageAccount() {
         </div>
       </div>
       {/* Info of accounts */}
-      <div className="flex flex-col h-full w-3/4 bg-white rounded-2xl min-h-0">
+      <div className={`${role === 'customer' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
         <AccountCustomer />
+      </div>
+
+      <div className={`${role === 'staff' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
+        <AccountStaff />
       </div>
     </div>
   );

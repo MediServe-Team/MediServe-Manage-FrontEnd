@@ -7,14 +7,17 @@ import DialogContent from '@mui/material/DialogContent';
 import CustomSwitch from '../../category/components/CustomSwitch';
 import { BsPlusSquareFill } from 'react-icons/bs';
 import { BiXCircle } from 'react-icons/bi';
-import { BsCloudUploadFill } from 'react-icons/bs';
+import { BsCloudUploadFill, BsCheckCircle } from 'react-icons/bs';
 import Button from '@mui/joy/Button';
 import { useState } from 'react';
 import { Modal, ModalDialog, Radio, RadioGroup } from '@mui/joy';
 import Checkbox from '@mui/material/Checkbox';
+import { create } from '@mui/material/styles/createTransitions';
 
-function BtnAddAcc() {
+function BtnAddAcc({ children }) {
   const [open, setOpen] = useState(false);
+  const [createAcc, setCreateAcc] = useState(false);
+  const [openAcc, setOpenAcc] = useState(false);
 
   const darkBlue = '#064861',
     red = '#D41919';
@@ -22,7 +25,10 @@ function BtnAddAcc() {
   return (
     <div className="bg-white h-1/2 w-3/4 rounded-lg mx-auto flex">
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          console.log(createAcc);
+        }}
         className="flex min-h-0 w-full"
         variant="outlined"
         style={{ borderColor: darkBlue, borderWidth: '2px' }}
@@ -151,7 +157,9 @@ function BtnAddAcc() {
                 value="createAccount"
                 size="small"
                 className="bg-text_primary border-text_primary text-text_primary"
-                onSelect={() => console.log('haha')}
+                onChange={() => {
+                  setCreateAcc((pre) => !pre);
+                }}
               />
               <span>Tạo kèm tài khoản</span>
             </div>
@@ -166,7 +174,10 @@ function BtnAddAcc() {
                   fontSize: '15px',
                 }}
                 size="md"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  setCreateAcc(false);
+                }}
               >
                 Hủy bỏ
               </Button>
@@ -175,11 +186,62 @@ function BtnAddAcc() {
                 variant="solid"
                 style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '15px' }}
                 size="md"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  if (createAcc === true) {
+                    setOpen(false);
+                    setCreateAcc(false);
+                    setOpenAcc(true);
+                  } else {
+                    setOpen(false);
+                  }
+                }}
               >
                 Tạo ngay
               </Button>
             </div>
+          </div>
+        </ModalDialog>
+      </Modal>
+
+      <Modal open={openAcc} onClose={() => setOpenAcc(false)}>
+        <ModalDialog variant="outlined" style={{ width: '25%', fontSize: '16px' }}>
+          <div className="flex items-center border-b-2 border-text_blur/50 pb-3 mb-3">
+            <div className="text-white bg-text_primary rounded-xl w-12 h-9 flex flex-shrink-0 justify-center items-center">
+              <BsCheckCircle size={22} />
+            </div>
+
+            <span className="text-text_primary font-semibold ml-3 text-[18px] flex-shrink-0">
+              Tài khoản đã được tạo
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-5 px-12">
+            <div className="flex flex-col gap-1 ">
+              <span className="text-text_primary font-medium">Tài khoản</span>
+              <input className="px-2 py-1 border-2 border-text_primary rounded-lg" type="text" name="account" id="" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-text_primary font-medium">Mật khẩu</span>
+              <input
+                className="px-2 py-1 border-2 border-text_primary rounded-lg"
+                type="password"
+                name="password"
+                id=""
+              />
+            </div>
+          </div>
+
+          <div className="flex h-full justify-center items-center mt-5">
+            <Button
+              className="hover:opacity-90 active:opacity-100"
+              variant="solid"
+              style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '15px' }}
+              size="md"
+              onClick={() => setOpenAcc(false)}
+            >
+              Xác nhận
+            </Button>
           </div>
         </ModalDialog>
       </Modal>
