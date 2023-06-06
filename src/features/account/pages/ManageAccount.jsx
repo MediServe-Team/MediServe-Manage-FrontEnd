@@ -9,7 +9,7 @@ import { BiDollar } from 'react-icons/bi';
 import { AccountCustomer, AccountStaff } from '../pages';
 
 function ManageAccount() {
-  let all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
+  const [all, setAll] = useState(['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff']);
   const [listUser, setListUser] = useState(all);
   const [filter, setFilter] = useState('');
   const [role, setRole] = useState('customer');
@@ -65,7 +65,8 @@ function ManageAccount() {
               item !== 'customer' ? (
                 <button
                   className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
-                  id={index}
+                  order={item}
+                  key={index}
                   onClick={() => setRole('staff')}
                 >
                   <StaffItem order={item} key={index} />
@@ -73,7 +74,8 @@ function ManageAccount() {
               ) : (
                 <button
                   className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
-                  id={index}
+                  order={item}
+                  key={index}
                   onClick={() => setRole('customer')}
                 >
                   <CustomerItem order={item} key={index} />

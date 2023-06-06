@@ -9,3 +9,4 @@ export { default as ItemStock } from './ItemStock';
 export { default as TitleDose } from './TitleDose';
 export { default as ItemDose } from './ItemDose';
 export { default as Permission } from './Permission';
+export { default as PermissionItem } from './PermissionItem';

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   CustomSwitch,
   TitleShopping,
@@ -8,32 +9,75 @@ import {
   TitleDose,
   ItemDose,
   Permission,
+  PermissionItem,
 } from '../components';
 import Button from '@mui/joy/Button';
-import { FaShoppingCart } from 'react-icons/fa';
-import { BiDollar } from 'react-icons/bi';
-import { Modal, ModalClose, ModalDialog } from '@mui/joy';
+import Checkbox from '@mui/material/Checkbox';
+import { BiXCircle } from 'react-icons/bi';
+import { Modal, ModalClose, ModalDialog, Radio, RadioGroup } from '@mui/joy';
 import { Medicine, Prescription, Dose } from '../../selling/components';
-import { BsCloudUploadFill, BsPlusCircle } from 'react-icons/bs';
+import { BsCloudUploadFill, BsPlusCircle, BsX } from 'react-icons/bs';
 
 function AccountStaff() {
-  const [filter, setFilter] = useState('');
   const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
   const [preview, setPreview] = useState(false);
   const [listPermission, setListPermission] = useState([
-    'Bán hàng',
-    'Quản lý kho',
-    'Quản lý kho',
-    'Quản lý kho',
-    'Quản lý kho',
-    'Quản lý kho',
-    'Quản lý kho',
-    'Quản lý kho',
+    { name: 'Trang chủ', active: true },
+    { name: 'Quản lý kho', active: false },
+    { name: 'Quản lý thuốc', active: false },
+    { name: 'Quản lý sản phẩm', active: false },
+    { name: 'Quản lý liều', active: false },
+    { name: 'Quản lý danh mục', active: false },
+    { name: 'Quản lý tài khoản', active: false },
+    { name: 'Bán hàng', active: false },
+    { name: 'Thông tin cá nhân', active: false },
   ]);
+  const [listTemp, setListTemp] = useState([
+    { name: 'Trang chủ', active: true },
+    { name: 'Quản lý kho', active: false },
+    { name: 'Quản lý thuốc', active: false },
+    { name: 'Quản lý sản phẩm', active: false },
+    { name: 'Quản lý liều', active: false },
+    { name: 'Quản lý danh mục', active: false },
+    { name: 'Quản lý tài khoản', active: false },
+    { name: 'Bán hàng', active: false },
+    { name: 'Thông tin cá nhân', active: false },
+  ]);
+  const [openEditPer, setOpenEditPer] = useState(false);
 
   let red = '#FF6060',
     darkBlue = '#064861',
     orange = '#EA7408';
+
+  useEffect(() => {
+    listPermission.forEach((permission) => {
+      setListTemp((prev) =>
+        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
+      );
+    });
+  }, [listPermission]);
+
+  const handleCloseModal = () => {
+    listPermission.forEach((permission) => {
+      setListTemp((prev) =>
+        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
+      );
+    });
+  };
+
+  const handleSavePermission = () => {
+    setOpenEditPer(false);
+
+    listTemp.forEach((temp) => {
+      setListPermission((permission) =>
+        permission.map((item) => (item.name === temp.name ? { ...item, active: temp.active } : { ...item })),
+      );
+    });
+  };
+
+  const handleDeletePer = (name) => {
+    setListPermission((pre) => pre.map((item) => (item.name === name ? { ...item, active: false } : { ...item })));
+  };
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-2xl">
@@ -51,7 +95,7 @@ function AccountStaff() {
         <div className="flex justify-center flex-shrink w-full py-6">
           <div className="flex flex-col flex-shrink w-[90%] border-text_blur/50 border-2 rounded-xl">
             <div className="flex h-[12%] min-h-0 justify-start pl-3 py-2">
-              <p className="text-h6 rounded-lg flex justify-center items-center px-3 bg-secondary/50">Nhân viên</p>
+              <p className="text-h6 rounded-lg flex justify-center items-center px-3 py-1 bg-secondary/50">Nhân viên</p>
             </div>
 
             <div className="flex flex-col flex-shrink">
@@ -138,15 +182,92 @@ function AccountStaff() {
               <span className="text-h7 text-text_primary font-medium">Cấp quyền</span>
               <div className="flex border-2 border-text_blur rounded-xl py-2 pl-2">
                 <div className="flex w-[93%] gap-3 overflow-x-auto">
-                  {listPermission.map((item, index) => (
-                    <Permission key={index} item={item} />
-                  ))}
+                  {listPermission.map((item, index) =>
+                    item.active ? (
+                      <div
+                        key={index}
+                        className="flex h-full rounded-lg bg-secondary/80 justify-center items-center flex-grow-0 flex-shrink-0 px-2 py-1 gap-3"
+                      >
+                        <span className="text-white text-h6 h-full">{item.name}</span>
+                        <button className="flex items-center" onClick={() => handleDeletePer(item.name)}>
+                          <BsX size={20} />
+                        </button>
+                      </div>
+                    ) : null,
+                  )}
                 </div>
 
                 <div className="flex w-[7%] justify-center items-center">
-                  <button>
+                  <button
+                    onClick={() => {
+                      setOpenEditPer(true);
+                    }}
+                  >
                     <BsPlusCircle size={20} style={{ color: orange }} />
                   </button>
+
+                  <Modal open={openEditPer} onClose={() => setOpenEditPer(false)}>
+                    <ModalDialog
+                      variant="outlined"
+                      style={{
+                        width: '45%',
+                        height: '70%',
+                        paddingInline: '0',
+                        paddingBlock: '0',
+                        borderTopLeftRadius: '1rem',
+                        borderTopRightRadius: '0px',
+                        borderBottomRightRadius: '1rem',
+                        borderBottomLeftRadius: '0px',
+                      }}
+                    >
+                      <div className="flex items-center border-b-2 border-text_blur/50 bg-primary rounded-tl-2xl py-2 px-3">
+                        <div className="">
+                          <div className="bg-[url('https://s3-alpha-sig.figma.com/img/711e/d2ed/22f41791a0dd8909af17f46dbccd8af8?Expires=1685923200&Signature=Df8uzSuQIW4cCzWheeEP6~zX9~~kTUXwRMI0VxZbii6FVFsUQlbaE~G6K3WHzQWHPAVZ7Dqeeh9x67BU2LT-uLA8QoRJLe35jgEP7X~mkSsYRzjq-NVZ4Ngi664ssb56eCMaV91WHVyKQ7oLf34ZArNon6l3B6C0nLFqFzYgvqvt~vydSdhqE8DDIHJUO1lr5PBmZWNx~a4OaBGC8nAwEttn96PrrxMk8wj~2cg43zH~GvKYbctogPw5GXe-d4QgKpt5ekmQmXqJWPYJQ1QrD-HcmqEt2KYe8X8~gBh0xL78ZCJ6KfpNPUs9Wmz4~7ZTe00tb8DXraicYGxDXDdszw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')] bg-cover h-10 w-10 rounded-full"></div>
+                        </div>
+
+                        <div className="flex justify-start items-center flex-grow pl-4">
+                          <span className="text-white text-h4 font-medium truncate">Trần Minh Quang</span>
+                        </div>
+
+                        <div className="flex items-center justify-end">
+                          <button
+                            onClick={() => {
+                              handleCloseModal();
+                              setOpenEditPer(false);
+                            }}
+                          >
+                            <BiXCircle size={30} style={{ color: darkBlue }} />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-grow p-8">
+                        <div className="flex gap-8 flex-wrap">
+                          {listTemp.map((item, index) => (
+                            <PermissionItem key={index} item={item} />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end items-end gap-4 pr-4 pb-4 h-full">
+                        <Button
+                          className="hover:opacity-90 active:opacity-100"
+                          variant="solid"
+                          style={{
+                            backgroundColor: darkBlue,
+                            width: '5rem',
+                            height: '5rem',
+                            fontSize: '18px',
+                            borderRadius: '9999px',
+                          }}
+                          size="md"
+                          onClick={handleSavePermission}
+                        >
+                          Lưu
+                        </Button>
+                      </div>
+                    </ModalDialog>
+                  </Modal>
                 </div>
               </div>
             </div>
