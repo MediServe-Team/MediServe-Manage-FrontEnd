@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import {
   CustomSwitch,
   TitleShopping,
@@ -8,13 +7,12 @@ import {
   ItemStock,
   TitleDose,
   ItemDose,
-  Permission,
   PermissionItem,
 } from '../components';
 import Button from '@mui/joy/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { BiXCircle } from 'react-icons/bi';
-import { Modal, ModalClose, ModalDialog, Radio, RadioGroup } from '@mui/joy';
+import { Modal, ModalClose, ModalDialog } from '@mui/joy';
 import { Medicine, Prescription, Dose } from '../../selling/components';
 import { BsCloudUploadFill, BsPlusCircle, BsX } from 'react-icons/bs';
 
