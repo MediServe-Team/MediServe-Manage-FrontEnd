@@ -13,7 +13,7 @@ import {
 import Button from '@mui/joy/Button';
 import { TbRefresh } from 'react-icons/tb';
 import { BsX, BsSearch, BsXCircleFill } from 'react-icons/bs';
-import { Modal, ModalClose, ModalDialog, Typography } from '@mui/joy';
+import { Modal, ModalClose, ModalDialog } from '@mui/joy';
 
 export default function BillCreate() {
   const [navList, setNavList] = useState([]);
@@ -322,7 +322,7 @@ export default function BillCreate() {
       </div>
 
       <Modal open={preview} onClose={() => setPreview(false)}>
-        <ModalDialog style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
+        <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
           <ModalClose />
           {/* Header */}
           <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
