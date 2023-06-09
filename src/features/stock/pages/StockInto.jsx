@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames';
 import { GroupItem, ItemRow } from '../components';
@@ -7,6 +7,8 @@ import { SearchResultItem } from '../components';
 import { default as Button } from '../../../components/Button';
 import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
 import representImg from '../../../assets/images/medicine.png';
+import { filterItem } from '../stockServices';
+import { useDebounce } from '../../../hooks';
 
 const TYPES = [
   {
@@ -31,6 +33,8 @@ function StockInto() {
   const searchRef = useRef();
   // ref to list itemRow
   const itemRowRef = useRef([]);
+  // value debounce
+  const debounced = useDebounce(searchValue, 500);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -38,12 +42,23 @@ function StockInto() {
     setSelectedIndex(index);
   };
 
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    (async () => {
+      const result = await filterItem(debounced, 3);
+      setSearchResults(result.data);
+    })();
+  }, [debounced]);
+
   const handleSearchValueChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
     if (value !== 0) setVisibleResult(true);
     else setVisibleResult(false);
-    setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
+    // setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
   };
 
   const handleClearSearch = () => {
@@ -89,9 +104,9 @@ function StockInto() {
       searchResults.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.name}
-          type={item.type}
-          packingSpecification="Hộp 4 vĩ, 30 viên"
+          name={item.productName ? item.productName : item.medicineName}
+          // type={item.type}
+          packingSpecification={item.packingSpecification}
           onClick={() => handleAddMerchandise(item)}
         />
       ))
