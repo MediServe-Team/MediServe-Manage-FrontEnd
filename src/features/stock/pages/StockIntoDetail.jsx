@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '../../../components';
 import { GroupItem, ItemRowReadOnly } from '../components';
 import { useParams } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 
 function StockIntoDetail() {
   const [listMedicine, setListMedicine] = useState([]);
@@ -15,6 +16,13 @@ function StockIntoDetail() {
     setListProduct(mockData);
   }, []);
 
+  const handleExportFile = () => {
+    const workBook = XLSX.utils.book_new();
+    const workSheet = XLSX.utils.json_to_sheet(mockData);
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'sheet_01');
+    XLSX.writeFile(workBook, 'detail-stock.xlsx');
+  };
+
   return (
     <div className="h-full flex flex-col bg-white rounded-lg px-10 py-4">
       {/* Header page*/}
@@ -25,7 +33,7 @@ function StockIntoDetail() {
           </h2>
           <p className="text-h6 font-medium text-text_blur">Ghi chú: Danh sách thuốc cần bán hết trong vòng 30 ngày</p>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6">
+        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>
