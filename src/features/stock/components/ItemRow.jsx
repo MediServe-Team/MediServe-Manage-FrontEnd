@@ -9,18 +9,6 @@ import { ItemRowIntoStockSchema } from '../../../validations/ItemRowIntoStock';
 import formatToVND from '../../../helpers/formatToVND';
 
 function ItemRow({ onRemove, ...props }, ref) {
-  // const initialData = {
-  //   id: '',
-  //   quantity: null,
-  //   specification: null,
-  //   importPrice: null,
-  //   sellPrice: null,
-  //   manufactureDate: null,
-  //   expDate: null,
-  //   lotNumber: '',
-  //   isMedicine: null,
-  // };
-
   const {
     register,
     control,
@@ -37,7 +25,12 @@ function ItemRow({ onRemove, ...props }, ref) {
       const passValidate = await trigger();
       if (passValidate) {
         clearErrors();
-        return getValues();
+        const data = getValues();
+        data.id = props.id;
+        data.isMedicine = props.isMedicine;
+        data.totalImportPrice = totalImportPrice;
+        data.totalSellPrice = totalSellPrice;
+        return data;
       }
       return null;
     },
@@ -46,7 +39,10 @@ function ItemRow({ onRemove, ...props }, ref) {
   const quantity = watch('quantity', 0);
   const specificate = watch('specification', 0);
   const importPrice = watch('importPrice', 0);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const sellPrice = watch('sellPrice', 0);
+  const [totalImportPrice, setTotalImportPrice] = useState(0);
+  const [totalSellPrice, setTotalSellPrice] = useState(0);
+
   const [totalQnt, setTotalQnt] = useState(0);
   // calc total quantity
   useEffect(() => {
@@ -58,12 +54,22 @@ function ItemRow({ onRemove, ...props }, ref) {
   }, [quantity, specificate]);
   // cacl total price
   useEffect(() => {
-    if (isNaN(importPrice) || isNaN(totalQnt)) setTotalPrice(formatToVND(0));
-    else {
-      const total = importPrice * totalQnt;
-      setTotalPrice(formatToVND(total));
+    if (!isNaN(totalQnt)) {
+      if (isNaN(importPrice)) setTotalImportPrice(0);
+      else {
+        const totalImport = importPrice * totalQnt;
+        setTotalImportPrice(totalImport);
+      }
+      if (isNaN(sellPrice)) setTotalSellPrice(0);
+      else {
+        const totalSell = sellPrice * totalQnt;
+        setTotalSellPrice(totalSell);
+      }
+    } else {
+      setTotalImportPrice(0);
+      setTotalSellPrice(0);
     }
-  }, [importPrice, totalQnt]);
+  }, [importPrice, sellPrice, totalQnt]);
 
   return (
     <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
@@ -98,7 +104,7 @@ function ItemRow({ onRemove, ...props }, ref) {
             )}
           />
           <span>=</span>
-          <span className="text-h6 whitespace-nowrap text-text_blur">{totalQnt} viên</span>
+          <span className="text-h6 whitespace-nowrap">{totalQnt} viên</span>
         </div>
 
         {/* import price */}
@@ -126,7 +132,7 @@ function ItemRow({ onRemove, ...props }, ref) {
         </div>
 
         {/* total price */}
-        <span className="w-0 flex-[2]">{totalPrice}</span>
+        <span className="w-0 flex-[2]">{formatToVND(totalImportPrice)}</span>
 
         {/* manufacture Date */}
         <div className="w-0 flex-[2]">

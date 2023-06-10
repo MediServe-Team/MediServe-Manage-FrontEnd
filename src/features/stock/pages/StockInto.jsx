@@ -9,6 +9,8 @@ import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
 import representImg from '../../../assets/images/medicine.png';
 import { filterItem } from '../stockServices';
 import { useDebounce } from '../../../hooks';
+import { useSelector } from 'react-redux';
+import { getUserId } from '../../Auth/AuthSlice';
 
 const TYPES = [
   {
@@ -30,6 +32,8 @@ function StockInto() {
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [visibleResult, setVisibleResult] = useState(false);
+  const [note, setNote] = useState('');
+  const userId = useSelector(getUserId);
   const searchRef = useRef();
   // ref to list itemRow
   const itemRowRef = useRef([]);
@@ -58,7 +62,6 @@ function StockInto() {
     setSearchValue(value);
     if (value !== 0) setVisibleResult(true);
     else setVisibleResult(false);
-    // setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
   };
 
   const handleClearSearch = () => {
@@ -71,7 +74,12 @@ function StockInto() {
   const handleAddMerchandise = (item) => {
     setMerchandises([
       ...merchandises,
-      { name: item.productName ? item.productName : item.medicineName, packingSpecification: 'Hộp 4 vĩ, 30 viên' },
+      {
+        name: item.productName ? item.productName : item.medicineName,
+        packingSpecification: 'Hộp 4 vĩ, 30 viên',
+        id: item.id,
+        isMedicine: item.isMedicine,
+      },
     ]);
   };
 
@@ -83,7 +91,7 @@ function StockInto() {
 
   const handleIntoStock = async () => {
     let checkValidate = true;
-    const data = await itemRowRef.current.reduce(async (acc, curr) => {
+    const listItemData = await itemRowRef.current.reduce(async (acc, curr) => {
       if (curr) {
         const result = await curr.getData();
         // an item not valid
@@ -97,7 +105,15 @@ function StockInto() {
       return acc;
     }, []);
     if (checkValidate) {
+      // calc total import price
+      let totalImport = 0;
+      let totalSell = 0;
+      listItemData.map((item) => {
+        totalImport += item.totalImportPrice;
+        totalSell += item.totalSellPrice;
+      });
       // handle call api to post here
+      const data = { note, staffId: userId, totalImport, totalSell, listItemData };
       console.log(data);
     }
   };
@@ -176,7 +192,14 @@ function StockInto() {
       <div className="flex justify-between items-center h-[80px] bg-white rounded-lg px-10">
         <div className="flex flex-col w-[400px] gap-1 pb-1">
           <h5 className="font-medium">Ghi chú</h5>
-          <input type="text" name="" placeholder="Thêm ghi chú" className="border rounded-md p-2 text-h6" />
+          <input
+            type="text"
+            name="note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Thêm ghi chú"
+            className="border rounded-md p-2 text-h6"
+          />
         </div>
 
         {/* Total import price */}
@@ -191,7 +214,7 @@ function StockInto() {
         {/* Total sell price */}
         <div className="flex flex-col gap-1">
           <h5 className="font-medium">Tổng giá bán</h5>
-          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-green-300 text-green-600">
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-lime-200 text-green-600">
             <span className="font-bold">1.200.000 vnđ</span>
             <MdOutlineOutput className="text-[22px]" />
           </div>
