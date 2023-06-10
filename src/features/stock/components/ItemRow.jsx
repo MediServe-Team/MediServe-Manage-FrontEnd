@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useEffect, useState, useImperativeHandle } from 'react';
 import DatePicker from 'react-datepicker';
 import classNames from 'classnames';
 import { useForm, Controller } from 'react-hook-form';
@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CgRemove } from 'react-icons/cg';
 import { ItemRowIntoStockSchema } from '../../../validations/ItemRowIntoStock';
+import formatToVND from '../../../helpers/formatToVND';
 
 function ItemRow({ onRemove, ...props }, ref) {
   // const initialData = {
@@ -26,6 +27,7 @@ function ItemRow({ onRemove, ...props }, ref) {
     trigger,
     clearErrors,
     getValues,
+    watch,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(ItemRowIntoStockSchema) });
 
@@ -40,6 +42,28 @@ function ItemRow({ onRemove, ...props }, ref) {
       return null;
     },
   }));
+
+  const quantity = watch('quantity', 0);
+  const specificate = watch('specification', 0);
+  const importPrice = watch('importPrice', 0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalQnt, setTotalQnt] = useState(0);
+  // calc total quantity
+  useEffect(() => {
+    if (isNaN(quantity) || isNaN(specificate)) setTotalQnt(0);
+    else {
+      const total = quantity * specificate;
+      setTotalQnt(total);
+    }
+  }, [quantity, specificate]);
+  // cacl total price
+  useEffect(() => {
+    if (isNaN(importPrice) || isNaN(totalQnt)) setTotalPrice(formatToVND(0));
+    else {
+      const total = importPrice * totalQnt;
+      setTotalPrice(formatToVND(total));
+    }
+  }, [importPrice, totalQnt]);
 
   return (
     <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
@@ -74,7 +98,7 @@ function ItemRow({ onRemove, ...props }, ref) {
             )}
           />
           <span>=</span>
-          <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
+          <span className="text-h6 whitespace-nowrap text-text_blur">{totalQnt} viên</span>
         </div>
 
         {/* import price */}
@@ -102,7 +126,7 @@ function ItemRow({ onRemove, ...props }, ref) {
         </div>
 
         {/* total price */}
-        <span className="w-0 flex-[2]">240.000</span>
+        <span className="w-0 flex-[2]">{totalPrice}</span>
 
         {/* manufacture Date */}
         <div className="w-0 flex-[2]">

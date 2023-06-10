@@ -69,7 +69,10 @@ function StockInto() {
   };
 
   const handleAddMerchandise = (item) => {
-    setMerchandises([...merchandises, { name: item.name, packingSpecification: 'Hộp 4 vĩ, 30 viên' }]);
+    setMerchandises([
+      ...merchandises,
+      { name: item.productName ? item.productName : item.medicineName, packingSpecification: 'Hộp 4 vĩ, 30 viên' },
+    ]);
   };
 
   const handleRemove = (index) => {
