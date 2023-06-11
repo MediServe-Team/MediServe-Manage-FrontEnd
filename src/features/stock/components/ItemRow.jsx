@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useEffect, useState, useImperativeHandle } from 'react';
 import DatePicker from 'react-datepicker';
 import classNames from 'classnames';
 import { useForm, Controller } from 'react-hook-form';
@@ -6,26 +6,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CgRemove } from 'react-icons/cg';
 import { ItemRowIntoStockSchema } from '../../../validations/ItemRowIntoStock';
+import formatToVND from '../../../helpers/formatToVND';
 
-function ItemRow({ onRemove, ...props }, ref) {
-  // const initialData = {
-  //   id: '',
-  //   quantity: null,
-  //   specification: null,
-  //   importPrice: null,
-  //   sellPrice: null,
-  //   manufactureDate: null,
-  //   expDate: null,
-  //   lotNumber: '',
-  //   isMedicine: null,
-  // };
-
+function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
   const {
     register,
     control,
     trigger,
     clearErrors,
     getValues,
+    watch,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(ItemRowIntoStockSchema) });
 
@@ -35,11 +25,58 @@ function ItemRow({ onRemove, ...props }, ref) {
       const passValidate = await trigger();
       if (passValidate) {
         clearErrors();
-        return getValues();
+        const data = getValues();
+        data.id = props.id;
+        data.isMedicine = props.isMedicine;
+        data.totalImportPrice = totalImportPrice;
+        data.totalSellPrice = totalSellPrice;
+        return data;
       }
       return null;
     },
+    getPrice: () => {
+      return { totalImportPrice, totalSellPrice };
+    },
   }));
+
+  const quantity = watch('inputQuantity', 0);
+  const specificate = watch('specification', 0);
+  const importPrice = watch('importPrice', 0);
+  const sellPrice = watch('sellPrice', 0);
+  const [totalImportPrice, setTotalImportPrice] = useState(0);
+  const [totalSellPrice, setTotalSellPrice] = useState(0);
+
+  const [totalQnt, setTotalQnt] = useState(0);
+  // calc total quantity
+  useEffect(() => {
+    if (isNaN(quantity) || isNaN(specificate)) setTotalQnt(0);
+    else {
+      const total = quantity * specificate;
+      setTotalQnt(total);
+    }
+  }, [quantity, specificate]);
+  // cacl total price
+  useEffect(() => {
+    if (!isNaN(totalQnt)) {
+      if (isNaN(importPrice)) setTotalImportPrice(0);
+      else {
+        const totalImport = importPrice * totalQnt;
+        setTotalImportPrice(totalImport);
+      }
+      if (isNaN(sellPrice)) setTotalSellPrice(0);
+      else {
+        const totalSell = sellPrice * totalQnt;
+        setTotalSellPrice(totalSell);
+      }
+    } else {
+      setTotalImportPrice(0);
+      setTotalSellPrice(0);
+    }
+  }, [importPrice, sellPrice, totalQnt]);
+
+  useEffect(() => {
+    handleChangeField();
+  }, [totalImportPrice, totalSellPrice]);
 
   return (
     <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
@@ -57,10 +94,10 @@ function ItemRow({ onRemove, ...props }, ref) {
         <div className="w-0 flex-[5] flex gap-2 items-center ">
           <input
             type="text"
-            {...register('quantity')}
+            {...register('inputQuantity')}
             className={classNames(
               'min-w-[50px] max-w-[80px] rounded-md border-[1px]  shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
-              errors.quantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+              errors.inputQuantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
           <span className="text-text_blur">x</span>
@@ -74,7 +111,7 @@ function ItemRow({ onRemove, ...props }, ref) {
             )}
           />
           <span>=</span>
-          <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
+          <span className="text-h6 whitespace-nowrap">{totalQnt} viên</span>
         </div>
 
         {/* import price */}
@@ -102,7 +139,7 @@ function ItemRow({ onRemove, ...props }, ref) {
         </div>
 
         {/* total price */}
-        <span className="w-0 flex-[2]">240.000</span>
+        <span className="w-0 flex-[2]">{formatToVND(totalImportPrice)}</span>
 
         {/* manufacture Date */}
         <div className="w-0 flex-[2]">
@@ -133,12 +170,12 @@ function ItemRow({ onRemove, ...props }, ref) {
         <div className="w-0 flex-[2]">
           <Controller
             control={control}
-            name="expDate"
+            name="expirationDate"
             render={({ field }) => (
               <DatePicker
                 className={classNames(
                   'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
-                  errors.expDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+                  errors.expirationDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
                 )}
                 selected={field?.value}
                 onChange={(date) => {

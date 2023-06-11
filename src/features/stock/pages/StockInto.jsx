@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames';
 import { GroupItem, ItemRow } from '../components';
@@ -7,6 +7,12 @@ import { SearchResultItem } from '../components';
 import { default as Button } from '../../../components/Button';
 import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
 import representImg from '../../../assets/images/medicine.png';
+import { filterItemService, createInvoiceService } from '../stockServices';
+import { useDebounce } from '../../../hooks';
+import { useSelector } from 'react-redux';
+import { getUserId } from '../../Auth/AuthSlice';
+import formatToVND from '../../../helpers/formatToVND';
+import { toast } from 'react-toastify';
 
 const TYPES = [
   {
@@ -28,22 +34,39 @@ function StockInto() {
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [visibleResult, setVisibleResult] = useState(false);
+  const [note, setNote] = useState('');
+  const userId = useSelector(getUserId);
   const searchRef = useRef();
   // ref to list itemRow
   const itemRowRef = useRef([]);
+  // value debounce
+  const debounced = useDebounce(searchValue, 500);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  // total price
+  const [totalImportPrice, setTotalImportPrice] = useState(0);
+  const [totalSellPrice, setTotalSellPrice] = useState(0);
 
   const handleSelectType = (index) => {
     setSelectedIndex(index);
   };
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    (async () => {
+      const result = await filterItemService(debounced, 3);
+      setSearchResults(result.data);
+    })();
+  }, [debounced]);
 
   const handleSearchValueChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
     if (value !== 0) setVisibleResult(true);
     else setVisibleResult(false);
-    setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
   };
 
   const handleClearSearch = () => {
@@ -54,7 +77,15 @@ function StockInto() {
   };
 
   const handleAddMerchandise = (item) => {
-    setMerchandises([...merchandises, { name: item.name, packingSpecification: 'Hộp 4 vĩ, 30 viên' }]);
+    setMerchandises([
+      ...merchandises,
+      {
+        name: item.productName ? item.productName : item.medicineName,
+        packingSpecification: 'Hộp 4 vĩ, 30 viên',
+        id: item.id,
+        isMedicine: item.isMedicine,
+      },
+    ]);
   };
 
   const handleRemove = (index) => {
@@ -65,12 +96,16 @@ function StockInto() {
 
   const handleIntoStock = async () => {
     let checkValidate = true;
-    const data = await itemRowRef.current.reduce(async (acc, curr) => {
+    const listItemData = await itemRowRef.current.reduce(async (acc, curr) => {
       if (curr) {
         const result = await curr.getData();
         // an item not valid
         if (!result) {
           checkValidate = false;
+        } else {
+          // delete field not using to create item
+          delete result.totalImportPrice;
+          delete result.totalSellPrice;
         }
         // async fn always return a promise
         acc = await Promise.resolve(acc);
@@ -80,8 +115,46 @@ function StockInto() {
     }, []);
     if (checkValidate) {
       // handle call api to post here
-      console.log(data);
+      const data = {
+        note,
+        staffId: userId,
+        totalImportPrice,
+        totalSellPrice,
+        listItem: listItemData,
+      };
+      const result = await createInvoiceService(data);
+      if (result.status === 200) {
+        toast.success('Sản phẩm và thuốc đã được thêm vào kho!');
+        //* clear data
+        setMerchandises([]);
+        setTotalImportPrice(0);
+        setTotalSellPrice(0);
+        setNote('');
+      } else {
+        toast.error('Hệ thống gặp sự cố khi nhập kho!');
+      }
     }
+  };
+
+  const calculateTotalPrice = async () => {
+    // calc total import price
+    let totalImport = 0;
+    let totalSell = 0;
+    const listItemPrice = await itemRowRef.current.reduce(async (acc, curr) => {
+      if (curr) {
+        const result = await curr.getPrice();
+        // async fn always return a promise
+        acc = await Promise.resolve(acc);
+        acc.push(result);
+      }
+      return acc;
+    }, []);
+    listItemPrice.map((item) => {
+      totalImport += item.totalImportPrice;
+      totalSell += item.totalSellPrice;
+    });
+    setTotalImportPrice(totalImport);
+    setTotalSellPrice(totalSell);
   };
 
   const renderSearchResult = () => {
@@ -89,9 +162,9 @@ function StockInto() {
       searchResults.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.name}
-          type={item.type}
-          packingSpecification="Hộp 4 vĩ, 30 viên"
+          name={item.productName ? item.productName : item.medicineName}
+          // type={item.type}
+          packingSpecification={item.packingSpecification}
           onClick={() => handleAddMerchandise(item)}
         />
       ))
@@ -139,6 +212,7 @@ function StockInto() {
                   {...item}
                   ref={(el) => (itemRowRef.current[index] = el)}
                   onRemove={() => handleRemove(index)}
+                  handleChangeField={() => calculateTotalPrice()}
                   key={index}
                 />
               ))
@@ -158,7 +232,14 @@ function StockInto() {
       <div className="flex justify-between items-center h-[80px] bg-white rounded-lg px-10">
         <div className="flex flex-col w-[400px] gap-1 pb-1">
           <h5 className="font-medium">Ghi chú</h5>
-          <input type="text" name="" placeholder="Thêm ghi chú" className="border rounded-md p-2 text-h6" />
+          <input
+            type="text"
+            name="note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Thêm ghi chú"
+            className="border rounded-md p-2 text-h6"
+          />
         </div>
 
         {/* Total import price */}
@@ -166,15 +247,15 @@ function StockInto() {
           <h5 className="font-medium">Tổng giá nhập</h5>
           <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-red-300 text-red-600">
             <MdOutlineInput className="text-[22px]" />
-            <span className="font-bold">1.200.000 vnđ</span>
+            <span className="font-bold">{formatToVND(totalImportPrice)}</span>
           </div>
         </div>
 
         {/* Total sell price */}
         <div className="flex flex-col gap-1">
           <h5 className="font-medium">Tổng giá bán</h5>
-          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-green-300 text-green-600">
-            <span className="font-bold">1.200.000 vnđ</span>
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-lime-200 text-green-600">
+            <span className="font-bold">{formatToVND(totalSellPrice)}</span>
             <MdOutlineOutput className="text-[22px]" />
           </div>
         </div>
