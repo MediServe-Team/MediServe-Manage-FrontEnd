@@ -8,7 +8,7 @@ import { CgRemove } from 'react-icons/cg';
 import { ItemRowIntoStockSchema } from '../../../validations/ItemRowIntoStock';
 import formatToVND from '../../../helpers/formatToVND';
 
-function ItemRow({ onRemove, ...props }, ref) {
+function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
   const {
     register,
     control,
@@ -34,9 +34,12 @@ function ItemRow({ onRemove, ...props }, ref) {
       }
       return null;
     },
+    getPrice: () => {
+      return { totalImportPrice, totalSellPrice };
+    },
   }));
 
-  const quantity = watch('quantity', 0);
+  const quantity = watch('inputQuantity', 0);
   const specificate = watch('specification', 0);
   const importPrice = watch('importPrice', 0);
   const sellPrice = watch('sellPrice', 0);
@@ -71,6 +74,10 @@ function ItemRow({ onRemove, ...props }, ref) {
     }
   }, [importPrice, sellPrice, totalQnt]);
 
+  useEffect(() => {
+    handleChangeField();
+  }, [totalImportPrice, totalSellPrice]);
+
   return (
     <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
       {/* form data ItemRow */}
@@ -87,10 +94,10 @@ function ItemRow({ onRemove, ...props }, ref) {
         <div className="w-0 flex-[5] flex gap-2 items-center ">
           <input
             type="text"
-            {...register('quantity')}
+            {...register('inputQuantity')}
             className={classNames(
               'min-w-[50px] max-w-[80px] rounded-md border-[1px]  shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
-              errors.quantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+              errors.inputQuantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
           <span className="text-text_blur">x</span>
@@ -163,12 +170,12 @@ function ItemRow({ onRemove, ...props }, ref) {
         <div className="w-0 flex-[2]">
           <Controller
             control={control}
-            name="expDate"
+            name="expirationDate"
             render={({ field }) => (
               <DatePicker
                 className={classNames(
                   'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
-                  errors.expDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
+                  errors.expirationDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
                 )}
                 selected={field?.value}
                 onChange={(date) => {

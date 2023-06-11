@@ -7,11 +7,11 @@ import { SearchResultItem } from '../components';
 import { default as Button } from '../../../components/Button';
 import { MdOutlineInput, MdOutlineOutput } from 'react-icons/md';
 import representImg from '../../../assets/images/medicine.png';
-import { filterItem } from '../stockServices';
+import { filterItemService, createInvoiceService } from '../stockServices';
 import { useDebounce } from '../../../hooks';
 import { useSelector } from 'react-redux';
 import { getUserId } from '../../Auth/AuthSlice';
-
+import formatToVND from '../../../helpers/formatToVND';
 const TYPES = [
   {
     title: 'Thuốc',
@@ -41,6 +41,9 @@ function StockInto() {
   const debounced = useDebounce(searchValue, 500);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  // total price
+  const [totalImportPrice, setTotalImportPrice] = useState(0);
+  const [totalSellPrice, setTotalSellPrice] = useState(0);
 
   const handleSelectType = (index) => {
     setSelectedIndex(index);
@@ -52,7 +55,7 @@ function StockInto() {
       return;
     }
     (async () => {
-      const result = await filterItem(debounced, 3);
+      const result = await filterItemService(debounced, 3);
       setSearchResults(result.data);
     })();
   }, [debounced]);
@@ -97,6 +100,10 @@ function StockInto() {
         // an item not valid
         if (!result) {
           checkValidate = false;
+        } else {
+          // delete field not using to create item
+          delete result.totalImportPrice;
+          delete result.totalSellPrice;
         }
         // async fn always return a promise
         acc = await Promise.resolve(acc);
@@ -105,17 +112,38 @@ function StockInto() {
       return acc;
     }, []);
     if (checkValidate) {
-      // calc total import price
-      let totalImport = 0;
-      let totalSell = 0;
-      listItemData.map((item) => {
-        totalImport += item.totalImportPrice;
-        totalSell += item.totalSellPrice;
-      });
       // handle call api to post here
-      const data = { note, staffId: userId, totalImport, totalSell, listItemData };
-      console.log(data);
+      const data = {
+        note,
+        staffId: userId,
+        totalImportPrice,
+        totalSellPrice,
+        listItem: listItemData,
+      };
+      const result = await createInvoiceService(data);
+      console.log(result);
     }
+  };
+
+  const calculateTotalPrice = async () => {
+    // calc total import price
+    let totalImport = 0;
+    let totalSell = 0;
+    const listItemPrice = await itemRowRef.current.reduce(async (acc, curr) => {
+      if (curr) {
+        const result = await curr.getPrice();
+        // async fn always return a promise
+        acc = await Promise.resolve(acc);
+        acc.push(result);
+      }
+      return acc;
+    }, []);
+    listItemPrice.map((item) => {
+      totalImport += item.totalImportPrice;
+      totalSell += item.totalSellPrice;
+    });
+    setTotalImportPrice(totalImport);
+    setTotalSellPrice(totalSell);
   };
 
   const renderSearchResult = () => {
@@ -173,6 +201,7 @@ function StockInto() {
                   {...item}
                   ref={(el) => (itemRowRef.current[index] = el)}
                   onRemove={() => handleRemove(index)}
+                  handleChangeField={() => calculateTotalPrice()}
                   key={index}
                 />
               ))
@@ -207,7 +236,7 @@ function StockInto() {
           <h5 className="font-medium">Tổng giá nhập</h5>
           <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-red-300 text-red-600">
             <MdOutlineInput className="text-[22px]" />
-            <span className="font-bold">1.200.000 vnđ</span>
+            <span className="font-bold">{formatToVND(totalImportPrice)}</span>
           </div>
         </div>
 
@@ -215,7 +244,7 @@ function StockInto() {
         <div className="flex flex-col gap-1">
           <h5 className="font-medium">Tổng giá bán</h5>
           <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-lime-200 text-green-600">
-            <span className="font-bold">1.200.000 vnđ</span>
+            <span className="font-bold">{formatToVND(totalSellPrice)}</span>
             <MdOutlineOutput className="text-[22px]" />
           </div>
         </div>
