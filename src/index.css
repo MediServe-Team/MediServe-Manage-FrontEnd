@@ -3,5 +3,61 @@
 @tailwind utilities;
 
 * {
-    box-sizing: border-box;
-  }
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  /* background-color: #e6e6e6; */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aae4f9;
+  border-radius: 999px;
+}
+
+.titleInputProfile {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.inputProfile {
+  height: 2.2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.375rem;
+  border: solid 2px #a8a8a8;
+  font-size: 16px;
+  width: 100%;
+}
+
+.inputAccount {
+  height: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.375rem;
+  border: solid 1.5px #a8a8a8;
+  font-size: 13px;
+  width: 100%;
+  border-color: #064861;
+}
+
+.btnProfile {
+  background-color: #1490bf;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f7f9f9;
+  border-radius: 0.375rem;
+  text-align: center;
+}
+
+/* style color for DataPicker */
+
+.react-datepicker__header {
+  background-color: rgba(92, 198, 238, 0.3) !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: rgb(92, 198, 238) !important;
+}
