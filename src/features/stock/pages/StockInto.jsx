@@ -12,6 +12,8 @@ import { useDebounce } from '../../../hooks';
 import { useSelector } from 'react-redux';
 import { getUserId } from '../../Auth/AuthSlice';
 import formatToVND from '../../../helpers/formatToVND';
+import { toast } from 'react-toastify';
+
 const TYPES = [
   {
     title: 'Thuốc',
@@ -121,7 +123,16 @@ function StockInto() {
         listItem: listItemData,
       };
       const result = await createInvoiceService(data);
-      console.log(result);
+      if (result.status === 200) {
+        toast.success('Sản phẩm và thuốc đã được thêm vào kho!');
+        //* clear data
+        setMerchandises([]);
+        setTotalImportPrice(0);
+        setTotalSellPrice(0);
+        setNote('');
+      } else {
+        toast.error('Hệ thống gặp sự cố khi nhập kho!');
+      }
     }
   };
 
