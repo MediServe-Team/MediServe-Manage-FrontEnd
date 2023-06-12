@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react';
 import StaffItem from '../components/StaffItem';
 import CustomerItem from '../components/CustomerItem';
-import CustomSwitch from '../components/CustomSwitch';
 import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
-import { FaShoppingCart } from 'react-icons/fa';
-import { BiDollar } from 'react-icons/bi';
 import { AccountCustomer, AccountStaff } from '../pages';
 
 function ManageAccount() {
-  const [all, setAll] = useState(['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff']);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
   const [listUser, setListUser] = useState(all);
-  const [filter, setFilter] = useState('');
   const [role, setRole] = useState('customer');
   const [filterCustomer, setFilterCustomer] = useState(false);
   const [filterStaff, setFilterStaff] = useState(false);
-
-  let red = '#FF6060',
-    darkBlue = '#064861';
 
   useEffect(() => {
     if ((filterCustomer === true && filterStaff === true) || (filterCustomer === false && filterStaff === false)) {
