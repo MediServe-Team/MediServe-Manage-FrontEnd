@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
 import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Pagination } from '../../../components';
+import Tippy from '@tippyjs/react/headless';
 
 const mockData = [
   {
@@ -119,10 +119,37 @@ const mockData = [
 function HistoryStock() {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
+  const [sort, setSort] = useState('desc');
+  const [sortVisible, setSortVisible] = useState(false);
   const refFromDate = useRef();
   const refToDate = useRef();
   // pagination
   const [pageNumber, setPageNumber] = useState(1);
+
+  const handleChangeOrder = (sort) => {
+    if (sort === 'asc') setSort('asc');
+    if (sort === 'desc') setSort('desc');
+    setSortVisible(false);
+  };
+
+  const renderFilter = () => {
+    return (
+      <ul className="w-[140px] h-full">
+        <li
+          className="px-4 py-1 hover:bg-text_blur/10 text-h5 cursor-pointer whitespace-nowrap"
+          onClick={() => handleChangeOrder('asc')}
+        >
+          Tăng dần
+        </li>
+        <li
+          className="px-4 py-1 hover:bg-text_blur/10 text-h5 cursor-pointer whitespace-nowrap"
+          onClick={() => handleChangeOrder('desc')}
+        >
+          Giảm dần
+        </li>
+      </ul>
+    );
+  };
 
   return (
     <div className="h-full flex flex-col bg-white rounded-lg px-10 py-4">
@@ -131,6 +158,26 @@ function HistoryStock() {
 
         {/* Filter  */}
         <div className="flex gap-10 mr-10">
+          <Tippy
+            visible={sortVisible}
+            interactive={true}
+            placement="bottom-start"
+            onClickOutside={() => setSortVisible(false)}
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs}>
+                <div className="bg-white rounded-md shadow-[0px_2px_13px_-4px_rgba(0,0,0,0.8)]">{renderFilter()}</div>
+              </div>
+            )}
+          >
+            <div
+              onClick={() => setSortVisible(!sortVisible)}
+              className="flex items-center justify-between border-2 w-[140px] h-[30px] border-gray-400 rounded-[4px] px-2 cursor-pointer"
+            >
+              <span className="text-gray-400">{sort === 'asc' ? 'Tăng dần' : 'Giảm dần'}</span>
+              <IoIosArrowDown className="text-gray-400" />
+            </div>
+          </Tippy>
+
           {/* from date */}
           <div
             className="flex items-center justify-between border-2 w-[140px] h-[30px] border-gray-400 rounded-[4px] px-2 cursor-pointer"
