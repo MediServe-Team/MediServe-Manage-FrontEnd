@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Pagination } from '../../../components';
+import { Pagination, EmptyImage } from '../../../components';
 import Tippy from '@tippyjs/react/headless';
 import useStock from '../hooks/useStock';
 
@@ -111,11 +111,10 @@ function HistoryStock() {
       </div>
 
       {/* list bill item */}
-      <div className="flex-1 pt-3 overflow-auto pb-[60px]">
-        <div className="flex flex-col gap-5">
-          {Array.isArray(invoices) &&
-            invoices.length > 0 &&
-            invoices.map((groupItem, index) => {
+      {Array.isArray(invoices) && invoices.length > 0 ? (
+        <div className="flex-1 pt-3 overflow-auto pb-[60px]">
+          <div className="flex flex-col gap-5">
+            {invoices.map((groupItem, index) => {
               return (
                 <GroupByDate date={groupItem.createdAt} key={index}>
                   {Array.isArray(groupItem?.listInvoiceIndate) &&
@@ -136,13 +135,18 @@ function HistoryStock() {
                 </GroupByDate>
               );
             })}
+          </div>
         </div>
-      </div>
+      ) : (
+        <EmptyImage title="Không có đơn nhập kho nào trong khoảng thời gian này!" />
+      )}
 
       <div className="flex justify-center relative">
-        <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
-          <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
-        </div>
+        {pageLength > 0 && (
+          <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
+            <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -9,6 +9,15 @@ const useStock = () => {
   const [pageLength, setPageLength] = useState(0);
   const [invoices, setInvoices] = useState([]);
 
+  useEffect(() => {
+    // set initial fromDate
+    const currentDate = new Date();
+    const initialDate = new Date();
+    // set initial date is 10 day ago
+    initialDate.setDate(currentDate.getDate() - 10);
+    setFromDate(initialDate);
+  }, []);
+
   const filterHistoryInvoice = async () => {
     try {
       const result = await filterHistoryInvoiceService(fromDate, toDate, sort, pageNumber, 10);
@@ -18,7 +27,6 @@ const useStock = () => {
     } catch (err) {
       console.log(err);
     }
-    return {};
   };
 
   useEffect(() => {
