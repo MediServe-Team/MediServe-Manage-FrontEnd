@@ -13,21 +13,8 @@ import { useSelector } from 'react-redux';
 import { getUserId } from '../../Auth/AuthSlice';
 import formatToVND from '../../../helpers/formatToVND';
 import { toast } from 'react-toastify';
-
-const TYPES = [
-  {
-    title: 'Thuốc',
-    type: 'medicine',
-  },
-  {
-    title: 'Vật tư Y tế',
-    type: 'medical_supplies',
-  },
-  {
-    title: 'Thực phẩm chức năng',
-    type: 'functional_foods',
-  },
-];
+// select category from redux store
+import { getlistCategories } from '../../category/categorySlice';
 
 function StockInto() {
   const [merchandises, setMerchandises] = useState([]);
@@ -36,13 +23,14 @@ function StockInto() {
   const [visibleResult, setVisibleResult] = useState(false);
   const [note, setNote] = useState('');
   const userId = useSelector(getUserId);
+  const categories = useSelector(getlistCategories);
   const searchRef = useRef();
   // ref to list itemRow
   const itemRowRef = useRef([]);
   // value debounce
   const debounced = useDebounce(searchValue, 500);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(categories[0]?.id);
   // total price
   const [totalImportPrice, setTotalImportPrice] = useState(0);
   const [totalSellPrice, setTotalSellPrice] = useState(0);
@@ -57,10 +45,10 @@ function StockInto() {
       return;
     }
     (async () => {
-      const result = await filterItemService(debounced, 3);
+      const result = await filterItemService(debounced, selectedIndex);
       setSearchResults(result.data);
     })();
-  }, [debounced]);
+  }, [debounced, selectedIndex]);
 
   const handleSearchValueChange = (e) => {
     const value = e.target.value;
@@ -195,7 +183,7 @@ function StockInto() {
                 value={searchValue}
                 onChange={handleSearchValueChange}
                 onClear={handleClearSearch}
-                types={TYPES}
+                types={categories}
                 typeSelected={selectedIndex}
                 onTypeChange={handleSelectType}
               />
