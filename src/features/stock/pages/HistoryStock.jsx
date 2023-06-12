@@ -1,130 +1,19 @@
+import React, { useState, useEffect, useRef } from 'react';
 import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Pagination } from '../../../components';
 import Tippy from '@tippyjs/react/headless';
-
-const mockData = [
-  {
-    date: '23/23/23',
-    listIntoBill: [
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đã thanh toán đơn',
-      },
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đơn chưa thanh toán',
-      },
-    ],
-  },
-  {
-    date: '23/23/23',
-    listIntoBill: [
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đã thanh toán đơn',
-      },
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đơn chưa thanh toán',
-      },
-    ],
-  },
-
-  {
-    date: '23/23/23',
-    listIntoBill: [
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đã thanh toán đơn',
-      },
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đơn chưa thanh toán',
-      },
-    ],
-  },
-
-  {
-    date: '23/23/23',
-    listIntoBill: [
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đã thanh toán đơn',
-      },
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đơn chưa thanh toán',
-      },
-    ],
-  },
-
-  {
-    date: '23/23/23',
-    listIntoBill: [
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đã thanh toán đơn',
-      },
-      {
-        billID: 'MsFJSD92w',
-        staffID: 'ST0345',
-        staffName: 'Hoàng Anh',
-        totalImport: '1.560.000',
-        totalSell: '2.600.000',
-        note: 'đơn chưa thanh toán',
-      },
-    ],
-  },
-];
+import useStock from '../hooks/useStock';
 
 function HistoryStock() {
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-  const [sort, setSort] = useState('desc');
   const [sortVisible, setSortVisible] = useState(false);
   const refFromDate = useRef();
   const refToDate = useRef();
-  // pagination
-  const [pageNumber, setPageNumber] = useState(1);
+  //* useStock
+  const { invoices, pageLength, sort, fromDate, toDate, pageNumber, setSort, setFromDate, setToDate, setPageNumber } =
+    useStock();
 
   const handleChangeOrder = (sort) => {
     if (sort === 'asc') setSort('asc');
@@ -224,21 +113,35 @@ function HistoryStock() {
       {/* list bill item */}
       <div className="flex-1 pt-3 overflow-auto pb-[60px]">
         <div className="flex flex-col gap-5">
-          {mockData.map((groupItem, index) => {
-            return (
-              <GroupByDate date={groupItem.date} key={index}>
-                {groupItem.listIntoBill.map((item, index) => {
-                  return <BillEntered {...item} key={index} />;
-                })}
-              </GroupByDate>
-            );
-          })}
+          {Array.isArray(invoices) &&
+            invoices.length > 0 &&
+            invoices.map((groupItem, index) => {
+              return (
+                <GroupByDate date={groupItem.createdAt} key={index}>
+                  {Array.isArray(groupItem?.listInvoiceIndate) &&
+                    groupItem?.listInvoiceIndate?.length > 0 &&
+                    groupItem.listInvoiceIndate.map((item, index) => {
+                      return (
+                        <BillEntered
+                          billID={item.id}
+                          staffID={item.staffId}
+                          staffName={item.staff.fullName}
+                          totalImport={item.totalImportPrice}
+                          totalSell={item.totalSellPrice}
+                          note={item.note}
+                          key={index}
+                        />
+                      );
+                    })}
+                </GroupByDate>
+              );
+            })}
         </div>
       </div>
 
       <div className="flex justify-center relative">
         <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
-          <Pagination pageLength={7} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+          <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
         </div>
       </div>
     </div>
