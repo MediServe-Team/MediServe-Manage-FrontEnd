@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 function Category() {
   const listCategory = useSelector(getlistCategories);
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllCategory());
-  }, []);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(getAllCategory());
+  // }, []);
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-xl px-14 py-8 relative">
