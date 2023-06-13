@@ -200,7 +200,7 @@ function SideBar() {
       </header>
 
       {/* Menu sideBar */}
-      <nav className="mt-10 justify-between flex-1 flex flex-col">
+      <nav className="mt-10 justify-between flex-1 flex flex-col overflow-y-auto">
         <ul className={classNames('flex-1 flex flex-col gap-2 select-none')}>{renderMenu()}</ul>
       </nav>
 
