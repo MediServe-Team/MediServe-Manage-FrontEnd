@@ -79,6 +79,8 @@ function StockIntoDetail() {
                   manufactureDate={item.manufactureDate}
                   expirationDate={item.expirationDate}
                   lotNumber={item.lotNumber}
+                  destroyed={item.destroyed}
+                  soldQuantity={item.soldQuantity}
                 />
               ))}
             </>
@@ -99,6 +101,8 @@ function StockIntoDetail() {
                   manufactureDate={item.manufactureDate}
                   expirationDate={item.expirationDate}
                   lotNumber={item.lotNumber}
+                  destroyed={item.destroyed}
+                  soldQuantity={item.soldQuantity}
                 />
               ))}
             </>
