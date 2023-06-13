@@ -54,7 +54,10 @@ function StockIntoDetail() {
           <h2 className="text-text_primary text-h5 font-bold">
             Chi tiết đơn nhập: <span className="text-black">{id}</span>
           </h2>
-          <p className="text-h6 font-medium text-text_blur">{invoice.note}</p>
+          <p className="text-h6 font-medium text-text_blur">
+            {' '}
+            <span className="text-text_primary">Ghi chú:</span> {invoice.note}
+          </p>
         </div>
         <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file

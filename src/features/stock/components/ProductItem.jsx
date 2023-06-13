@@ -103,7 +103,7 @@ function ProductItem() {
       </div>
       {/* View detail */}
       <div
-        className="w-full flex justify-center items-center h-[40px]  rounded-md shadow-[0px_6px_7px_-1px_rgba(0,0,0,0.45)] cursor-default hover:shadow-none hover:opacity-50 hover:border-[1px] border-text_primary transition-all"
+        className="w-full flex justify-center items-center h-[40px]  rounded-md shadow-[0px_2px_7px_-1px_rgba(0,0,0,0.45)] cursor-default hover:shadow-none hover:opacity-50 hover:border-[1px] border-text_primary transition-all"
         onMouseOver={() => {
           setY(0);
           setOpacity(1);
