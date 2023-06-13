@@ -3,8 +3,20 @@ import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { CgRemove } from 'react-icons/cg';
 import { BsCheckLg } from 'react-icons/bs';
+import dateToString from '../../../helpers/dateToString';
+import formatToVND from '../../../helpers/formatToVND';
 
-function ItemRowReadOnly({ ...props }) {
+function ItemRowReadOnly({
+  name,
+  packingSpecification,
+  inputQuantity,
+  specification,
+  importPrice,
+  sellPrice,
+  manufactureDate,
+  expirationDate,
+  lotNumber,
+}) {
   return (
     <div className="flex flex-col bg-slate-50 px-5 py-2 border-2 rounded-lg ">
       <div className="flex justify-between items-center gap-2 ">
@@ -12,58 +24,60 @@ function ItemRowReadOnly({ ...props }) {
         <div className="flex flex-1 justify-between items-center gap-2">
           {/* name & package*/}
           <div className="flex-[4] w-0 flex flex-col">
-            <h3 className="font-medium text-ellipsis overflow-hidden">{props.name}</h3>
-            <p className="text-text_blur">{props.packingSpecification}</p>
+            <h3 className="font-medium text-ellipsis overflow-hidden">{name}</h3>
+            <p className="text-text_blur">{packingSpecification}</p>
           </div>
 
           {/* quantity & specifications*/}
           <div className="w-0 flex-[5] flex gap-2 items-center ">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+              {inputQuantity}
             </span>
             <span className="text-text_blur">x</span>
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+              {specification}
             </span>
             <span>=</span>
-            <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
+            <span className="text-h6 whitespace-nowrap text-text_blur">{inputQuantity * specification} (viên)</span>
           </div>
 
           {/* import price */}
           <div className="w-0 flex-[2] flex">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+              {importPrice}
             </span>
           </div>
 
           {/* sell price */}
           <div className="w-0 flex-[2] flex">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+              {sellPrice}
             </span>
           </div>
 
           {/* total price */}
-          <span className="w-0 flex-[2] font-medium text-secondary">240.000 vnđ</span>
+          <span className="w-0 flex-[2] font-medium text-secondary">
+            {formatToVND(inputQuantity * specification * importPrice)}
+          </span>
 
           {/* manufacture Date */}
           <div className="w-0 flex-[2] flex">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              33/33/33
+              {dateToString(manufactureDate)}
             </span>
           </div>
 
           {/* exp Date */}
           <div className="w-0 flex-[2] flex">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3/22/22
+              {dateToString(expirationDate)}
             </span>
           </div>
 
           {/* Lot number */}
           <div className="w-0 flex-[2] flex">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              jabdhbva
+              {lotNumber}
             </span>
           </div>
         </div>

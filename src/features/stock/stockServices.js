@@ -18,3 +18,8 @@ export const filterHistoryInvoiceService = async (fromDate, toDate, sort, pageNu
   );
   return response.data;
 };
+
+export const getDetailInvoiceServices = async (invoiceId) => {
+  const response = await axiosBase.get(`/invoice-into-stocks/${invoiceId}`);
+  return response.data;
+};

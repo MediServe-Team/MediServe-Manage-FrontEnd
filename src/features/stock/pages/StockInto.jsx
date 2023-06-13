@@ -69,7 +69,7 @@ function StockInto() {
       ...merchandises,
       {
         name: item.productName ? item.productName : item.medicineName,
-        packingSpecification: 'Hộp 4 vĩ, 30 viên',
+        packingSpecification: item.packingSpecification,
         id: item.id,
         isMedicine: item.isMedicine,
       },
