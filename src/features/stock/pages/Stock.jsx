@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SubNavigate } from '../components';
+import { SearchOnChange } from '../../../components';
 
 function Stock() {
   const [navList, setNavList] = useState([]);
+  // Search
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchValueChange = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
     const navs = [
@@ -42,7 +49,12 @@ function Stock() {
         {/* navigate on page */}
         <SubNavigate navs={navList} />
         {/* Search */}
-        <div className=" w-[200px] h-[30px] bg-gray-100"></div>
+        <SearchOnChange
+          value={searchValue}
+          onChange={handleSearchValueChange}
+          onClear={() => setSearchValue('')}
+          className={'w-[400px]'}
+        />
       </div>
       {/* Main page */}
       <Outlet />

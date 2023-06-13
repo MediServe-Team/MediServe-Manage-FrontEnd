@@ -3,9 +3,10 @@ import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Pagination, EmptyImage } from '../../../components';
+import { Pagination, EmptyImage, Button } from '../../../components';
 import Tippy from '@tippyjs/react/headless';
 import useStock from '../hooks/useStock';
+import * as XLSX from 'xlsx';
 
 function HistoryStock() {
   const [sortVisible, setSortVisible] = useState(false);
@@ -14,6 +15,18 @@ function HistoryStock() {
   //* useStock
   const { invoices, pageLength, sort, fromDate, toDate, pageNumber, setSort, setFromDate, setToDate, setPageNumber } =
     useStock();
+
+  const handleExportFile = () => {
+    const length = invoices.length;
+    const workBook = XLSX.utils.book_new();
+    if (invoices && length > 0) {
+      for (let i = 0; i < length; i++) {
+        const workSheet = XLSX.utils.json_to_sheet(invoices[i].listInvoiceIndate);
+        XLSX.utils.book_append_sheet(workBook, workSheet, invoices[i].createdAt.toString());
+      }
+      XLSX.writeFile(workBook, 'invoices-into-stocks.xlsx');
+    }
+  };
 
   const handleChangeOrder = (sort) => {
     if (sort === 'asc') setSort('asc');
@@ -108,6 +121,9 @@ function HistoryStock() {
             <IoIosArrowDown className="text-gray-400" />
           </div>
         </div>
+        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+          Xuất file
+        </Button>
       </div>
 
       {/* list bill item */}

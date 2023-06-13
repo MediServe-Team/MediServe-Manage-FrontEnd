@@ -1,10 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import classNames from 'classnames';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { CgRemove } from 'react-icons/cg';
-import { BsCheckLg } from 'react-icons/bs';
+import { BsCheckLg, BsFillExclamationCircleFill } from 'react-icons/bs';
+import dateToString from '../../../helpers/dateToString';
+import formatToVND from '../../../helpers/formatToVND';
 
-function ItemRowReadOnly({ ...props }) {
+function ItemRowReadOnly({
+  name,
+  packingSpecification,
+  inputQuantity,
+  specification,
+  importPrice,
+  sellPrice,
+  manufactureDate,
+  expirationDate,
+  lotNumber,
+  destroyed,
+  soldQuantity,
+}) {
+  const renderTextStatus = () => {
+    const quantity = inputQuantity * specification;
+    if (destroyed) {
+      const destroyQnt = quantity - soldQuantity;
+      return <span className="text-danger">Đã tiêu hủy {destroyQnt} viên</span>;
+    } else if (quantity === soldQuantity) {
+      return <span className="text-green">Đã bán hết</span>;
+    } else if (quantity > soldQuantity) {
+      const restQnt = quantity - soldQuantity;
+      return <span className="text-yellow-500">Còn lại {restQnt} viên</span>;
+    }
+  };
+
+  const renderIconStatus = () => {
+    const quantity = inputQuantity * specification;
+    if (destroyed) {
+      return (
+        <div className="shadow-md w-[16px] h-[16px] rounded-full flex justify-center items-center">
+          <BsFillExclamationCircleFill className="text-[16px] text-danger font-bold" />
+        </div>
+      );
+    } else if (quantity === soldQuantity) {
+      return (
+        <div className="shadow-md w-[16px] h-[16px] rounded-full bg-green flex justify-center items-center">
+          <BsCheckLg className="text-[10px] text-white font-bold" />
+        </div>
+      );
+    } else if (quantity > soldQuantity) {
+      return (
+        <div className="shadow-md w-[16px] h-[16px] rounded-full bg-yellow-500 flex justify-center items-center">
+          <BsCheckLg className="text-[10px] text-white font-bold" />
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col bg-slate-50 px-5 py-2 border-2 rounded-lg ">
       <div className="flex justify-between items-center gap-2 ">
@@ -12,70 +62,66 @@ function ItemRowReadOnly({ ...props }) {
         <div className="flex flex-1 justify-between items-center gap-2">
           {/* name & package*/}
           <div className="flex-[4] w-0 flex flex-col">
-            <h3 className="font-medium text-ellipsis overflow-hidden">{props.name}</h3>
-            <p className="text-text_blur">{props.packingSpecification}</p>
+            <h3 className="font-medium text-ellipsis overflow-hidden">{name}</h3>
+            <p className="text-text_blur">{packingSpecification}</p>
           </div>
 
           {/* quantity & specifications*/}
           <div className="w-0 flex-[5] flex gap-2 items-center ">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {inputQuantity}
             </span>
             <span className="text-text_blur">x</span>
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {specification}
             </span>
             <span>=</span>
-            <span className="text-h6 whitespace-nowrap text-text_blur">160 (viên)</span>
+            <span className="text-h6 whitespace-nowrap">{inputQuantity * specification} (viên)</span>
           </div>
 
           {/* import price */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {importPrice}
             </span>
           </div>
 
           {/* sell price */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {sellPrice}
             </span>
           </div>
 
           {/* total price */}
-          <span className="w-0 flex-[2] font-medium text-secondary">240.000 vnđ</span>
+          <span className="w-0 flex-[2]">{formatToVND(inputQuantity * specification * importPrice)}</span>
 
           {/* manufacture Date */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              33/33/33
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {dateToString(manufactureDate)}
             </span>
           </div>
 
           {/* exp Date */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              3/22/22
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {dateToString(expirationDate)}
             </span>
           </div>
 
           {/* Lot number */}
           <div className="w-0 flex-[2] flex">
-            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-medium py-[3px] text-h6 text-center outline-none bg-white">
-              jabdhbva
+            <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
+              {lotNumber}
             </span>
           </div>
         </div>
 
         {/* Status */}
-        <div className="shadow-md w-[16px] h-[16px] rounded-full bg-green flex justify-center items-center">
-          <BsCheckLg className="text-[10px] text-white font-bold" />
-        </div>
+        {renderIconStatus()}
       </div>
-      <div className="flex justify-end">
-        <span className="text-green">Đã bán hết</span>
-      </div>
+      <div className="flex justify-end">{renderTextStatus()}</div>
     </div>
   );
 }
