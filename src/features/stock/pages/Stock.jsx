@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SubNavigate } from '../components';
 import { SearchOnChange } from '../../../components';
+import { useDispatch } from 'react-redux';
+import { getInventoryStock } from '../stockSlice';
 
 function Stock() {
   const [navList, setNavList] = useState([]);
   // Search
   const [searchValue, setSearchValue] = useState('');
+  // dispatch
+  const dispatch = useDispatch();
 
   const handleSearchValueChange = (e) => {
     setSearchValue(e.target.value);
@@ -41,6 +45,8 @@ function Stock() {
     ];
 
     setNavList(navs);
+    //* fetch data inventory stock
+    dispatch(getInventoryStock({}));
   }, []);
 
   return (
