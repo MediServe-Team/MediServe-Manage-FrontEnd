@@ -47,5 +47,10 @@ export const getAllMerchandise = (state) => state.stock?.allMerchandise;
 export const getPreSoldOutMerchandise = (state) => state.stock?.preSoldOutMerchandise;
 export const getPreExpMerchandise = (state) => state.stock?.preExpMerchandise;
 export const getExpMerchandise = (state) => state.stock?.expMerchandise;
+// get length
+export const getLengthAll = (state) => state.stock?.allMerchandise.length;
+export const getLengthPreSoldOut = (state) => state.stock?.preSoldOutMerchandise.length;
+export const getLengthPreExp = (state) => state.stock?.preExpMerchandise.length;
+export const getLengthExp = (state) => state.stock?.expMerchandise.length;
 
 export default StockSlice.reducer;
