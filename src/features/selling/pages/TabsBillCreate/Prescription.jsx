@@ -1,5 +1,6 @@
 import { MedicineItem } from '../../../dose/components';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
+import Button from '@mui/joy/Button';
 import { useState } from 'react';
 import { BsXCircleFill } from 'react-icons/bs';
 
@@ -21,19 +22,27 @@ function Prescription() {
   return (
     <div className="h-full flex flex-col w-full gap-4">
       {/* Search */}
-      <div className="flex justify-center pt-5 relative gap-1">
-        <input
-          className="bg-text_blur/10 w-[70%] pl-4 pr-10 rounded-lg py-2"
-          placeholder="Tên thuốc"
-          value={searchDose}
-          onChange={handleSearchDose}
-        />
-        <button onClick={handleClearSearchDose}>
-          <BsXCircleFill className="text-text_blur text-h4 absolute right-[26%] top-[50%]" />
-        </button>
+      <div className="flex justify-center pt-5 gap-4">
+        <div className="relative flex justify-center w-[64%]">
+          <input
+            className="bg-text_blur/10 w-full pl-4 pr-10 rounded-lg py-2 border-2"
+            placeholder="Tên thuốc"
+            value={searchDose}
+            onChange={handleSearchDose}
+          />
+          <button onClick={handleClearSearchDose}>
+            <BsXCircleFill className="text-text_blur text-h4 absolute right-[4%] top-[25%]" />
+          </button>
+        </div>
         <Button
-          variant="contained"
-          style={{ backgroundColor: darkBlue, paddingInline: '1rem', fontSize: '13px', borderRadius: '0.5rem' }}
+          className="hover:opacity-90 active:opacity-100 w-[20%]"
+          variant="solid"
+          style={{
+            backgroundColor: '#38B3E1',
+            paddingInline: '1rem',
+            borderRadius: '0.5rem',
+            fontSize: '16px',
+          }}
         >
           Thêm
         </Button>
@@ -56,10 +65,13 @@ function Prescription() {
       </div>
 
       <div className="flex justify-center items-center gap-3 mb-2">
-        <Button variant="outlined" style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem' }}>
+        <Button
+          variant="outlined"
+          style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem', fontSize: '16px' }}
+        >
           Hủy
         </Button>
-        <Button variant="contained" style={{ backgroundColor: darkBlue, paddingInline: '2rem' }}>
+        <Button variant="solid" style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '16px' }}>
           Thêm vào hóa đơn
         </Button>
       </div>
