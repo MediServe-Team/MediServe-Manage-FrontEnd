@@ -1,11 +1,59 @@
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { MedicineItem } from '../../components';
 import { Pagination } from '../../../../components';
 
+const overlay = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      duration: 1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      type: 'spring',
+      duration: 1,
+    },
+  },
+};
+
+const modal = {
+  hidden: {
+    x: 600,
+  },
+  visible: {
+    x: 0,
+    transition: {
+      type: 'spring',
+      duration: 0.7,
+    },
+  },
+  exit: {
+    x: 600,
+    transition: {
+      duration: 0.7,
+    },
+  },
+};
+
 function MedicineAll() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const overlayRef = useRef(null);
+
+  const handleClickOutSide = (event) => {
+    if (event.target === overlayRef.current) {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-white rounded-lg px-5 py-3 min-h-0 relative overflow-hidden">
       <div className="flex-1 grid grid-cols-4 gap-x-4 gap-y-10 pb-[60px] overflow-y-auto">
@@ -26,18 +74,19 @@ function MedicineAll() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 100, duration: 0.5 }}
+            key="overlay"
+            variants={overlay}
+            initial={'hidden'}
+            animate={'visible'}
+            exit={'exit'}
             className="absolute w-full h-full top-0 left-0 bg-black/20 "
+            onClick={handleClickOutSide}
+            ref={overlayRef}
           >
             {/* modal section */}
             <motion.div
-              initial={{ x: 600 }}
-              animate={{ x: 0 }}
-              exit={{ x: 600 }}
-              transition={{ duration: 0.5 }}
+              key="modal"
+              variants={modal}
               className="bg-white h-full w-2/3 absolute right-0 rounded-lg min-h-0"
             >
               <div className="h-2/5 relative flex justify-center">

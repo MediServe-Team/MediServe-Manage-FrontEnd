@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
-import { SubNavigate } from '../../../components';
+import { SearchOnChange, SubNavigate } from '../../../components';
 import { Outlet } from 'react-router-dom';
 
 function Medicine() {
   const [navList, setNavList] = useState([]);
+  // Search
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchValueChange = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
     const navs = [
@@ -34,7 +40,12 @@ function Medicine() {
         {/* navigate on page */}
         <SubNavigate navs={navList} />
         {/* Search */}
-        <div className=" w-[200px] h-[30px] bg-gray-100"></div>
+        <SearchOnChange
+          value={searchValue}
+          onChange={handleSearchValueChange}
+          onClear={() => setSearchValue('')}
+          className={'w-[400px]'}
+        />
       </div>
       {/* Main page */}
       <Outlet />
