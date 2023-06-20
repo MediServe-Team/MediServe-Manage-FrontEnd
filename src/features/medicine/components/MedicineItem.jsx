@@ -2,25 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 
-function MedicineItem({
-  id,
-  medicineName,
-  registrationNumber,
-  dosageForm,
-  productContent,
-  chemicalName,
-  chemicalCode,
-  packingSpecification,
-  barCode,
-  sellUnitsellUnit,
-  inputUnit,
-  applyToAffectedAreaCode,
-  applyToAffectedArea,
-  medicineFunction,
-  medicineImage,
-  note,
-  onclick,
-}) {
+function MedicineItem({ id, medicineName, registrationNumber, medicineImage, packingSpecification, barCode, onclick }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="relative overflow-hidden">
@@ -37,26 +19,20 @@ function MedicineItem({
         </div>
         <div className="flex flex-col">
           <p className="text-text_primary">
-            Mã sản phẩm: <span className="font-medium text-black">{id}</span>
+            Mã số thuốc: <span className="font-medium text-black">{id}</span>
           </p>
-          {/* Quantiry */}
-          <div className="flex gap-2">
-            <p className="text-text_primary">
-              Đã bán: <span className="font-medium text-secondary">nonono</span>
-            </p>
-            <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">nonono</span>
-            </p>
+          {/* Barcode */}
+          <div className="">
+            <img
+              src="https://chiaki.vn/upload/news/content/2020/11/ma-vach-jpg-1604390780-03112020150620.jpg"
+              alt=""
+              className="h-[80px]"
+            />
           </div>
-          {/* Date */}
-          <div className="flex gap-2">
-            <p className="text-text_primary">
-              NSX: <span className="text-black text-h6">nono</span>
-            </p>
-            <p className="text-text_primary">
-              HSD: <span className="text-black text-h6">nono</span>
-            </p>
-          </div>
+          {/* registrationNumber */}
+          <p className="text-text_primary">
+            Số đăng ký: <span className="font-medium text-secondary">{registrationNumber}</span>
+          </p>
         </div>
       </div>
       {/* Button View detail */}

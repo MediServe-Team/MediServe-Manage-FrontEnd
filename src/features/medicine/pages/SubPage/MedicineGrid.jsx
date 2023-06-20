@@ -49,6 +49,7 @@ function MedicineGrid({ searchValue }) {
   const [medicines, setMedicines] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageLength, setPageLength] = useState(0);
+  const [selected, setSelected] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
   const overlayRef = useRef(null);
   const { categoryId } = useParams();
@@ -61,6 +62,11 @@ function MedicineGrid({ searchValue }) {
     };
     getMedicines();
   }, [categoryId, searchValue, pageNumber]);
+
+  const handleSelectMedicineItem = (index) => {
+    setSelected(index);
+    setIsOpen(true);
+  };
 
   const handleClickOutSide = (event) => {
     if (event.target === overlayRef.current) {
@@ -77,29 +83,20 @@ function MedicineGrid({ searchValue }) {
               id={medicine.id}
               medicineName={medicine.medicineName}
               registrationNumber={medicine.registrationNumber}
-              dosageForm={medicine.dosageForm}
-              productContent={medicine.productContent}
-              chemicalName={medicine.chemicalName}
-              chemicalCode={medicine.chemicalCode}
               packingSpecification={medicine.packingSpecification}
               barCode={medicine.barCode}
-              sellUnitsellUnit={medicine.sellUnitsellUnit}
-              inputUnit={medicine.inputUnit}
-              applyToAffectedAreaCode={medicine.applyToAffectedAreaCode}
-              applyToAffectedArea={medicine.applyToAffectedArea}
-              medicineFunction={medicine.medicineFunction}
-              medicineImage={medicine.medicineImage}
-              note={medicine.note}
               key={index}
-              onclick={() => setIsOpen(!isOpen)}
+              onclick={() => handleSelectMedicineItem(index)}
             />
           ))}
       </div>
       {/* Pagination */}
       <div className="flex justify-center items-center relative">
-        <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
-          <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
-        </div>
+        {pageLength > 0 && (
+          <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
+            <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+          </div>
+        )}
       </div>
       {/* Overlay */}
       <AnimatePresence>
@@ -134,42 +131,48 @@ function MedicineGrid({ searchValue }) {
               <div className="px-5 py-3 flex flex-col gap-5 flex-1 min-h-0">
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <h3 className="text-h4 text-black font-bold">Levothyroxine (Viên)</h3>
-                    <p className="text-h5 text-text_blur">hộp 4 vĩ x 20 viên</p>
+                    <h3 className="text-h4 text-black font-bold">{medicines[selected].medicineName}</h3>
+                    <p className="text-h5 text-text_blur">{medicines[selected].packingSpecification}</p>
                     <p className="text-text_primary">
-                      Mã thuốc: <span className="font-medium text-black">MsWD36</span>
+                      Mã thuốc: <span className="font-medium text-black">{medicines[selected].id}</span>
                     </p>
                   </div>
                   {/* mã vạch */}
-                  {/* <img src="" alt="" /> */}
-                  <div className="w-[120px] h-[50px] bg-black"></div>
+                  <img
+                    src="https://chiaki.vn/upload/news/content/2020/11/ma-vach-jpg-1604390780-03112020150620.jpg"
+                    alt=""
+                    className="h-[80px]"
+                  />
                 </div>
                 {/* grid */}
                 <div className="flex-1 overflow-y-auto min-h-0">
                   <div className="grid grid-cols-3 grid-rows-3 gap-1">
                     <p className="text-text_primary">
-                      Số đăng ký: <span className="font-medium text-black">MsWD36</span>
+                      Số đăng ký:{' '}
+                      <span className="font-medium text-black">{medicines[selected].registrationNumber}</span>
                     </p>
                     <p className="text-text_primary">
-                      Mã hoạt chất: <span className="font-medium text-black">MsWD36</span>
+                      Mã hoạt chất: <span className="font-medium text-black">{medicines[selected].chemicalCode}</span>
                     </p>
                     <p className="text-text_primary">
-                      Mã đường dùng: <span className="font-medium text-black">MsWD36</span>
+                      Mã đường dùng:{' '}
+                      <span className="font-medium text-black">{medicines[selected].applyToAffectedAreaCode}</span>
                     </p>
                     <p className="text-text_primary">
-                      Dạng bào chế: <span className="font-medium text-black">MsWD36</span>
+                      Dạng bào chế: <span className="font-medium text-black">{medicines[selected].dosageForm}</span>
                     </p>
                     <p className="text-text_primary">
-                      Tên hoạt chất: <span className="font-medium text-black">MsWD36</span>
+                      Tên hoạt chất: <span className="font-medium text-black">{medicines[selected].chemicalName}</span>
                     </p>
                     <p className="text-text_primary">
-                      Tên đường dùng: <span className="font-medium text-black">MsWD36</span>
+                      Tên đường dùng:{' '}
+                      <span className="font-medium text-black">{medicines[selected].applyToAffectedArea}</span>
                     </p>
                     <p className="text-text_primary">
-                      Hàm lượng: <span className="font-medium text-black">MsWD36</span>
+                      Hàm lượng: <span className="font-medium text-black">{medicines[selected].productContent}</span>
                     </p>
                     <p className="text-text_primary">
-                      Dạng bào chế: <span className="font-medium text-black">MsWD36</span>
+                      Dạng bào chế: <span className="font-medium text-black">xxx</span>
                     </p>
                   </div>
 
