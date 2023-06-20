@@ -2,7 +2,25 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
 
-function MedicineItem({ onclick }) {
+function MedicineItem({
+  id,
+  medicineName,
+  registrationNumber,
+  dosageForm,
+  productContent,
+  chemicalName,
+  chemicalCode,
+  packingSpecification,
+  barCode,
+  sellUnitsellUnit,
+  inputUnit,
+  applyToAffectedAreaCode,
+  applyToAffectedArea,
+  medicineFunction,
+  medicineImage,
+  note,
+  onclick,
+}) {
   return (
     <div className="flex flex-col gap-2">
       <div className="relative overflow-hidden">
@@ -14,29 +32,29 @@ function MedicineItem({ onclick }) {
           />
         </div>
         <div className="flex flex-col">
-          <h3 className="text-h5 text-black font-medium">Levothyroxine (Viên)</h3>
-          <p className="text-h5 text-text_blur">hộp 4 vĩ x 20 viên</p>
+          <h3 className="text-h5 text-black font-medium">{medicineName}</h3>
+          <p className="text-h5 text-text_blur">{packingSpecification}</p>
         </div>
         <div className="flex flex-col">
           <p className="text-text_primary">
-            Mã sản phẩm: <span className="font-medium text-black">MsWD36</span>
+            Mã sản phẩm: <span className="font-medium text-black">{id}</span>
           </p>
           {/* Quantiry */}
           <div className="flex gap-2">
             <p className="text-text_primary">
-              Đã bán: <span className="font-medium text-secondary">306</span>
+              Đã bán: <span className="font-medium text-secondary">nonono</span>
             </p>
             <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">480</span>
+              Còn lại: <span className="font-medium text-primary">nonono</span>
             </p>
           </div>
           {/* Date */}
           <div className="flex gap-2">
             <p className="text-text_primary">
-              NSX: <span className="text-black text-h6">12/03/2022</span>
+              NSX: <span className="text-black text-h6">nono</span>
             </p>
             <p className="text-text_primary">
-              HSD: <span className="text-black text-h6">24/06/2023</span>
+              HSD: <span className="text-black text-h6">nono</span>
             </p>
           </div>
         </div>

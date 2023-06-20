@@ -9,7 +9,7 @@ const routes = {
   historyStockManage: '/stock/history',
   stockIntoDetail: '/stock/invoice/:id',
 
-  medicineManage: '/medicines',
+  medicineManage: '/medicines/:categoryId',
   medicineManageWithFistSubPage: '/medicines/all',
   medicineCreate: '/medicines/add',
 

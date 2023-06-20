@@ -1,8 +1,10 @@
-import { useRef } from 'react';
+import { useRef, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { MedicineItem } from '../../components';
 import { Pagination } from '../../../../components';
+import { useParams } from 'react-router-dom';
+import { getMedicinesService } from '../../medicineServices';
 
 const overlay = {
   hidden: {
@@ -43,10 +45,22 @@ const modal = {
   },
 };
 
-function MedicineAll() {
+function MedicineGrid({ searchValue }) {
+  const [medicines, setMedicines] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageLength, setPageLength] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const overlayRef = useRef(null);
+  const { categoryId } = useParams();
+
+  useEffect(() => {
+    const getMedicines = async () => {
+      const result = await getMedicinesService(categoryId, searchValue, pageNumber, 2);
+      setPageLength(result.data.totalPage);
+      setMedicines(result.data.medicines);
+    };
+    getMedicines();
+  }, [categoryId, searchValue, pageNumber]);
 
   const handleClickOutSide = (event) => {
     if (event.target === overlayRef.current) {
@@ -57,17 +71,34 @@ function MedicineAll() {
   return (
     <div className="flex-1 flex flex-col bg-white rounded-lg px-5 py-3 min-h-0 relative overflow-hidden">
       <div className="flex-1 grid grid-cols-4 gap-x-4 gap-y-10 pb-[60px] overflow-y-auto">
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
-        <MedicineItem onclick={() => setIsOpen(!isOpen)} />
+        {medicines.length > 0 &&
+          medicines.map((medicine, index) => (
+            <MedicineItem
+              id={medicine.id}
+              medicineName={medicine.medicineName}
+              registrationNumber={medicine.registrationNumber}
+              dosageForm={medicine.dosageForm}
+              productContent={medicine.productContent}
+              chemicalName={medicine.chemicalName}
+              chemicalCode={medicine.chemicalCode}
+              packingSpecification={medicine.packingSpecification}
+              barCode={medicine.barCode}
+              sellUnitsellUnit={medicine.sellUnitsellUnit}
+              inputUnit={medicine.inputUnit}
+              applyToAffectedAreaCode={medicine.applyToAffectedAreaCode}
+              applyToAffectedArea={medicine.applyToAffectedArea}
+              medicineFunction={medicine.medicineFunction}
+              medicineImage={medicine.medicineImage}
+              note={medicine.note}
+              key={index}
+              onclick={() => setIsOpen(!isOpen)}
+            />
+          ))}
       </div>
       {/* Pagination */}
       <div className="flex justify-center items-center relative">
         <div className="absolute -top-[50px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
-          <Pagination pageLength={7} pageNumber={pageNumber} setPageNumber={setPageNumber} />
+          <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
         </div>
       </div>
       {/* Overlay */}
@@ -160,4 +191,4 @@ function MedicineAll() {
   );
 }
 
-export default MedicineAll;
+export default memo(MedicineGrid);

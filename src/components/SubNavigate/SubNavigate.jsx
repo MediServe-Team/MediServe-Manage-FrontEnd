@@ -59,7 +59,7 @@ function SubNavigate({ navs }) {
                 to={item.path}
                 className={({ isActive, isPending }) => styleNavItem(isActive, color)}
               >
-                <span>{item.name}</span>
+                <span className="whitespace-nowrap">{item.name}</span>
                 {!isNaN(item.quantity) && (
                   <div
                     className={classNames(
