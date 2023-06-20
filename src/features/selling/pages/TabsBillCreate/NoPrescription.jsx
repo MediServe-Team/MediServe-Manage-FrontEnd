@@ -1,96 +1,31 @@
-import { SearchToAdd } from '../../../../components/SearchToAdd';
-import { SearchResultItem } from '../../../stock/components';
-import Tippy from '@tippyjs/react/headless';
-import classNames from 'classnames';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { BsXCircleFill } from 'react-icons/bs';
+import Button from '@mui/joy/Button';
 
 function NoPrescription() {
-  const [merchandises, setMerchandises] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [visibleResult, setVisibleResult] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const searchRef = useRef();
-
-  const TYPES = [
-    {
-      title: 'Thuốc',
-      type: 'medicine',
-    },
-    {
-      title: 'Vật tư Y tế',
-      type: 'medical_supplies',
-    },
-    {
-      title: 'TPCN',
-      type: 'functional_foods',
-    },
-  ];
-
-  const renderSearchResult = () => {
-    return Array.isArray(searchResults) && searchResults.length > 0 ? (
-      searchResults.map((item, index) => (
-        <SearchResultItem
-          key={index}
-          name={item.name}
-          type={item.type}
-          packingSpecification="Hộp 4 vĩ, 30 viên"
-          onClick={() => handleAddMerchandise(item)}
-        />
-      ))
-    ) : (
-      <div className="px-4 py-1 text-text_blur">Không có kết quả tìm kiếm phù hợp!</div>
-    );
-  };
-
-  const handleAddMerchandise = (item) => {
-    setMerchandises([...merchandises, { name: item.name, packingSpecification: 'Hộp 4 vĩ, 30 viên' }]);
-  };
-
-  const handleSearchValueChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    if (value !== 0) setVisibleResult(true);
-    else setVisibleResult(false);
-    setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
-  };
-
-  const handleClearSearch = () => {
-    setSearchValue('');
-    setSearchResults([]);
-    setVisibleResult(false);
-    searchRef.current.focus();
-  };
-
-  const handleSelectType = (index) => {
-    setSelectedIndex(index);
-  };
+  const [searchMedicine, setSearchMedicine] = useState('');
 
   return (
-    <div className="">
-      <Tippy
-        visible={visibleResult && searchResults.length > 0}
-        interactive={true}
-        placement="bottom-start"
-        onClickOutside={() => setVisibleResult(false)}
-        render={(attrs) => (
-          <div tabIndex="-1" {...attrs} className={classNames('w-[600px] max-h-[480px] overflow-y-auto shadow-lg')}>
-            <div className="bg-white rounded-md shadow-xl">{renderSearchResult()}</div>
-          </div>
-        )}
+    <div className="h-[7%] justify-center mt-5 flex gap-3">
+      <div className="relative w-[59%]">
+        <input
+          type="text"
+          className="bg-text_blur/10 w-full h-full pl-4 pr-9 rounded-lg border-2"
+          value={searchMedicine}
+          onChange={(e) => setSearchMedicine(e.target.value)}
+          placeholder="Tên thuốc"
+        />
+        <button onClick={() => setSearchMedicine('')}>
+          <BsXCircleFill className="text-text_blur text-h4 absolute right-[3%] top-[23%]" />
+        </button>
+      </div>
+      <Button
+        className="hover:opacity-90 active:opacity-100"
+        variant="solid"
+        style={{ backgroundColor: '#38B3E1', paddingInline: '1.5rem', fontSize: '16px' }}
       >
-        <div className=" w-[70%] pl-5 pt-5">
-          <SearchToAdd
-            ref={searchRef}
-            value={searchValue}
-            onChange={handleSearchValueChange}
-            onClear={handleClearSearch}
-            types={TYPES}
-            typeSelected={selectedIndex}
-            onTypeChange={handleSelectType}
-          />
-        </div>
-      </Tippy>
+        Thêm
+      </Button>
     </div>
   );
 }
