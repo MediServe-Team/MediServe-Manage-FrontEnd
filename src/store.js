@@ -4,10 +4,12 @@ import storage from 'redux-persist/lib/storage';
 
 import authSlice from './features/Auth/AuthSlice';
 import categorySlice from './features/category/categorySlice';
+import stockSlice from './features/stock/stockSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
   category: categorySlice,
+  stock: stockSlice,
 });
 
 const persistConfig = {

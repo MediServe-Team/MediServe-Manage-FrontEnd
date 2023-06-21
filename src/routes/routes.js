@@ -24,13 +24,6 @@ import {
 
 import { Medicine } from '../features/medicine/pages';
 import { MedicineCreate } from '../features/medicine/pages';
-// Sub in Medicine manage
-import {
-  MedicineAll,
-  MedicineNonPrescription,
-  MedicinePrescription,
-  MedicineSpecial,
-} from '../features/medicine/pages/SubPage';
 
 import { Product } from '../features/product/pages';
 import { ProductCreate } from '../features/product/pages';
@@ -77,16 +70,7 @@ const privateRouters = [
   { path: routes.stockIntoDetail, component: StockIntoDetail },
   { path: routes.historyStockManage, component: HistoryStock },
   { path: routes.medicineCreate, component: MedicineCreate },
-  {
-    path: routes.medicineManage,
-    component: Medicine,
-    children: [
-      { path: 'all', component: MedicineAll },
-      { path: 'non-prescription', component: MedicineNonPrescription },
-      { path: 'prescription', component: MedicinePrescription },
-      { path: 'special', component: MedicineSpecial },
-    ],
-  },
+  { path: routes.medicineManage, component: Medicine },
   {
     path: routes.productManage,
     component: Product,
