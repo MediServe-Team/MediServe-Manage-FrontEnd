@@ -6,6 +6,9 @@ import formatToKBMBGB from '.././helpers/formatToKBMBGB';
 function UploadImg({ listImg, setListImg }) {
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
+    // check cancle file
+    if (!file) return;
+    // convert file to base64
     const data = await getBase64(file);
     setListImg((prev) => {
       const newImgs = [...prev, { fileName: file.name, size: formatToKBMBGB(file.size), data }];
@@ -18,7 +21,6 @@ function UploadImg({ listImg, setListImg }) {
     setListImg((prev) => {
       const newImgs = [...prev];
       newImgs.splice(index, 1);
-      console.log(newImgs);
       return newImgs;
     });
   };
@@ -43,14 +45,14 @@ function UploadImg({ listImg, setListImg }) {
     <div className="w-full flex flex-col items-center rounded-md h-[340px] bg-primary/10">
       <div className="flex-shrink-1 w-full">
         <h3 className="font-bold text-text_primary text-center py-2">Tải ảnh lên</h3>
-        <form
+        <div
           className="w-4/5 h-[100px] border-2 bg-white border-text_primary border-dashed mx-auto flex flex-col justify-center items-center cursor-pointer"
           onClick={() => document.querySelector('#upload-file').click()}
         >
           <IoMdCloudUpload className="text-[30px] text-text_primary" />
           <span className="text-text_primary">Nhấn để thêm ảnh</span>
           <input id="upload-file" type="file" accept="image/*" hidden onChange={(e) => handleUploadImage(e)} />
-        </form>
+        </div>
       </div>
       {/* List image uploading */}
       <div className="w-4/5 mt-3">
