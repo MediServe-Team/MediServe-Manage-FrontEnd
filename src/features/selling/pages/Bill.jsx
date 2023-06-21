@@ -150,7 +150,7 @@ function Bill() {
           {/* List of Invoice */}
           <div className="h-[87%] flex flex-col gap-3">
             {listBill.map((item, index) => (
-              <div>
+              <div key={index}>
                 <ItemBill key={index} activeDetail={activeDetail}>
                   <button id={index} onClick={handleActiveDetail}>
                     Chi tiết
