@@ -81,7 +81,7 @@ function AccountStaff() {
     <div className="flex flex-col h-full w-full bg-white rounded-2xl">
       <div className="flex h-[12.5%] min-h-0">
         <div className="flex w-[10%] justify-end items-end">
-          <div className="bg-[url('https://s3-alpha-sig.figma.com/img/711e/d2ed/22f41791a0dd8909af17f46dbccd8af8?Expires=1685923200&Signature=Df8uzSuQIW4cCzWheeEP6~zX9~~kTUXwRMI0VxZbii6FVFsUQlbaE~G6K3WHzQWHPAVZ7Dqeeh9x67BU2LT-uLA8QoRJLe35jgEP7X~mkSsYRzjq-NVZ4Ngi664ssb56eCMaV91WHVyKQ7oLf34ZArNon6l3B6C0nLFqFzYgvqvt~vydSdhqE8DDIHJUO1lr5PBmZWNx~a4OaBGC8nAwEttn96PrrxMk8wj~2cg43zH~GvKYbctogPw5GXe-d4QgKpt5ekmQmXqJWPYJQ1QrD-HcmqEt2KYe8X8~gBh0xL78ZCJ6KfpNPUs9Wmz4~7ZTe00tb8DXraicYGxDXDdszw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')] bg-cover h-14 w-14 rounded-full"></div>
+          <div className="bg-[url('https://i.ibb.co/GnM8rdR/22f41791a0dd8909af17f46dbccd8af8-Expires-1688342400-Signature-g-Ws-Xx-V4-Hvs-PPYeh-Zzq-Pa31e-KYmq-MK.jpg')] bg-cover h-14 w-14 rounded-full"></div>
         </div>
         <div className="flex flex-col w-[90%] justify-end items-start pl-6">
           <div className="text-black text-h4 font-medium truncate">Trần Minh Quang</div>

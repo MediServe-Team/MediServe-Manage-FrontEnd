@@ -1,6 +1,9 @@
 import { BsPencilSquare, BsCloudUploadFill } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 
 function StaffProfile() {
+  const state = useSelector((state) => state);
+
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">
@@ -110,7 +113,10 @@ function StaffProfile() {
         </div>
 
         <div className="flex w-2/5 justify-end items-end">
-          <button className="btnProfile px-10 py-2 absolute bottom-4 right-6 hover:bg-dark_primary/80 active:bg-dark_primary">
+          <button
+            className="btnProfile px-10 py-2 absolute bottom-4 right-6 hover:bg-dark_primary/80 active:bg-dark_primary"
+            onClick={console.log(state)}
+          >
             Lưu
           </button>
         </div>
