@@ -3,12 +3,20 @@ import { UploadImg } from '../../.././components';
 import { IoMdCloudUpload } from 'react-icons/io';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectBox } from '../../../components';
+import { useSelector } from 'react-redux';
+import { getListUnits } from '../../../slices/unitSlice';
 
 function MedicineCreate() {
   const [listImg, setListImg] = useState([]);
   const [barcode, setBarcode] = useState('');
   const [importUnit, setImportUnit] = useState('');
   const [sellUnit, setSellUnit] = useState('');
+
+  const units = useSelector(getListUnits);
+  useEffect(() => {
+    setImportUnit(units[0].unitName);
+    setSellUnit(units[0].unitName);
+  }, []);
 
   const handleUploadBarCode = async (e) => {
     const file = e.target.files[0];
@@ -181,11 +189,11 @@ function MedicineCreate() {
           <div className="flex gap-5">
             <div className="flex flex-col gap-1 w-1/2">
               <span className="text-text_primary font-medium">Đơn vị nhập</span>
-              <SelectBox height={40} list={unitsFake} selected={unitsFake[0].name} setSelected={setImportUnit} />
+              <SelectBox height={40} list={units} selected={importUnit} setSelected={setImportUnit} />
             </div>
             <div className="flex flex-col gap-1 w-1/2">
               <span className="text-text_primary font-medium">Đơn vị bán</span>
-              <SelectBox height={40} list={unitsFake} selected={unitsFake[0].name} setSelected={setSellUnit} />
+              <SelectBox height={40} list={units} selected={sellUnit} setSelected={setSellUnit} />
             </div>
           </div>
 
@@ -200,20 +208,5 @@ function MedicineCreate() {
     </div>
   );
 }
-
-const unitsFake = [
-  {
-    type: 'import',
-    name: 'Hộp',
-  },
-  {
-    type: 'import',
-    name: 'Gói',
-  },
-  {
-    type: 'import',
-    name: 'Ống',
-  },
-];
 
 export default MedicineCreate;

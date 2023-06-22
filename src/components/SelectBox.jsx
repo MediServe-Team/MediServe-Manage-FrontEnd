@@ -12,9 +12,9 @@ function SelectBox({ list, width, height, padding, selected, setSelected }) {
         <div
           key={index}
           className={'px-4 py-1 hover:bg-text_blur/10 text-h5 cursor-pointer whitespace-nowrap'}
-          onClick={() => setSelected(item.name)}
+          onClick={() => setSelected(item.unitName)}
         >
-          {item.name}
+          {item.unitName}
         </div>
       ))
     ) : (
@@ -30,7 +30,13 @@ function SelectBox({ list, width, height, padding, selected, setSelected }) {
       onClickOutside={() => setVisible(false)}
       render={(attrs) => (
         <div tabIndex="-1" {...attrs}>
-          <div className={classNames('bg-white rounded-md shadow-xl', `min-w-full`)}>{renderList()}</div>
+          <div
+            className={classNames(
+              'bg-white rounded-md shadow-[0px_3px_7px_-1px_rgba(0,0,0,0.45)] max-h-[400px] overflow-y-auto',
+            )}
+          >
+            {renderList()}
+          </div>
         </div>
       )}
     >

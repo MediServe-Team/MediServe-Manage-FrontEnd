@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { getAllCategory } from '../features/category/categorySlice';
+import { getAllUnits } from '../slices/unitSlice';
 import { useDispatch } from 'react-redux';
 
 function Dashboard() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllCategory());
+    dispatch(getAllUnits());
   }, []);
 
   return (
