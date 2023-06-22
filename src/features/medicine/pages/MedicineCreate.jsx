@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { UploadImg } from '../../.././components';
 import { IoMdCloudUpload } from 'react-icons/io';
 import getBase64 from '../../../helpers/getBase64';
+import { Button, SelectBox } from '../../../components';
 
 function MedicineCreate() {
   const [listImg, setListImg] = useState([]);
   const [barcode, setBarcode] = useState('');
+  const [importUnit, setImportUnit] = useState('');
+  const [sellUnit, setSellUnit] = useState('');
 
   const handleUploadBarCode = async (e) => {
     const file = e.target.files[0];
@@ -122,10 +125,95 @@ function MedicineCreate() {
         </div>
 
         {/* Third column */}
-        <div className="w-1/3 h-full"></div>
+        <div className="w-1/3 h-full flex flex-col gap-5">
+          {/* Number registration */}
+          <div className="flex flex-col gap-1">
+            <span className="text-text_primary font-medium">Số đăng ký</span>
+            <input
+              type="text"
+              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+            />
+          </div>
+
+          {/* Type of medicine */}
+          <div className="flex flex-col gap-1">
+            <span className="text-text_primary font-medium">Loại thuốc</span>
+            <div className="flex gap-12 h-[40px]">
+              <div className="flex items-center gap-3">
+                <input type="radio" id="radio-prescription" name="type-medicine" value="prescription" defaultChecked />
+                <label htmlFor="radio-prescription">Kê đơn</label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input type="radio" id="radio-non-prescription" name="type-medicine" value="non-prescription" />
+                <label htmlFor="radio-non-prescription">Không kê đơn</label>
+              </div>
+            </div>
+          </div>
+
+          {/* Product content */}
+          <div className="flex flex-col gap-1">
+            <span className="text-text_primary font-medium">Hàm lượng</span>
+            <input
+              type="text"
+              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+            />
+          </div>
+
+          {/* Chemical code */}
+          <div className="flex flex-col gap-1">
+            <span className="text-text_primary font-medium">Mã hoạt chất</span>
+            <input
+              type="text"
+              className="border-2 w-1/2 h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+            />
+          </div>
+
+          {/* Chemical name */}
+          <div className="flex flex-col gap-1">
+            <span className="text-text_primary font-medium">Tên hoạt chất</span>
+            <input
+              type="text"
+              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+            />
+          </div>
+
+          {/* Unit */}
+          <div className="flex gap-5">
+            <div className="flex flex-col gap-1 w-1/2">
+              <span className="text-text_primary font-medium">Đơn vị nhập</span>
+              <SelectBox height={40} list={unitsFake} selected={unitsFake[0].name} setSelected={setImportUnit} />
+            </div>
+            <div className="flex flex-col gap-1 w-1/2">
+              <span className="text-text_primary font-medium">Đơn vị bán</span>
+              <SelectBox height={40} list={unitsFake} selected={unitsFake[0].name} setSelected={setSellUnit} />
+            </div>
+          </div>
+
+          {/* Button create medicine */}
+          <div className="flex-1 flex justify-end items-end">
+            <Button type={'solid'} size={'medium'} width={150}>
+              Tạo thuốc
+            </Button>
+          </div>
+        </div>
       </form>
     </div>
   );
 }
+
+const unitsFake = [
+  {
+    type: 'import',
+    name: 'Hộp',
+  },
+  {
+    type: 'import',
+    name: 'Gói',
+  },
+  {
+    type: 'import',
+    name: 'Ống',
+  },
+];
 
 export default MedicineCreate;
