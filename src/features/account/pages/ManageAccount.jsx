@@ -6,9 +6,8 @@ import { BtnAddAcc } from '../components';
 import { AccountCustomer, AccountStaff } from '../pages';
 
 function ManageAccount() {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
-  const [listUser, setListUser] = useState(all);
+  let [listUser, setListUser] = useState(all);
   const [role, setRole] = useState('customer');
   const [filterCustomer, setFilterCustomer] = useState(false);
   const [filterStaff, setFilterStaff] = useState(false);
@@ -23,7 +22,8 @@ function ManageAccount() {
       let result = all.filter((item) => item === 'staff');
       setListUser(result);
     }
-  }, [all, filterCustomer, filterStaff]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterCustomer, filterStaff]);
 
   const handleFilterCustomer = () => {
     setFilterCustomer(!filterCustomer);

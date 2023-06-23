@@ -27,7 +27,6 @@ function BtnAddAcc({ children }) {
       <Button
         onClick={() => {
           setOpen(true);
-          console.log(createAcc);
         }}
         className="flex min-h-0 w-full"
         variant="outlined"

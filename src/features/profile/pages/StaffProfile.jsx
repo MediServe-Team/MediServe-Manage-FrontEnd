@@ -115,7 +115,7 @@ function StaffProfile() {
         <div className="flex w-2/5 justify-end items-end">
           <button
             className="btnProfile px-10 py-2 absolute bottom-4 right-6 hover:bg-dark_primary/80 active:bg-dark_primary"
-            onClick={console.log(state)}
+            onClick={() => console.log(state)}
           >
             Lưu
           </button>
