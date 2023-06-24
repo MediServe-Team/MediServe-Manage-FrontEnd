@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CreateMedicineSchema } from '../../../validations/createMedicine';
 import classNames from 'classnames';
+import { createMedicineServices } from '../medicineServices';
+import { toast } from 'react-toastify';
 
 function MedicineCreate() {
   const [listImg, setListImg] = useState([]);
@@ -74,6 +76,7 @@ function MedicineCreate() {
     if (categoryId) newErrors.category = '';
 
     setTrackErrors(newErrors);
+    // eslint-disable-next-line
   }, [listImg, barcode, importUnit, sellUnit, categoryId]);
 
   //* Hanlde check errors before submit form
@@ -103,12 +106,35 @@ function MedicineCreate() {
   };
 
   //* Handle before submit data to create new Medicine
-  const handleSubmitCreateMedicine = (dataForm) => {
-    console.log(dataForm);
-    console.log(trackErrors.passErrs);
-    //!!! handle here
-    //!!! kiểm tra nếu chưa pass error thì kh làm gì cả, nếu pass rồi thì call api tạo medicine
-    return;
+  const handleSubmitCreateMedicine = async (dataForm) => {
+    if (!trackErrors.passErrs) return;
+    const imgs = listImg.map((img) => img.data);
+    const bodyRequest = {
+      categoryId: categoryId,
+      medicineName: dataForm.medicineName,
+      registrationNumber: dataForm.registrationNumber,
+      dosageForm: dataForm.dosageForm,
+      productContent: dataForm.productContent,
+      chemicalName: dataForm.chemicalName,
+      chemicalCode: dataForm.chemicalCode,
+      packingSpecification: dataForm.packingSpecification,
+      barCode: barcode,
+      sellUnit: sellUnit,
+      inputUnit: importUnit,
+      applyToAffectedAreaCode: dataForm.applyToAffectedAreaCode,
+      applyToAffectedArea: dataForm.applyToAffectedArea,
+      medicineFunction: dataForm.medicineFunction,
+      medicineImage: imgs,
+      isPrescription: Boolean(dataForm.isPrescription),
+      note: dataForm.note,
+    };
+
+    const result = await createMedicineServices(bodyRequest);
+    if (result.status === 201) {
+      toast.success('Tạo mới sản phẩm thành công!');
+    } else {
+      toast.error('Hệ thống gặp sự cố khi tạo thuốc!');
+    }
   };
 
   return (
