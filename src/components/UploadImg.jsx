@@ -17,7 +17,6 @@ function UploadImg({ listImg, setListImg }) {
   };
 
   const handleRemoveImage = (index) => {
-    console.log(index);
     setListImg((prev) => {
       const newImgs = [...prev];
       newImgs.splice(index, 1);
@@ -42,7 +41,7 @@ function UploadImg({ listImg, setListImg }) {
   );
 
   return (
-    <div className="w-full flex flex-col items-center rounded-md h-[340px] bg-primary/10">
+    <div className="w-full flex flex-col items-center rounded-md h-[320px] bg-primary/10">
       <div className="flex-shrink-1 w-full">
         <h3 className="font-bold text-text_primary text-center py-2">Tải ảnh lên</h3>
         <div

@@ -3,23 +3,32 @@ import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames';
 
-function SelectBox({ list, width, height, padding, selected, setSelected }) {
+function SelectCategory({ categories, width, height, padding, selected, setSelected, danger }) {
   const [visible, setVisible] = useState(false);
 
   const renderList = () => {
-    return Array.isArray(list) && list.length > 0 ? (
-      list.map((item, index) => (
+    return Array.isArray(categories) && categories.length > 0 ? (
+      categories.map((item, index) => (
         <div
           key={index}
           className={'px-4 py-1 hover:bg-text_blur/10 text-h5 cursor-pointer whitespace-nowrap'}
-          onClick={() => setSelected(item.unitName)}
+          onClick={() => setSelected(item.id)}
         >
-          {item.unitName}
+          {item.categoryName}
         </div>
       ))
     ) : (
       <div className="px-4 py-1 text-text_blur">Danh sách rỗng!</div>
     );
+  };
+
+  const categorySelectedName = (id) => {
+    if (id) {
+      const categorySelected = categories.filter((item) => item.id === id);
+      if (categorySelected.length > 0) return categorySelected[0].categoryName;
+      return '';
+    }
+    return '';
   };
 
   return (
@@ -41,16 +50,19 @@ function SelectBox({ list, width, height, padding, selected, setSelected }) {
       )}
     >
       <div
-        className="border-2 border-text_primary/20 hover:border-text_primary rounded-md flex justify-between items-center px-3 cursor-pointer"
+        className={classNames(
+          'border-2 hover:border-text_primary rounded-md flex justify-between items-center px-3 cursor-pointer',
+          danger ? 'border-danger' : 'border-text_primary/20',
+        )}
         //   style
         style={{ width: width, height: height, padding: padding }}
         onClick={() => setVisible(true)}
       >
-        <span>{selected}</span>
+        <span>{categorySelectedName(selected)}</span>
         <MdOutlineKeyboardArrowDown className="text-[20px] text-text_primary" />
       </div>
     </Tippy>
   );
 }
 
-export default SelectBox;
+export default SelectCategory;
