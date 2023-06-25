@@ -84,6 +84,7 @@ function MedicineGrid({ searchValue }) {
           medicines.map((medicine, index) => (
             <MedicineItem
               id={medicine.id}
+              medicineImage={medicine.medicineImage}
               medicineName={medicine.medicineName}
               registrationNumber={medicine.registrationNumber}
               packingSpecification={medicine.packingSpecification}
@@ -124,8 +125,8 @@ function MedicineGrid({ searchValue }) {
               <div className="overflow-y-auto w-full h-full min-h-0 px-5">
                 <div className="h-2/5 relative flex justify-center">
                   <img
-                    src="https://intriphat.com/wp-content/uploads/2021/07/mau-hop-thuoc-dep-5.jpg"
-                    alt=""
+                    src={medicines[selected].medicineImage}
+                    alt={medicines[selected].medicineName}
                     className="h-full object-contain"
                   />
                 </div>
@@ -141,8 +142,8 @@ function MedicineGrid({ searchValue }) {
                     </div>
                     {/* mã vạch */}
                     <img
-                      src="https://chiaki.vn/upload/news/content/2020/11/ma-vach-jpg-1604390780-03112020150620.jpg"
-                      alt=""
+                      src={medicines[selected].barCode}
+                      alt={medicines[selected].medicineName}
                       className="h-[80px]"
                     />
                   </div>

@@ -1,17 +1,9 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import classNames from 'classnames';
-
 function MedicineItem({ id, medicineName, registrationNumber, medicineImage, packingSpecification, barCode, onclick }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="relative overflow-hidden">
         <div className="flex justify-center">
-          <img
-            src="https://intriphat.com/wp-content/uploads/2021/07/mau-hop-thuoc-dep-5.jpg"
-            alt="thuốc"
-            className="object-cover h-[200px]"
-          />
+          <img src={medicineImage} alt={medicineName} className="object-cover h-[200px]" />
         </div>
         <div className="flex flex-col">
           <h3 className="text-h5 text-black font-medium">{medicineName}</h3>
@@ -23,11 +15,7 @@ function MedicineItem({ id, medicineName, registrationNumber, medicineImage, pac
           </p>
           {/* Barcode */}
           <div className="">
-            <img
-              src="https://chiaki.vn/upload/news/content/2020/11/ma-vach-jpg-1604390780-03112020150620.jpg"
-              alt=""
-              className="h-[80px]"
-            />
+            <img src={barCode} alt="" className="h-[80px]" />
           </div>
           {/* registrationNumber */}
           <p className="text-text_primary">
