@@ -6,3 +6,23 @@ export const getProductsService = async (categoryId, searchValue, pageNumber, li
   );
   return response.data;
 };
+
+export const createProductServices = async (data) => {
+  const response = await axiosBase.post('/products/create', {
+    categoryId: data?.categoryId,
+    productName: data?.productName,
+    registrationNumber: data?.registrationNumber,
+    dosageForm: data?.dosageForm,
+    productContent: data?.productContent,
+    chemicalName: data?.chemicalName,
+    chemicalCode: data?.chemicalCode,
+    packingSpecification: data?.packingSpecification,
+    barCode: data?.barCode,
+    sellUnit: data?.sellUnit,
+    inputUnit: data?.inputUnit,
+    productFunction: data?.productFunction,
+    productImage: data?.productImage,
+    note: data?.note,
+  });
+  return response.data;
+};
