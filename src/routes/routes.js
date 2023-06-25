@@ -27,7 +27,6 @@ import { MedicineCreate } from '../features/medicine/pages';
 
 import { Product } from '../features/product/pages';
 import { ProductCreate } from '../features/product/pages';
-import { ProductAll, Cosmetic, Milk, FunctionalFood } from '../features/product/pages/SubPage';
 
 import { Dose } from '../features/dose/pages';
 
@@ -44,6 +43,7 @@ const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
 const privateRouters = [
   { path: routes.dashboard, component: Dashboard },
+  //* stocks
   {
     path: routes.stockManage,
     component: Stock,
@@ -69,30 +69,11 @@ const privateRouters = [
   { path: routes.stockIntoManage, component: StockInto },
   { path: routes.stockIntoDetail, component: StockIntoDetail },
   { path: routes.historyStockManage, component: HistoryStock },
+  //* medicines
   { path: routes.medicineCreate, component: MedicineCreate },
   { path: routes.medicineManage, component: Medicine },
-  {
-    path: routes.productManage,
-    component: Product,
-    children: [
-      {
-        path: 'all',
-        component: ProductAll,
-      },
-      {
-        path: 'functional-food',
-        component: FunctionalFood,
-      },
-      {
-        path: 'milk',
-        component: Milk,
-      },
-      {
-        path: 'cosmetic',
-        component: Cosmetic,
-      },
-    ],
-  },
+  //* products
+  { path: routes.productManage, component: Product },
   { path: routes.productCreate, component: ProductCreate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
