@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UploadImg } from '../../.././components';
 import { IoMdCloudUpload } from 'react-icons/io';
+import { TbRefresh } from 'react-icons/tb';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
 import { useSelector } from 'react-redux';
@@ -35,6 +36,8 @@ function MedicineCreate() {
   const {
     register,
     handleSubmit,
+    reset,
+    clearErrors,
     formState: { errors },
   } = useForm({ resolver: yupResolver(CreateMedicineSchema) });
 
@@ -135,6 +138,24 @@ function MedicineCreate() {
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo thuốc!');
     }
+  };
+
+  const handleClearForm = () => {
+    setListImg([]);
+    setBarcode('');
+    setImportUnit('');
+    setSellUnit('');
+    setCategoryId(null);
+    reset();
+    clearErrors();
+    setTrackErrors({
+      passErrs: false,
+      listImg: '',
+      barcode: '',
+      importUnit: '',
+      sellUnit: '',
+      category: '',
+    });
   };
 
   return (
@@ -383,7 +404,16 @@ function MedicineCreate() {
           </div>
 
           {/* Button create medicine */}
-          <div className="flex-1 flex justify-end items-end">
+          <div className="flex-1 flex justify-between items-end">
+            <Button
+              type={'outline'}
+              size={'medium'}
+              width={150}
+              leftIcon={<TbRefresh className="text-[20px]" />}
+              onClick={() => handleClearForm()}
+            >
+              Làm rỗng
+            </Button>
             <Button type={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
               Tạo thuốc
             </Button>
