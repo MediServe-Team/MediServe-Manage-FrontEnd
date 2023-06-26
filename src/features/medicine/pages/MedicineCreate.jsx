@@ -410,7 +410,7 @@ function MedicineCreate() {
           {/* Button create medicine */}
           <div className="flex-1 flex justify-between items-end">
             <Button
-              type={'outline'}
+              styleBtn={'outline'}
               size={'medium'}
               width={150}
               leftIcon={<TbRefresh className="text-[20px]" />}
@@ -418,7 +418,7 @@ function MedicineCreate() {
             >
               Làm rỗng
             </Button>
-            <Button type={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
+            <Button styleBtn={'solid'} type={'button'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
               Tạo thuốc
             </Button>
           </div>

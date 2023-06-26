@@ -6,3 +6,4 @@ export { default as SearchOnChange } from './SearchOnchange/SearchOnChange.jsx';
 export { default as UploadImg } from './UploadImg.jsx';
 export { default as SelectUnit } from './SelectUnit.jsx';
 export { default as SelectCategory } from './SelectCategory.jsx';
+export { default as Modal } from './Modal.jsx';

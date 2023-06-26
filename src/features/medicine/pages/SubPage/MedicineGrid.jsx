@@ -118,7 +118,7 @@ function MedicineGrid({ searchValue }) {
             {/* modal section */}
             <motion.div key="modal" variants={modal} className="bg-white h-full w-2/3 absolute right-0 rounded-lg py-5">
               <div className="absolute top-2 right-3 z-50">
-                <Button onClick={() => setIsOpen(!isOpen)} type="solid" size="normal">
+                <Button onClick={() => setIsOpen(!isOpen)} styleBtn="solid" size="normal">
                   <MdKeyboardDoubleArrowRight className="text-[20px]" />
                 </Button>
               </div>

@@ -121,7 +121,7 @@ function HistoryStock() {
             <IoIosArrowDown className="text-gray-400" />
           </div>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+        <Button size="normal" styleBtn="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>
