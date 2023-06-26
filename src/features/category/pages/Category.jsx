@@ -19,10 +19,10 @@ function Category() {
             <CategotyItem
               order={index + 1}
               key={index}
+              categoryId={item.id}
               categoryName={item.categoryName}
               isMedicine={item.isMedicine}
-              // isDefault={item.isDefault}
-              isDefault={true}
+              isDefault={item.isDefault}
               note={item.note}
             />
           ))}

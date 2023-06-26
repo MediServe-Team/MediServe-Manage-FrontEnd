@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { axiosBase } from '../.././lib/axios';
 
 export const getAllCategoryServices = () => {
@@ -10,5 +11,19 @@ export const createCategoryServices = async (data) => {
     isMedicine: data?.isMedicine,
     note: data?.note,
   });
+  return response.data;
+};
+
+export const updateCategoryServices = async (data) => {
+  const response = await axiosBase.put(`/categories/update/${data?.id}`, {
+    categoryName: data?.categoryName,
+    isMedicine: data?.isMedicine,
+    note: data?.note,
+  });
+  return response.data;
+};
+
+export const deleteCategoryServices = async (id) => {
+  const response = await axiosBase.delete(`/categories/delete/${id}`);
   return response.data;
 };
