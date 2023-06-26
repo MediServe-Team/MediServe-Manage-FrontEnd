@@ -3,10 +3,26 @@ import { BsPlusSquareFill } from 'react-icons/bs';
 import CustomSwitch from '../components/CustomSwitch';
 import classNames from 'classnames';
 import { Modal, Button } from '../../../components';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { CreateCategorySchema } from '../../../validations/createCategory';
+import { createCategoryServices } from '../categoryServices';
+import { toast } from 'react-toastify';
+// dispatch
+import { useDispatch } from 'react-redux';
+import { getAllCategory } from '../categorySlice';
 
 function CategotyItemAdd({ order }) {
   const [openModal, setOpenModal] = useState(false);
   const [isMedicine, setIsMedicine] = useState(false);
+  const dispatch = useDispatch();
+
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm({ resolver: yupResolver(CreateCategorySchema) });
 
   // check color style for item add category
   let stylesColor;
@@ -21,6 +37,23 @@ function CategotyItemAdd({ order }) {
       stylesColor = '#02D09E';
       break;
   }
+
+  const handleCreateCategory = async (dataForm) => {
+    const newCategory = {
+      ...dataForm,
+      isMedicine,
+    };
+    const result = await createCategoryServices(newCategory);
+    if (result.status === 201) {
+      toast.success('Tạo mới danh mục thành công!');
+      // reset modal
+      reset();
+      setOpenModal(false);
+      dispatch(getAllCategory());
+    } else {
+      toast.error('Tạo danh mục thất bại!');
+    }
+  };
 
   return (
     <div className="bg-white h-[87px] w-full rounded-lg mx-auto flex border-[2px]" style={{ borderColor: stylesColor }}>
@@ -47,23 +80,26 @@ function CategotyItemAdd({ order }) {
           <div className="bg-text_primary h-[1px] w-full mt-3"></div>
 
           {/* Form create category */}
-          <form className="flex flex-col gap-4 mt-5 w-5/6">
+          <form onSubmit={handleSubmit(handleCreateCategory)} className="flex flex-col gap-4 mt-5 w-5/6">
             {/* Category Name */}
             <div className="flex flex-col gap-1">
               <span className="text-text_primary font-medium">Tên danh mục</span>
               <input
                 type="text"
+                {...register('categoryName')}
                 className={classNames(
                   'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
                   false ? 'border-danger' : 'border-text_primary/20',
                 )}
               />
+              {errors.categoryName?.message && <span className="text-danger">Tên danh mục không được trống</span>}
             </div>
             {/* Category Note */}
             <div className="flex flex-col gap-1">
               <span className="text-text_primary font-medium">Ghi chú</span>
               <input
                 type="text"
+                {...register('note')}
                 className={classNames(
                   'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
                   false ? 'border-danger' : 'border-text_primary/20',
@@ -80,7 +116,7 @@ function CategotyItemAdd({ order }) {
               >
                 Khác thuốc
               </span>
-              <CustomSwitch defaultChecked checked={isMedicine} onChange={() => setIsMedicine(!isMedicine)} />
+              <CustomSwitch checked={isMedicine} onChange={() => setIsMedicine(!isMedicine)} />
               <span
                 className={classNames(
                   'font-medium transition-colors',
@@ -99,6 +135,7 @@ function CategotyItemAdd({ order }) {
                 modifier={'danger'}
                 width={120}
                 onClick={() => {
+                  reset();
                   setOpenModal(false);
                 }}
               >
