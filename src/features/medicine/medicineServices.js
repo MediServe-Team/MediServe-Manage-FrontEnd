@@ -6,3 +6,26 @@ export const getMedicinesService = async (categoryId, searchValue, pageNumber, l
   );
   return response.data;
 };
+
+export const createMedicineServices = async (data) => {
+  const response = await axiosBase.post('/medicines/create', {
+    categoryId: data?.categoryId,
+    medicineName: data?.medicineName,
+    registrationNumber: data?.registrationNumber,
+    dosageForm: data?.dosageForm,
+    productContent: data?.productContent,
+    chemicalName: data?.chemicalName,
+    chemicalCode: data?.chemicalCode,
+    packingSpecification: data?.packingSpecification,
+    barCode: data?.barCode,
+    sellUnit: data?.sellUnit,
+    inputUnit: data?.inputUnit,
+    applyToAffectedAreaCode: data?.applyToAffectedAreaCode,
+    applyToAffectedArea: data?.applyToAffectedArea,
+    medicineFunction: data?.medicineFunction,
+    medicineImage: data?.medicineImage,
+    isPrescription: data?.isPrescription,
+    note: data?.note,
+  });
+  return response.data;
+};

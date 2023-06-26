@@ -13,7 +13,7 @@ const routes = {
   medicineManageWithFistSubPage: '/medicines/all',
   medicineCreate: '/medicines/add',
 
-  productManage: '/products',
+  productManage: '/products/:categoryId',
   productCreate: '/products/add',
   productManageWithFistSubPage: '/products/all',
 
