@@ -59,7 +59,7 @@ function StockIntoDetail() {
             <span className="text-text_primary">Ghi chú:</span> {invoice.note}
           </p>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+        <Button size="normal" styleBtn="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>

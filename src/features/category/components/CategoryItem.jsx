@@ -24,7 +24,7 @@ function CategotyItem({ order, categoryName, isMedicine, isDefault, note }) {
           className="h-[26px] w-[28px] flex items-center justify-center rounded-sm text-h7 text-white font-medium"
           style={{ backgroundColor: stylesColor }}
         >
-          20
+          {order}
         </p>
 
         <div className="flex items-end gap-2">

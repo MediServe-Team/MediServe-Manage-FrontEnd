@@ -354,7 +354,7 @@ function ProductCreate() {
           {/* Button create product */}
           <div className="flex-1 flex justify-between items-end">
             <Button
-              type={'outline'}
+              styleBtn={'outline'}
               size={'medium'}
               width={150}
               leftIcon={<TbRefresh className="text-[20px]" />}
@@ -362,7 +362,7 @@ function ProductCreate() {
             >
               Làm rỗng
             </Button>
-            <Button type={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
+            <Button styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
               Tạo sản phẩm
             </Button>
           </div>
