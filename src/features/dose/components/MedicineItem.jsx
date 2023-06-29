@@ -1,4 +1,4 @@
-function MedicineItem({ number, name, specification }) {
+function MedicineItem({ number, medicineId, medicineName, specification, medicineUnit }) {
   return (
     <div className="flex flex-col border-2 border-text_blur rounded-lg">
       {/* header item */}
@@ -41,7 +41,7 @@ function MedicineItem({ number, name, specification }) {
           <p className="">Levothyroxine (Viên)</p>
           <p className="text-text_blur">Hộp 4 vĩ x 20 viên</p>
         </div>
-        <div className="flex w-1/2 gap-6">
+        <div className="flex items-center w-1/2 gap-6">
           <div className="w-2/5">
             <input
               type="text"
@@ -49,10 +49,7 @@ function MedicineItem({ number, name, specification }) {
             />
           </div>
           <div className="w-2/5">
-            <input
-              type="text"
-              className="border-2 rounded-md border-text_blur max-w-[72px] h-[30px] min-w-0 px-2 text-center"
-            />
+            <span>(Viên)</span>
           </div>
           <button className="w-1/5 text-text_blur text-h4 pr-5 font-semibold">x</button>
         </div>

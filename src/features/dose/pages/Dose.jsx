@@ -1,16 +1,13 @@
 import { useState, useRef } from 'react';
 import { ItemList, MedicineItem, TitleList } from '../components';
 import { BsSearch, BsXCircleFill } from 'react-icons/bs';
-import Button from '@mui/joy/Button';
+import { Button, SearchOnChange } from '../../../components';
 
 function Dose() {
   //const categories = useSelector(getlistCategories);
   const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
   const [searchDose, setSearchDose] = useState('');
-  const [searchMedicine, setSearchMedicine] = useState('');
-
-  let red = '#D41919',
-    darkBlue = '#064861';
+  const [searchMedicineValue, setSearchMedicineValue] = useState('');
 
   const handleClearSearchDose = () => {
     setSearchDose('');
@@ -26,69 +23,69 @@ function Dose() {
     <div className="h-full flex gap-3">
       {/* Dose */}
       <div className="flex flex-col w-2/5 bg-white rounded-lg h-full">
-        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 ">
-          <h3 className="text-h4 text-dark_primary font-semibold">Tạo liều thuốc</h3>
+        <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50 flex-shrink-0">
+          <h3 className="text-h4 text-text_primary font-semibold">Tạo liều thuốc</h3>
         </header>
-        {/* Search */}
-        <div className="h-[6.5%] justify-center mt-5 flex gap-3">
-          <div className="relative w-[59%]">
+
+        <div className="px-5 flex flex-col min-h-0">
+          {/* Search */}
+          <div className="flex justify-between items-center mt-5 gap-3">
+            <SearchOnChange
+              className={'w-full'}
+              value={searchMedicineValue}
+              onChange={(e) => setSearchMedicineValue(e.target.value)}
+              onClear={() => setSearchMedicineValue('')}
+            />
+            <Button className="hover:opacity-90 active:opacity-100" styleBtn="solid" size={'medium'}>
+              Thêm
+            </Button>
+          </div>
+
+          {/* Name of dose */}
+          <div className="pt-4 pb-1">
+            <h3 className="text-text_primary font-medium">Tên liều thuốc:</h3>
             <input
               type="text"
-              className="bg-text_blur/10 w-full h-full pl-4 pr-9 rounded-lg border-2"
-              value={searchMedicine}
-              onChange={(e) => setSearchMedicine(e.target.value)}
-              placeholder="Tên thuốc"
+              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+              placeholder="VD: Liều thuốc cảm cúm cho người lớn"
             />
-            <button onClick={() => setSearchMedicine('')}>
-              <BsXCircleFill className="text-text_blur text-h4 absolute right-[3%] top-[23%]" />
-            </button>
           </div>
-          <Button
-            className="hover:opacity-90 active:opacity-100"
-            variant="solid"
-            style={{ backgroundColor: '#38B3E1', paddingInline: '1.5rem', fontSize: '16px' }}
-          >
-            Thêm
-          </Button>
-        </div>
-        {/* Name of dose */}
-        <div className="mx-auto pt-5 pb-7">
-          <h3 className="text-h5 font-semibold">Tên liều thuốc:</h3>
-          <input
-            type="text"
-            className="border-dark_primary border-2 rounded-md w-[385px] h-[37px] px-3 mt-2"
-            placeholder="VD: Liều thuốc cảm cúm cho người lớn"
-          />
-        </div>
 
-        {/* List medicine */}
-        <div className="h-[50%] px-5 flex flex-col gap-5 overflow-auto">
-          {listMedicine.map((item, index) => (
-            <MedicineItem key={index} />
-          ))}
-        </div>
+          {/* List medicine */}
+          <div className="flex-1 flex flex-col pt-4 gap-5 overflow-auto min-h-0">
+            {listMedicine.map((item, index) => (
+              <MedicineItem key={index} />
+            ))}
+          </div>
 
-        <div className="flex justify-end items-end gap-3 my-auto mx-auto">
-          <Button
-            variant="outlined"
-            style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem', fontSize: '16px' }}
-          >
-            Hủy
-          </Button>
-          <Button
-            className="hover:opacity-90 active:opacity-100"
-            variant="solid"
-            style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '16px' }}
-          >
-            Lưu
-          </Button>
+          {/* Button control area */}
+          <div className="flex justify-between items-end gap-5 py-2 flex-shrink-0">
+            {/* Note */}
+            <div className="flex-1 flex flex-col">
+              <h3 className="text-text_primary font-medium">Ghi chú:</h3>
+              <input
+                type="text"
+                className="border-2 w-full h-[44px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+                placeholder="Thêm ghi chú"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button styleBtn={'solid'} modifier={'danger'} size={'medium'} width={100}>
+                Hủy
+              </Button>
+              <Button styleBtn={'solid'} modifier={'dark_primary'} size={'medium'} width={100}>
+                Lưu
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* List Dose */}
       <div className="w-3/5 bg-white rounded-lg">
-        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4">
-          <h3 className="text-h4 text-dark_primary font-semibold">Danh sách liều thuốc</h3>
+        <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50">
+          <h3 className="text-h4 text-text_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
         <div className="h-[14%] flex justify-center py-5 relative">
