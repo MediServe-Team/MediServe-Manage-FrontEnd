@@ -4,10 +4,22 @@ import { BsSearch, BsXCircleFill } from 'react-icons/bs';
 import { Button, SearchOnChange } from '../../../components';
 
 function Dose() {
-  //const categories = useSelector(getlistCategories);
+  const [medicineName, setMedicineName] = useState('');
+  const [note, setNote] = useState('');
   const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
   const [searchDose, setSearchDose] = useState('');
   const [searchMedicineValue, setSearchMedicineValue] = useState('');
+  //* list ref to MedicineItem
+  const medicineItemRef = useRef([]);
+
+  //* Handle form create dose
+  const handleCreateDose = () => {
+    //
+  };
+
+  const handleClearFormCreateDose = () => {
+    //
+  };
 
   const handleClearSearchDose = () => {
     setSearchDose('');
@@ -54,12 +66,12 @@ function Dose() {
           {/* List medicine */}
           <div className="flex-1 flex flex-col pt-4 gap-5 overflow-auto min-h-0">
             {listMedicine.map((item, index) => (
-              <MedicineItem key={index} />
+              <MedicineItem key={index} ref={(el) => (medicineItemRef.current[index] = el)} />
             ))}
           </div>
 
           {/* Button control area */}
-          <div className="flex justify-between items-end gap-5 py-2 flex-shrink-0">
+          <div className="flex justify-between items-end gap-5 py-2 flex- shrink-0">
             {/* Note */}
             <div className="flex-1 flex flex-col">
               <h3 className="text-text_primary font-medium">Ghi chú:</h3>
@@ -71,10 +83,22 @@ function Dose() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button styleBtn={'solid'} modifier={'danger'} size={'medium'} width={100}>
+              <Button
+                styleBtn={'solid'}
+                modifier={'danger'}
+                size={'medium'}
+                width={100}
+                onClick={handleClearFormCreateDose}
+              >
                 Hủy
               </Button>
-              <Button styleBtn={'solid'} modifier={'dark_primary'} size={'medium'} width={100}>
+              <Button
+                styleBtn={'solid'}
+                modifier={'dark_primary'}
+                size={'medium'}
+                width={100}
+                onClick={handleCreateDose}
+              >
                 Lưu
               </Button>
             </div>
