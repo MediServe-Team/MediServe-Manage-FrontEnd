@@ -1,16 +1,16 @@
 import { BsPencilFill, BsTrashFill } from 'react-icons/bs';
 
-function ItemList() {
+function ItemList({ number, doseName, note }) {
   return (
-    <ul className="flex justify-between items-center bg-text_blur/20 p-2 rounded-lg gap-3 text-h5 px-2 flex-shrink-0">
+    <ul className="flex justify-between items-center bg-primary/5 border-2 border-text_primary/10 p-2 rounded-lg gap-3 text-h5 px-2 flex-shrink-0">
       {/* number */}
       <li className="w-[32px] h-[32px] flex flex-[1] justify-center items-center bg-white rounded-md px-1">
-        <span className="text-dark_primary">1</span>
+        <span className="text-dark_primary">{number}</span>
       </li>
 
       {/* dose */}
       <li className="flex flex-[12] items-center truncate">
-        <span>Liều cảm cúm cho trẻ nhỏ</span>
+        <span className="font-medium">Liều cảm cúm cho trẻ nhỏ</span>
       </li>
 
       <li className="flex flex-[10] items-center truncate">

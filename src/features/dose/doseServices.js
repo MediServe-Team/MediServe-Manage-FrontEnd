@@ -11,3 +11,8 @@ export const createDoseService = async (data) => {
 
   return response.data;
 };
+
+export const filterDoseService = async (searchValue) => {
+  const response = await axiosBase.get(`/prescriptions/filter?searchValue=${searchValue}`);
+  return response.data;
+};
