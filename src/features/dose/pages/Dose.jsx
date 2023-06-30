@@ -14,6 +14,9 @@ import { doseNameSchema } from '../../../validations/addMedicineInDose';
 // get user ID
 import { useSelector } from 'react-redux';
 import { getUserId } from '../../Auth/AuthSlice';
+// service call api
+import { createDoseService } from '../doseServices';
+import { toast } from 'react-toastify';
 
 function Dose() {
   const staffId = useSelector(getUserId);
@@ -48,6 +51,7 @@ function Dose() {
     register,
     getValues,
     trigger,
+    reset,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(doseNameSchema) });
 
@@ -95,14 +99,22 @@ function Dose() {
           data.staffId = staffId;
           data.isDose = true;
           data.listMedicines = listMedicines;
-          console.log(data);
+          // call api save new dose
+          const result = await createDoseService(data);
+          if (result.status === 201) {
+            toast.success('Tạo liều thuốc thành công!');
+          } else {
+            toast.error('Tạo liều thuốc thất bại!');
+          }
         }
       }
     }
   };
 
   const handleClearFormCreateDose = () => {
-    //
+    reset({ diagnose: '', note: '' });
+    medicineItemRefs.current = [];
+    setListMedicine([]);
   };
 
   const handleAddMedicineToDose = (medicineId, medicineName, packingSpecification, sellUnit) => {
@@ -233,7 +245,7 @@ function Dose() {
                 width={100}
                 onClick={handleClearFormCreateDose}
               >
-                Hủy
+                Làm rỗng
               </Button>
               <Button
                 styleBtn={'solid'}
