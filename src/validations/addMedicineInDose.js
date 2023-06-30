@@ -6,3 +6,7 @@ export const addMedicineInDoseSchema = yup.object({
   night: yup.number().default(0),
   quantity: yup.number().required(),
 });
+
+export const doseNameSchema = yup.object({
+  diagnose: yup.string().required(),
+});

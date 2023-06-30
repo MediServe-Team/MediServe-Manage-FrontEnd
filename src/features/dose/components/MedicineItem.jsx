@@ -5,16 +5,17 @@ import { addMedicineInDoseSchema } from '../../../validations/addMedicineInDose'
 import { MdOutlineClose } from 'react-icons/md';
 import classNames from 'classnames';
 
-function MedicineItem({ number, medicineId, medicineName, specification, medicineUnit }, ref) {
+function MedicineItem({ number, medicineId, medicineName, packingSpecification, medicineUnit, onRemove }, ref) {
   const {
     register,
     trigger,
     clearErrors,
     getValues,
     formState: { errors },
-  } = useForm({ resolver: { addMedicineInDoseSchema } });
+  } = useForm({ mode: 'onChange', resolver: yupResolver(addMedicineInDoseSchema) });
 
   useImperativeHandle(ref, () => ({
+    id: medicineId,
     getData: async () => {
       // trigger validate
       const passValidate = await trigger();
@@ -29,12 +30,12 @@ function MedicineItem({ number, medicineId, medicineName, specification, medicin
 
   return (
     <form className="flex flex-col border-2 border-text_blur rounded-lg">
-      <input type="hidden" {...register('medicineId')} />
+      <input type="hidden" value={medicineId} {...register('medicineId')} />
       {/* header item */}
       <div className="flex items-center bg-secondary/20 p-2">
         {/* number */}
         <div className="w-[32px] h-[32px] flex justify-center items-center bg-secondary/80 rounded-md flex-shrink-0">
-          <span className="text-white">#1</span>
+          <span className="text-white">#{number}</span>
         </div>
 
         {/* usage */}
@@ -80,8 +81,8 @@ function MedicineItem({ number, medicineId, medicineName, specification, medicin
       {/* info medicine */}
       <div className="flex items-center bg-text_blur/5 py-4">
         <div className="w-1/2 pl-2">
-          <p className="font-medium">Levothyroxine (Viên)</p>
-          <p className="text-text_blur">Hộp 4 vĩ x 20 viên</p>
+          <p className="font-medium">{medicineName}</p>
+          <p className="text-text_blur">{packingSpecification}</p>
         </div>
 
         <div className="flex items-center justify-between w-1/2 gap-2">
@@ -95,10 +96,14 @@ function MedicineItem({ number, medicineId, medicineName, specification, medicin
               )}
               {...register('quantity')}
             />
-            <span>(Viên)</span>
+            <i>({medicineUnit})</i>
           </div>
           {/* Button remove medicine */}
-          <button className="flex-shrink-0 flex text-text_blur text-h4 pr-5 font-semibold">
+          <button
+            type="button"
+            className="flex-shrink-0 flex text-text_blur text-h4 pr-5 font-semibold outline-none p-3 hover:text-danger"
+            onClick={onRemove}
+          >
             <MdOutlineClose className="text-[20px] m-auto" />
           </button>
         </div>

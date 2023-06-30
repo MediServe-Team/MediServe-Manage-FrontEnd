@@ -29,3 +29,8 @@ export const createMedicineServices = async (data) => {
   });
   return response.data;
 };
+
+export const filterMedicineServices = async (searchValue) => {
+  const response = await axiosBase.get(`/medicines/filter?searchValue=${searchValue}`);
+  return response.data;
+};

@@ -418,7 +418,7 @@ function MedicineCreate() {
             >
               Làm rỗng
             </Button>
-            <Button styleBtn={'solid'} type={'button'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
+            <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
               Tạo thuốc
             </Button>
           </div>
