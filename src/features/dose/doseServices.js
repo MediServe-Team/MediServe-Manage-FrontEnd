@@ -16,3 +16,8 @@ export const filterDoseService = async (searchValue) => {
   const response = await axiosBase.get(`/prescriptions/filter?searchValue=${searchValue}`);
   return response.data;
 };
+
+export const deleteDoseService = async (id) => {
+  const response = await axiosBase.delete(`/prescriptions/delete/${id}`);
+  return response.data;
+};

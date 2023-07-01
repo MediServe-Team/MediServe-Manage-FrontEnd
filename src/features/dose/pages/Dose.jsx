@@ -29,7 +29,8 @@ function Dose() {
   const medicineItemRefs = useRef([]);
   //* use Debounce delay value
   const medicineDebounced = useDebounce(searchMedicineValue, 500);
-  const doseDebounced = useDebounce(searchMedicineValue, 500);
+  const doseDebounced = useDebounce(searchDoseValue, 500);
+  const [reloadDose, setReloadDose] = useState(false);
   //* resize width for tippy search result box
   const searchMedicineBoxRef = useRef(null);
   useEffect(() => {
@@ -155,11 +156,8 @@ function Dose() {
       setlistDose(doseData.data);
     };
     filterDose();
-  }, [doseDebounced]);
+  }, [doseDebounced, reloadDose]);
 
-  const handleClearSearchDose = () => {
-    //
-  };
   const handleSearchDoseChange = (e) => {
     setSearchDoseValue(e.target.value);
   };
@@ -286,6 +284,7 @@ function Dose() {
             value={searchDoseValue}
             onChange={handleSearchDoseChange}
             placeholder={'Thêm từ khóa tìm kiếm liều thuốc'}
+            onClear={() => setSearchDoseValue('')}
           />
         </div>
         {/* Title */}
@@ -293,7 +292,14 @@ function Dose() {
           <TitleList>
             {/* Data */}
             {listDose.map((dose, index) => (
-              <ItemList key={index} number={index + 1} />
+              <ItemList
+                key={index}
+                number={index + 1}
+                doseId={dose.id}
+                doseName={dose.diagnose}
+                note={dose.note}
+                setReloadList={() => setReloadDose(!reloadDose)}
+              />
             ))}
           </TitleList>
         </div>

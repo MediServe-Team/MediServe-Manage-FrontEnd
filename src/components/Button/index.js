@@ -9,6 +9,7 @@ import classNames from 'classnames';
         - danger
         - primary
         - dark-primary
+        - gray
     - size:
         - normal
         - medium
@@ -32,7 +33,7 @@ import classNames from 'classnames';
 */
 
 const TYPES = ['solid', 'outline', 'disable'];
-const MODIFIERS = ['primary', 'dark-primary', 'danger'];
+const MODIFIERS = ['primary', 'dark-primary', 'danger', 'gray'];
 const SIZES = ['elasticity', 'normal', 'medium', 'large'];
 const SHAPES = ['rectangle', 'circle'];
 
@@ -93,6 +94,8 @@ function Button(
             checkType === 'solid' && checkModifier === 'danger',
           'bg-text_primary text-white hover:opacity-60 active:opacity-100':
             checkType === 'solid' && checkModifier === 'dark-primary',
+          'bg-text_blur text-white hover:opacity-60 active:opacity-100':
+            checkType === 'solid' && checkModifier === 'gray',
 
           'border-primary text-primary border-2 hover:bg-primary/10 active:bg-primary active:text-white transition-colors':
             checkType === 'outline' && checkModifier === 'primary',
@@ -100,6 +103,8 @@ function Button(
             checkType === 'outline' && checkModifier === 'danger',
           'border-text_primary text-text_primary border-2 hover:opacity-60 active:opacity-100':
             checkType === 'outline' && checkModifier === 'dark-primary',
+          'border-text_blur text-gray border-2 hover:opacity-60 active:opacity-100':
+            checkType === 'outline' && checkModifier === 'gray',
 
           'border-text_blur bg-slate-200 cursor-default shadow-none': disabled,
         },
