@@ -21,3 +21,18 @@ export const deleteDoseService = async (id) => {
   const response = await axiosBase.delete(`/prescriptions/delete/${id}`);
   return response.data;
 };
+
+export const getDoseService = async (id) => {
+  const response = await axiosBase.get(`/prescriptions/detail/${id}`);
+  return response.data;
+};
+
+export const updateDoseService = async (id, data) => {
+  const dataUpdate = {
+    diagnose: data?.diagnose,
+    note: data?.note,
+    listMedicines: data?.listMedicines,
+  };
+  const response = await axiosBase.put(`/prescriptions/update/${id}`, dataUpdate);
+  return response.data;
+};

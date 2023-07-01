@@ -5,7 +5,10 @@ import { addMedicineInDoseSchema } from '../../../validations/addMedicineInDose'
 import { MdOutlineClose } from 'react-icons/md';
 import classNames from 'classnames';
 
-function MedicineItem({ number, medicineId, medicineName, packingSpecification, medicineUnit, onRemove }, ref) {
+function MedicineItem(
+  { number, medicineId, medicineName, packingSpecification, medicineUnit, morning, noon, night, quantity, onRemove },
+  ref,
+) {
   const {
     register,
     trigger,
@@ -44,6 +47,7 @@ function MedicineItem({ number, medicineId, medicineName, packingSpecification, 
             <span>Sáng</span>
             <input
               type="text"
+              defaultValue={morning}
               className={classNames(
                 'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.morning?.message ? 'border-danger' : 'border-text_primary/20',
@@ -56,6 +60,7 @@ function MedicineItem({ number, medicineId, medicineName, packingSpecification, 
             <span>Trưa</span>
             <input
               type="text"
+              defaultValue={noon}
               className={classNames(
                 'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.noon?.message ? 'border-danger' : 'border-text_primary/20',
@@ -68,6 +73,7 @@ function MedicineItem({ number, medicineId, medicineName, packingSpecification, 
             <span>Tối</span>
             <input
               type="text"
+              defaultValue={night}
               className={classNames(
                 'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.night?.message ? 'border-danger' : 'border-text_primary/20',
@@ -90,6 +96,7 @@ function MedicineItem({ number, medicineId, medicineName, packingSpecification, 
           <div className="flex items-center gap-2">
             <input
               type="text"
+              defaultValue={quantity}
               className={classNames(
                 'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.quantity?.message ? 'border-danger' : 'border-text_primary/20',
