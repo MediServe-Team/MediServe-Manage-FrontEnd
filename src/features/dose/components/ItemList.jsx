@@ -22,7 +22,6 @@ import { doseNameSchema } from '../../../validations/addMedicineInDose';
 function ItemList({ number, doseId, doseName, note, setReloadList }) {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
-  const [dose, setDose] = useState({});
   // search medicine
   const [searchMedicineValue, setSearchMedicineValue] = useState('');
   const [searchMedicineResult, setSearchMedicineResult] = useState([]);
@@ -35,6 +34,7 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
     register,
     getValues,
     trigger,
+    reset,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(doseNameSchema) });
 
@@ -58,11 +58,10 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
   //* modal: remove medicine from dose
   const handleRemoveMedicineFromDose = (id) => {
     // remove out of refs
-    const removeIndex = medicineItemRefs.current.findIndex((item) => item.id === id);
-    if (removeIndex !== -1) medicineItemRefs.current.splice(removeIndex, 1);
+    medicineItemRefs.current = [];
     // remove out of state
     const newList = listGuide.filter((guide) => guide.medicineId !== id);
-    setListGuide(newList);
+    setListGuide([...newList]);
   };
 
   //* modal: search medicine change
@@ -82,7 +81,6 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
   //* modal: open update-modal
   const handleOpenUpdateDose = async () => {
     const result = await getDoseService(doseId);
-    setDose(result.data);
     const listGuides = result.data.MedicineGuides.map((item) => ({
       medicineId: item.medicineId,
       medicineName: item.medicine.medicineName,
@@ -100,7 +98,10 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
   //* modal: close update-modal
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
+    setListGuide([]);
+    medicineItemRefs.current = [];
     setSearchMedicineValue('');
+    reset();
   };
 
   //* fn: update dose
@@ -125,7 +126,10 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
         if (result.status === 200) {
           toast.success('Cập nhật liều thuốc thành công!');
           setOpenModalUpdate(false);
+          medicineItemRefs.current = [];
+          setListGuide([]);
           setReloadList();
+          reset();
         } else {
           toast.error('Cập nhật liều thuốc thất bại!');
         }
@@ -246,7 +250,7 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
                     'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
                     errors.diagnose?.message ? 'border-danger' : 'border-text_primary/20',
                   )}
-                  defaultValue={dose.diagnose}
+                  defaultValue={doseName}
                   {...register('diagnose')}
                 />
               </div>
@@ -256,7 +260,7 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
                 <input
                   type="text"
                   className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
-                  defaultValue={dose.note}
+                  defaultValue={note}
                   {...register('note')}
                 />
               </div>

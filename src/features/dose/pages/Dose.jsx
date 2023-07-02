@@ -106,6 +106,7 @@ function Dose() {
           const result = await createDoseService(data);
           if (result.status === 201) {
             toast.success('Tạo liều thuốc thành công!');
+            setReloadDose(!reloadDose);
           } else {
             toast.error('Tạo liều thuốc thất bại!');
           }
@@ -118,6 +119,7 @@ function Dose() {
     reset({ diagnose: '', note: '' });
     medicineItemRefs.current = [];
     setListMedicine([]);
+    setSearchMedicineValue('');
   };
 
   const handleAddMedicineToDose = (medicineId, medicineName, packingSpecification, sellUnit) => {

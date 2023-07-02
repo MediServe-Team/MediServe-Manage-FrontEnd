@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addMedicineInDoseSchema } from '../../../validations/addMedicineInDose';
@@ -14,6 +14,8 @@ function MedicineItem(
     trigger,
     clearErrors,
     getValues,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(addMedicineInDoseSchema) });
 
@@ -30,6 +32,13 @@ function MedicineItem(
       return;
     },
   }));
+
+  useEffect(() => {
+    // clean data in form when component unmounted
+    return () => {
+      reset();
+    };
+  }, [medicineId]);
 
   return (
     <form className="flex flex-col border-2 border-text_blur rounded-lg">
