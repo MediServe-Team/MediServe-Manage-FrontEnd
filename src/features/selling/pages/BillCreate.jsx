@@ -26,13 +26,18 @@ export default function BillCreate() {
   useEffect(() => {
     const navs = [
       {
-        name: 'Sản phẩm/ Thuốc',
-        path: '/bills/create/no-prescription',
+        name: 'Sản phẩm',
+        path: '/bills/create/product',
+        color: 'primary',
+      },
+      {
+        name: 'Thuốc',
+        path: '/bills/create/medicine',
         color: 'primary',
       },
       {
         name: 'Kê đơn',
-        path: '/bills/create/prescription',
+        path: '/bills/create/new-dose',
         color: 'primary',
       },
       {
