@@ -27,6 +27,8 @@ export default function BillCreate() {
   const [visibleCustomerResult, setVisibleCustomerResult] = useState(true);
   const [customerResults, setCustomerResults] = useState([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   const [cusomerSystem, setCustomerSystem] = useState({});
+  // product in bill
+  const [products, setProducts] = useState([]);
   // debounce
   const customerDebounced = useDebounce(searchCustomer);
 
@@ -127,6 +129,10 @@ export default function BillCreate() {
     }
   };
 
+  useEffect(() => {
+    console.log('~change', products);
+  }, [products]);
+
   return (
     <div className="h-full flex gap-3">
       <div className="flex flex-col justify-between px-5 bg-white rounded-xl w-[40%]">
@@ -136,7 +142,7 @@ export default function BillCreate() {
         </div>
         {/* Navigated page */}
         <div className="w-full flex-1">
-          <Outlet />
+          <Outlet context={setProducts} />
         </div>
       </div>
 
