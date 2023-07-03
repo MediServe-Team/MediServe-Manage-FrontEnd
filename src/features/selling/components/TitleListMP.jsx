@@ -1,6 +1,6 @@
 import { BsX } from 'react-icons/bs';
 
-function TitleListMedicine({ children, title, isDrug }) {
+function TitleListMP({ children, title, isDrug }) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* heading */}
@@ -9,7 +9,7 @@ function TitleListMedicine({ children, title, isDrug }) {
           <span>#</span>
         </li>
         <li className="flex-[12]">
-          <span>Tên thuốc</span>
+          <span>{title}</span>
         </li>
         <li className="flex-[5] text-center">
           <span>Số lượng</span>
@@ -32,4 +32,4 @@ function TitleListMedicine({ children, title, isDrug }) {
   );
 }
 
-export default TitleListMedicine;
+export default TitleListMP;

@@ -54,6 +54,7 @@ function AddProduct() {
       quantity: Number(quantity),
       totalPrice,
     };
+    setQuantity(1); // reset value
     setProducts((prev) => {
       return [...prev, newdata];
     });
@@ -68,11 +69,9 @@ function AddProduct() {
   //* modal: close
   const handleCloseModal = () => {
     setOpenModal(false);
-    //!!! add code clear modal
     setProductSelected({});
+    setQuantity(1);
   };
-
-  //* modal: add quantity
 
   return (
     <div className="h-full flex flex-col w-full gap-4">

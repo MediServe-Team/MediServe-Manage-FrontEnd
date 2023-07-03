@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BsArrowLeftCircleFill } from 'react-icons/bs';
-import { ItemListMedicine, TitleListMedicine, TitleListPre, ItemListPre } from '../components';
+import { ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
 import { useNavigate } from 'react-router-dom';
 
 function BillDetail() {
@@ -50,12 +50,12 @@ function BillDetail() {
           </span>
         </div>
         <div className="px-9">
-          <TitleListMedicine>
+          <TitleListMP>
             {/* Data */}
             {listMedicine.map((item, index) => (
-              <ItemListMedicine key={index} item={item} />
+              <ItemListMP key={index} item={item} />
             ))}
-          </TitleListMedicine>
+          </TitleListMP>
         </div>
 
         <div className="flex h-[15%] w-full px-9 items-center mt-5">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { SubNavigate, ItemListMedicine, TitleListMedicine, TitleListPre, ItemListPre } from '../components';
+import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
 import { Button, SearchOnChange } from '../../../components';
 import Tippy from '@tippyjs/react/headless';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
@@ -18,7 +18,6 @@ import { useDebounce } from '../../../hooks';
 export default function BillCreate() {
   const [navList, setNavList] = useState([]);
   const [listMedicine, setListMedicine] = useState(['1', '2']);
-  const [customer, setCustomer] = useState('guest');
   const [searchCustomer, setSearchCustomer] = useState('');
   const [preview, setPreview] = useState(false);
   // customer
@@ -27,7 +26,7 @@ export default function BillCreate() {
   const [visibleCustomerResult, setVisibleCustomerResult] = useState(true);
   const [customerResults, setCustomerResults] = useState([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
   const [cusomerSystem, setCustomerSystem] = useState({});
-  // product in bill
+  // product & medicine in bill
   const [products, setProducts] = useState([]);
   // debounce
   const customerDebounced = useDebounce(searchCustomer);
@@ -114,6 +113,13 @@ export default function BillCreate() {
         ))}
       </div>
     );
+  };
+
+  //*TODO: products
+  const handleDeleteProduct = (index) => {
+    console.log('~removed', index);
+    const newProduct = [...products];
+    setProducts([...newProduct.slice(0, index), ...newProduct.slice(index + 1)]);
   };
 
   //todo: Checkout
@@ -314,23 +320,34 @@ export default function BillCreate() {
             </div>
 
             {/* Info product and medicine */}
-            <div>
-              <div className="flex items-center">
-                <span className="font-semibold">Thông tin sản phẩm/ thuốc</span>
+            {products && products.length > 0 && (
+              <div>
+                <div className="flex items-center">
+                  <span className="font-semibold">Thông tin sản phẩm/ thuốc</span>
+                </div>
+                <div className="px-2">
+                  <TitleListMP title="Tên sản phẩm">
+                    {/* Data */}
+                    {products.map((product, index) => (
+                      <ItemListMP
+                        key={index}
+                        number={index + 1}
+                        id={product.productId}
+                        name={product.productName}
+                        quantity={product.quantity}
+                        sellPrice={product.sellPrice}
+                        unit={product.sellUnit}
+                        totalPrice={product.totalPrice}
+                      >
+                        <button onClick={() => handleDeleteProduct(index)}>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </ItemListMP>
+                    ))}
+                  </TitleListMP>
+                </div>
               </div>
-              <div className="px-2">
-                <TitleListMedicine>
-                  {/* Data */}
-                  {listMedicine.map((item, index) => (
-                    <ItemListMedicine key={index} item={item}>
-                      <button>
-                        <BsX size={25} style={{ color: '#A8A8A8' }} />
-                      </button>
-                    </ItemListMedicine>
-                  ))}
-                </TitleListMedicine>
-              </div>
-            </div>
+            )}
 
             {/* Info Prescription */}
             <div className="flex flex-col gap-1">
