@@ -34,10 +34,12 @@ import { Category } from '../features/category/pages';
 
 import { Account, AccountCustomer, AccountStaff, ManageAccount } from '../features/account/pages';
 
+// Bill
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
 import { Profile } from '../features/profile/pages';
 import { NoPrescription, Prescription, AvailableDose } from '../features/selling/pages/TabsBillCreate';
+import { BillDetail } from '../features/selling/pages';
 
 const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
@@ -78,6 +80,7 @@ const privateRouters = [
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
   { path: routes.accountManage, component: ManageAccount },
+  //* bills
   { path: routes.billManage, component: Bill },
   {
     path: routes.billCreate,
@@ -88,6 +91,8 @@ const privateRouters = [
       { path: 'available-dose', component: AvailableDose },
     ],
   },
+  { path: routes.billDetail, component: BillDetail },
+
   { path: routes.profile, component: Profile },
 ];
 
