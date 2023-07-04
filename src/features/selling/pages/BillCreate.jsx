@@ -28,6 +28,7 @@ export default function BillCreate() {
   const [cusomerSystem, setCustomerSystem] = useState({});
   // product & medicine in bill
   const [products, setProducts] = useState([]);
+  const [medicines, setMedicines] = useState([]);
   // debounce
   const customerDebounced = useDebounce(searchCustomer);
 
@@ -122,6 +123,12 @@ export default function BillCreate() {
     setProducts([...newProduct.slice(0, index), ...newProduct.slice(index + 1)]);
   };
 
+  //*TODO: medicines
+  const handleDeleteMedicine = (index) => {
+    const newMedicine = [...medicines];
+    setMedicines([...newMedicine.slice(0, index), ...newMedicine.slice(index + 1)]);
+  };
+
   //todo: Checkout
   const handleCheckout = async () => {
     if (isGuest) {
@@ -148,7 +155,7 @@ export default function BillCreate() {
         </div>
         {/* Navigated page */}
         <div className="w-full flex-1">
-          <Outlet context={setProducts} />
+          <Outlet context={{ setProducts, setMedicines }} />
         </div>
       </div>
 
@@ -319,11 +326,11 @@ export default function BillCreate() {
               )}
             </div>
 
-            {/* Info product and medicine */}
+            {/* Info product in dose */}
             {products && products.length > 0 && (
               <div>
                 <div className="flex items-center">
-                  <span className="font-semibold">Thông tin sản phẩm/ thuốc</span>
+                  <span className="font-semibold">Thông tin sản phẩm</span>
                 </div>
                 <div className="px-2">
                   <TitleListMP title="Tên sản phẩm">
@@ -340,6 +347,36 @@ export default function BillCreate() {
                         totalPrice={product.totalPrice}
                       >
                         <button onClick={() => handleDeleteProduct(index)}>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </ItemListMP>
+                    ))}
+                  </TitleListMP>
+                </div>
+              </div>
+            )}
+
+            {/* Info  medicine in dose */}
+            {medicines && medicines.length > 0 && (
+              <div>
+                <div className="flex items-center">
+                  <span className="font-semibold">Thông tin thuốc</span>
+                </div>
+                <div className="px-2">
+                  <TitleListMP title="Tên sản phẩm">
+                    {/* Data */}
+                    {medicines.map((medicine, index) => (
+                      <ItemListMP
+                        key={index}
+                        number={index + 1}
+                        id={medicine.medicineId}
+                        name={medicine.medicineName}
+                        quantity={medicine.quantity}
+                        sellPrice={medicine.sellPrice}
+                        unit={medicine.sellUnit}
+                        totalPrice={medicine.totalPrice}
+                      >
+                        <button onClick={() => handleDeleteMedicine(index)}>
                           <BsX size={25} style={{ color: '#A8A8A8' }} />
                         </button>
                       </ItemListMP>

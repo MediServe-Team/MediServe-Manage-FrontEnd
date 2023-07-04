@@ -12,7 +12,7 @@ function AddProduct() {
   const [searchValue, setSearchValue] = useState('');
   const [results, setResults] = useState([]);
   const debounced = useDebounce(searchValue);
-  const setProducts = useOutletContext();
+  const { setProducts } = useOutletContext();
   const [productSelected, setProductSelected] = useState({});
   // modal
   const [openModal, setOpenModal] = useState(false);
