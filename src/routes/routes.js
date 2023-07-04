@@ -34,10 +34,12 @@ import { Category } from '../features/category/pages';
 
 import { Account, AccountCustomer, AccountStaff, ManageAccount } from '../features/account/pages';
 
+// Bill
 import { Bill } from '../features/selling/pages';
 import { BillCreate } from '../features/selling/pages';
 import { Profile } from '../features/profile/pages';
-import { NoPrescription, Prescription, AvailableDose } from '../features/selling/pages/TabsBillCreate';
+import { AddProduct, AddMedicine, AddDose, AddAvailableDose } from '../features/selling/pages/TabsBillCreate';
+import { BillDetail } from '../features/selling/pages';
 
 const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
@@ -78,16 +80,20 @@ const privateRouters = [
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
   { path: routes.accountManage, component: ManageAccount },
+  //* bills
   { path: routes.billManage, component: Bill },
   {
     path: routes.billCreate,
     component: BillCreate,
     children: [
-      { path: 'no-prescription', component: NoPrescription },
-      { path: 'prescription', component: Prescription },
-      { path: 'available-dose', component: AvailableDose },
+      { path: 'product', component: AddProduct },
+      { path: 'medicine', component: AddMedicine },
+      { path: 'new-dose', component: AddDose },
+      { path: 'available-dose', component: AddAvailableDose },
     ],
   },
+  { path: routes.billDetail, component: BillDetail },
+
   { path: routes.profile, component: Profile },
 ];
 

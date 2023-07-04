@@ -4,7 +4,7 @@ import Button from '@mui/joy/Button';
 import { useState } from 'react';
 import { BsXCircleFill } from 'react-icons/bs';
 
-function Prescription() {
+function AddDose() {
   const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
   const [searchDose, setSearchDose] = useState('');
 
@@ -79,4 +79,4 @@ function Prescription() {
   );
 }
 
-export default Prescription;
+export default AddDose;

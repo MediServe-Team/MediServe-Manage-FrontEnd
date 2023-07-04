@@ -25,7 +25,8 @@ const routes = {
 
   billManage: '/bills',
   billCreate: '/bills/create',
-  billCreateWithNoPrescription: '/bills/create/no-prescription',
+  billCreateWithFirstPage: '/bills/create/product',
+  billDetail: '/bills/:id',
 
   profile: '/profile',
 };

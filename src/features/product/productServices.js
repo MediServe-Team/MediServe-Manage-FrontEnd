@@ -26,3 +26,8 @@ export const createProductServices = async (data) => {
   });
   return response.data;
 };
+
+export const filterProductService = async (searchValue) => {
+  const response = await axiosBase.get(`/products/filter?searchValue=${searchValue}`);
+  return response.data;
+};

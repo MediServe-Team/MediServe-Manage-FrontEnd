@@ -51,7 +51,7 @@ function Modal({ showModal, children }) {
             initial={'hidden'}
             animate={'visible'}
             exit={'exit'}
-            className="w-full h-full bg-black/30 flex"
+            className="w-full h-full bg-[#75ABD2]/10 backdrop-blur-sm flex"
           >
             <motion.div variants={modal} className="bg-white rounded-lg p-5 m-auto min-w-[300px] shadow-lg">
               {children}

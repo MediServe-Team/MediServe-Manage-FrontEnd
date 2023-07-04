@@ -1,385 +1,453 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import {
-  SubNavigate,
-  ItemListMedicine,
-  TitleListMedicine,
-  TitleListPre,
-  ItemListPre,
-  Medicine,
-  Prescription,
-  Dose,
-} from '../components';
-import Button from '@mui/joy/Button';
-import { TbRefresh } from 'react-icons/tb';
-import { BsX, BsSearch, BsXCircleFill } from 'react-icons/bs';
+import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
+import { Button, SearchOnChange } from '../../../components';
+import Tippy from '@tippyjs/react/headless';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { BsX } from 'react-icons/bs';
 import { Modal, ModalClose, ModalDialog } from '@mui/joy';
+import classNames from 'classnames';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InforGuestSchema } from '../../../validations/inforGuest';
+// service
+import { filterAccountCustomer } from '../../../services/accountServices';
+import { useDebounce } from '../../../hooks';
 
 export default function BillCreate() {
   const [navList, setNavList] = useState([]);
-  const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
-  const [customer, setCustomer] = useState('guest');
+  const [listMedicine, setListMedicine] = useState(['1', '2']);
   const [searchCustomer, setSearchCustomer] = useState('');
   const [preview, setPreview] = useState(false);
-  let darkBlue = '#064861';
+  // customer
+  const [isGuest, setIsGuest] = useState(true);
+  const [visibleSelectCustomer, setVisibleSelectCustomer] = useState(false);
+  const [visibleCustomerResult, setVisibleCustomerResult] = useState(true);
+  const [customerResults, setCustomerResults] = useState([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+  const [cusomerSystem, setCustomerSystem] = useState({});
+  // product & medicine in bill
+  const [products, setProducts] = useState([]);
+  const [medicines, setMedicines] = useState([]);
+  // debounce
+  const customerDebounced = useDebounce(searchCustomer);
 
+  // Tab Navigate
   useEffect(() => {
     const navs = [
       {
-        name: 'Sản phẩm/ Thuốc',
-        path: '/bills/create/no-prescription',
-        color: 'primary',
+        name: 'Sản phẩm',
+        path: '/bills/create/product',
+      },
+      {
+        name: 'Thuốc',
+        path: '/bills/create/medicine',
       },
       {
         name: 'Kê đơn',
-        path: '/bills/create/prescription',
-        color: 'primary',
+        path: '/bills/create/new-dose',
       },
       {
         name: 'Liều có sẵn',
         path: '/bills/create/available-dose',
-        color: 'primary',
       },
     ];
-
     setNavList(navs);
   }, []);
 
-  const handleClearSearchCustomer = () => {
-    setSearchCustomer('');
-  };
+  // Form customer data
+  const {
+    register,
+    getValues,
+    trigger,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(InforGuestSchema) });
 
-  const handleSearchCustomer = (e) => {
+  //? handle search onchage customer
+  useEffect(() => {
+    const filterCustomer = async () => {
+      if (customerDebounced) {
+        const result = await filterAccountCustomer(customerDebounced);
+        setCustomerResults(result.data);
+      } else {
+        setCustomerResults([]);
+      }
+    };
+    filterCustomer();
+  }, [customerDebounced]);
+
+  //* handle search customer change:
+  const handleSearchCustomerChange = (e) => {
+    setVisibleCustomerResult(true);
     setSearchCustomer(e.target.value);
   };
 
+  //* handle clear seach customer:
+  const handleClearSeachCustomer = () => {
+    setVisibleCustomerResult(false);
+    setSearchCustomer('');
+  };
+
+  //* fn handle add customer system
+  const handleAddCustomerSystem = (account) => {
+    const { id, fullName, gender, age, email } = account;
+    const accountSelected = { id, fullName, gender, age, email };
+    setCustomerSystem(accountSelected);
+    setVisibleCustomerResult(false);
+  };
+
+  //* fn render result search customer:
+  const renderSearchCustomerResult = () => {
+    return (
+      <div className="flex flex-col">
+        {customerResults.map((account, index) => (
+          <div
+            className="flex justify-around items-center py-2 hover:bg-text_blur/10 cursor-pointer"
+            key={index}
+            onClick={() => handleAddCustomerSystem(account)}
+          >
+            <p className="font-medium">{account.fullName}</p>
+            <p className="text-text_blur">{account.gender === 0 ? 'Nữ' : 'Nam'}</p>
+            <p className="text-text_blur">{account.age} tuổi</p>
+            <p className="text-text_blur">{account.email}</p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  //*TODO: products
+  const handleDeleteProduct = (index) => {
+    console.log('~removed', index);
+    const newProduct = [...products];
+    setProducts([...newProduct.slice(0, index), ...newProduct.slice(index + 1)]);
+  };
+
+  //*TODO: medicines
+  const handleDeleteMedicine = (index) => {
+    const newMedicine = [...medicines];
+    setMedicines([...newMedicine.slice(0, index), ...newMedicine.slice(index + 1)]);
+  };
+
+  //todo: Checkout
+  const handleCheckout = async () => {
+    if (isGuest) {
+      const passValidate = await trigger();
+      if (passValidate) {
+        const customerInfo = getValues();
+        console.log(customerInfo);
+      }
+    } else if (Object.keys(cusomerSystem).length !== 0) {
+      console.log(cusomerSystem);
+    }
+  };
+
+  useEffect(() => {
+    console.log('~change', products);
+  }, [products]);
+
   return (
     <div className="h-full flex gap-3">
-      <div className="flex flex-col justify-between items-center px-5 bg-white rounded-xl w-[40%] max-w-[40%]">
+      <div className="flex flex-col justify-between px-5 bg-white rounded-xl w-[40%]">
         {/* navigate on page */}
-        <div className="flex h-[8%] items-end pt-3 border-b-2 border-text_blur/50">
+        <div className="flex justify-start pt-3">
           <SubNavigate navs={navList} />
         </div>
         {/* Navigated page */}
-        <div className="h-[92%] w-full">
-          <Outlet />
+        <div className="w-full flex-1">
+          <Outlet context={{ setProducts, setMedicines }} />
         </div>
       </div>
 
-      <div className="flex flex-col h-full w-[60%] min-w-0 bg-white rounded-xl max-w-[60%]">
-        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 w-full">
+      {/* Sub page right */}
+      <div className="flex flex-col h-full w-[60%] bg-white rounded-xl">
+        <header className="border-b-2 border-text_blur/50 pl-6 pt-4 pb-1 w-full">
           <h3 className="text-h4 text-text_primary font-bold">Tạo hóa đơn</h3>
         </header>
-        <div className="flex flex-col h-[32%] w-full">
-          <div className="flex h-[25%] w-full px-9 items-center">
-            <span className="w-1/2 text-left text-h5 font-semibold">Thông tin khách hàng</span>
-            <div className="w-1/2 text-right text-h5">
-              <select
-                className={`text-text_primary font-medium rounded-md pl-2 pr-1 py-2 ${
-                  customer === 'vip' ? 'bg-secondary/30' : 'bg-tertiary/30'
-                }`}
-                onChange={({ target }) => {
-                  setCustomer(target.value);
-                }}
-              >
-                <option value="guest" defaultChecked className="bg-white">
-                  Khách hàng vãng lai
-                </option>
-                <option value="vip" className="bg-white">
-                  Khách hàng hệ thống
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div className={`h-[75%] w-full px-9 p-2 ${customer === 'vip' ? 'hidden' : 'flex'}`}>
-            <div className="flex rounded-lg bg-text_blur/5 border-2 border-text_primary/30 w-full h-full px-16 py-3 gap-8  text-h5">
-              <div className="h-full w-[80%] flex flex-col gap-4">
-                <input
-                  type="text"
-                  className="border-text_blur h-full border-2 border-text_blur/50 rounded-md w-full px-3"
-                  placeholder="Họ tên khách hàng"
-                />
-                <input
-                  type="text"
-                  className="border-text_blur h-full border-2 border-text_blur/50 rounded-md w-full px-3"
-                  placeholder="Địa chỉ"
-                />
-              </div>
-              <div className="h-full w-[20%] flex flex-col gap-4">
-                <input
-                  type="number"
-                  className="border-text_blur h-full border-2 border-text_blur/50 rounded-md w-full px-3"
-                  placeholder="Tuổi"
-                />
-                <select
-                  className="border-text_blur h-full border-2 border-text_blur/50 rounded-md w-full pl-2"
-                  placeholder="Giới tính"
+        {/* body */}
+        <div className="flex-1 flex flex-col w-full min-h-0 px-6 pt-5">
+          <div className="flex-1 flex flex-col gap-5 overflow-y-auto min-h-0">
+            {/* Customer info */}
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-semibold">Thông tin khách hàng</span>
+                <Tippy
+                  visible={visibleSelectCustomer}
+                  interactive={true}
+                  placement="bottom-start"
+                  onClickOutside={() => setVisibleSelectCustomer(false)}
+                  render={(attrs) => (
+                    <div tabIndex="-1" {...attrs}>
+                      <div className="bg-white w-[200px] rounded-md shadow-[0px_3px_7px_-1px_rgba(0,0,0,0.45)]">
+                        <p
+                          className="p-2 cursor-pointer hover:bg-text_blur/10"
+                          onClick={() => {
+                            setIsGuest(true);
+                            setVisibleSelectCustomer(false);
+                            setCustomerSystem({});
+                            setSearchCustomer('');
+                          }}
+                        >
+                          Khách hàng vãng lai
+                        </p>
+                        <p
+                          className="p-2 cursor-pointer hover:bg-text_blur/10"
+                          onClick={() => {
+                            setIsGuest(false);
+                            setVisibleSelectCustomer(false);
+                          }}
+                        >
+                          Khách hàng hệ thống
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 >
-                  <option value="Male">Nam</option>
-                  <option value="Female">Nữ</option>
-                </select>
+                  <div
+                    className={classNames(
+                      'w-[200px] h-[40px] rounded-md flex justify-evenly items-center cursor-pointer hover:opacity-90',
+                      isGuest ? 'bg-tertiary' : 'bg-secondary/40',
+                    )}
+                    onClick={() => setVisibleSelectCustomer(true)}
+                  >
+                    <span className="text-text_primary">{isGuest ? 'Khách hàng vãng lai' : 'Khách hàng hệ thống'}</span>
+                    <MdOutlineKeyboardArrowDown className="text-[20px]" />
+                  </div>
+                </Tippy>
               </div>
+              {isGuest ? (
+                //*  Customer not have account:
+                <div className="flex gap-5 border-2 border-text_primary/20 rounded-md p-5 bg-text_blur/5">
+                  <div className="flex flex-col gap-5 w-3/5">
+                    {/* Name customer */}
+                    <input
+                      type="text"
+                      {...register('name')}
+                      placeholder="Họ tên khách hàng"
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.name?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                    />
+                    {/* Address */}
+                    <input
+                      type="text"
+                      {...register('address')}
+                      placeholder="Địa chỉ"
+                      className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+                    />
+                  </div>
+                  {/* Age */}
+                  <div className="flex flex-col gap-5 w-2/5">
+                    <input
+                      type="text"
+                      {...register('age')}
+                      placeholder="Tuổi"
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.age?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                    />
+                    {/* Gender */}
+                    <div className="flex items-center gap-10">
+                      <div className="flex items-center gap-3">
+                        <input
+                          id="gender-male"
+                          type="radio"
+                          name="gender"
+                          value={1}
+                          {...register('gender')}
+                          defaultChecked
+                        />
+                        <label htmlFor="gender-male">Nam</label>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input id="gender-female" type="radio" name="gender" {...register('gender')} value={0} />
+                        <label htmlFor="gender-female">Nữ</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                //* Customer have account:
+                <div className="flex flex-col gap-4">
+                  <Tippy
+                    visible={visibleCustomerResult && customerResults.length > 0}
+                    interactive={true}
+                    placement="bottom-start"
+                    onClickOutside={() => setVisibleCustomerResult(false)}
+                    render={(attrs) => (
+                      <div
+                        tabIndex="-1"
+                        {...attrs}
+                        className={
+                          'w-full min-w-[600px] max-h-[400px] rounded-md overflow-y-auto shadow-[0px_2px_13px_-4px_rgba(0,0,0,0.8)]'
+                        }
+                      >
+                        <div className="bg-white rounded-md">{renderSearchCustomerResult()}</div>
+                      </div>
+                    )}
+                  >
+                    <div className="">
+                      <SearchOnChange
+                        placeholder={'Tìm kiếm với tên khách hàng'}
+                        value={searchCustomer}
+                        onChange={handleSearchCustomerChange}
+                        onClear={handleClearSeachCustomer}
+                      />
+                    </div>
+                  </Tippy>
+                  {/* Customer infor selected */}
+                  {cusomerSystem && Object.keys(cusomerSystem).length > 0 && (
+                    <div className="flex gap-5 border-2 border-text_primary/20 rounded-md p-5 bg-text_blur/5">
+                      <div className="flex flex-col gap-5 w-3/5">
+                        {/* Name customer */}
+                        <p className="font-medium">
+                          Họ tên khách hàng: <span className="font-normal">{cusomerSystem.fullName}</span>
+                        </p>
+                        {/* Address */}
+                        <p className="font-medium">
+                          Địa chỉ: <span className="font-normal">{cusomerSystem.address}</span>
+                        </p>
+                      </div>
+                      {/* Age */}
+                      <div className="flex flex-col gap-5 w-2/5">
+                        <p className="font-medium">
+                          Tuổi: <span className="font-normal">{cusomerSystem.age}</span>
+                        </p>
+                        {/* Gender */}
+                        <p className="font-medium">
+                          Giới tính: <span className="font-normal">{cusomerSystem.gender == 0 ? 'Nữ' : 'Nam'}</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          </div>
 
-          <div className={`h-[75%] flex-col gap-3 w-full px-9 p-2 ${customer === 'vip' ? 'flex' : 'hidden'}`}>
-            <div className="flex w-full h-[35%] relative">
-              <input
-                type="text"
-                className="bg-text_blur/10 w-full h-full pl-12 pr-12 rounded-lg"
-                value={searchCustomer}
-                onChange={handleSearchCustomer}
-                placeholder="Tên khách hàng"
-              />
-              <button>
-                <BsSearch className="text-text_blur text-h3 absolute left-[1.5%] top-[20%]" />
-              </button>
-              <button onClick={handleClearSearchCustomer}>
-                <BsXCircleFill className="text-text_blur text-h3 absolute right-[1.5%] top-[20%]" />
-              </button>
-            </div>
-
-            <div className="flex w-full h-[65%] rounded-md border-slate-300 border-2 px-7 py-2">
-              <div className="w-2/3 flex flex-col justify-start items-center h-full">
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Họ tên khách hàng<span className="font-normal">: Trần Minh Quang</span>
-                </span>
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Địa chỉ<span className="font-normal">: KTX Khu A, ĐHQG Hồ Chí Minh</span>
-                </span>
-              </div>
-              <div className="w-1/3 flex flex-col justify-start items-center h-full">
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Tuổi<span className="font-normal">: 21</span>
-                </span>
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Giới tính<span className="font-normal">: Nam</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="h-[49%] w-full overflow-y-auto">
-          <div className="flex h-[15%] w-full px-9 items-center">
-            <span className="text-left text-h5 font-semibold">Thông tin sản phẩm/ thuốc</span>
-          </div>
-          <div className="px-9">
-            <TitleListMedicine>
-              {/* Data */}
-              {listMedicine.map((item, index) => (
-                <ItemListMedicine key={index} item={item}>
-                  <button>
-                    <BsX size={25} style={{ color: '#A8A8A8' }} />
-                  </button>
-                </ItemListMedicine>
-              ))}
-            </TitleListMedicine>
-          </div>
-
-          <div className="flex h-[15%] w-full px-9 items-center mt-5">
-            <span className="text-left text-h5 font-semibold">Thông tin kê đơn</span>
-          </div>
-          <div className="px-9 text-h5">
-            <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-              <div className="flex items-center">
-                <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: Đau nhức xương khớp</span>
-                <div className="w-1/2 flex justify-end">
-                  <button>
-                    <BsX size={25} style={{ color: '#A8A8A8' }} />
-                  </button>
+            {/* Info product in dose */}
+            {products && products.length > 0 && (
+              <div>
+                <div className="flex items-center">
+                  <span className="font-semibold">Thông tin sản phẩm</span>
+                </div>
+                <div className="px-2">
+                  <TitleListMP title="Tên sản phẩm">
+                    {/* Data */}
+                    {products.map((product, index) => (
+                      <ItemListMP
+                        key={index}
+                        number={index + 1}
+                        id={product.productId}
+                        name={product.productName}
+                        quantity={product.quantity}
+                        sellPrice={product.sellPrice}
+                        unit={product.sellUnit}
+                        totalPrice={product.totalPrice}
+                      >
+                        <button onClick={() => handleDeleteProduct(index)}>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </ItemListMP>
+                    ))}
+                  </TitleListMP>
                 </div>
               </div>
-              <div className="pt-3">
-                <TitleListPre>
-                  {/* Data */}
-                  {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} item={item} />
-                  ))}
-                </TitleListPre>
-              </div>
-              <span className="pt-3 pb-1 text-right font-medium">
-                Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-              </span>
-            </div>
-          </div>
+            )}
 
-          <div className="px-9 text-h5 mt-8">
-            <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-              <div className="flex items-center">
-                <span className="w-1/2 italic font-medium flex justify-start">Liều thuốc: Đau mỏi vai gáy</span>
-                <div className="w-1/2 flex justify-end">
-                  <button>
-                    <BsX size={25} style={{ color: '#A8A8A8' }} />
-                  </button>
+            {/* Info  medicine in dose */}
+            {medicines && medicines.length > 0 && (
+              <div>
+                <div className="flex items-center">
+                  <span className="font-semibold">Thông tin thuốc</span>
+                </div>
+                <div className="px-2">
+                  <TitleListMP title="Tên sản phẩm">
+                    {/* Data */}
+                    {medicines.map((medicine, index) => (
+                      <ItemListMP
+                        key={index}
+                        number={index + 1}
+                        id={medicine.medicineId}
+                        name={medicine.medicineName}
+                        quantity={medicine.quantity}
+                        sellPrice={medicine.sellPrice}
+                        unit={medicine.sellUnit}
+                        totalPrice={medicine.totalPrice}
+                      >
+                        <button onClick={() => handleDeleteMedicine(index)}>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </ItemListMP>
+                    ))}
+                  </TitleListMP>
                 </div>
               </div>
-              <div className="pt-3">
-                <TitleListPre>
-                  {/* Data */}
-                  {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} />
-                  ))}
-                </TitleListPre>
-              </div>
-              <span className="pt-3 pb-1 text-right font-medium">
-                Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-              </span>
-            </div>
-          </div>
+            )}
 
-          <div className="flex h-[15%] w-full px-9 items-center mt-5">
-            <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-              Thanh toán (VNĐ)
-            </span>
-          </div>
-          <div className="flex w-full">
-            <div className="w-1/2"></div>
-            <div className="flex w-1/2">
-              <div className="w-1/2 flex flex-col gap-3 font-medium">
-                <span>Tổng tiền phải trả:</span>
-                <span>Tiền khách đưa:</span>
-                <span>Tiền thừa:</span>
-              </div>
-              <div className="w-1/2 flex gap-3 flex-col">
-                <span className="text-secondary">750,000 đ</span>
-                <input
-                  type="text"
-                  value="750,000 đ"
-                  className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
-                  disabled
-                />
-                <span className="text-tertiary">0 đ</span>
-              </div>
-            </div>
-          </div>
+            {/* Info Prescription */}
+            <div className="flex flex-col gap-1">
+              <span className="font-semibold">Thông tin kê đơn</span>
+              <div>
+                {/* new Dose */}
+                <div className="px-2 text-h5">
+                  <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
+                    <div className="flex items-center">
+                      <span className="w-1/2 italic font-medium flex justify-start">
+                        Chuẩn đoán: Đau nhức xương khớp
+                      </span>
+                      <div className="w-1/2 flex justify-end">
+                        <button>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="pt-3">
+                      <TitleListPre>
+                        {/* Data */}
+                        {listMedicine.map((item, index) => (
+                          <ItemListPre key={index} item={item} />
+                        ))}
+                      </TitleListPre>
+                    </div>
+                    <span className="pt-3 pb-1 text-right font-medium">
+                      Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
+                    </span>
+                  </div>
+                </div>
 
-          <div className="flex flex-col w-full px-9 items-center mt-5">
-            <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-            <div className=" w-full">
-              <textarea
-                name="comment"
-                id="comment"
-                cols="30"
-                rows="3"
-                className="w-full rounded-md border-text_blur/50 border-2 p-2"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div className="h-[11%] w-full flex py-3 px-3">
-          <div className="w-1/2">
-            <Button
-              startDecorator={<TbRefresh size={20} />}
-              variant="outlined"
-              style={{
-                color: darkBlue,
-                borderColor: darkBlue,
-                borderWidth: 2,
-                paddingInline: '1rem',
-                fontWeight: 600,
-                fontSize: '16px',
-              }}
-              size="md"
-            >
-              Làm trống
-            </Button>
-          </div>
-          <div className="w-1/2 flex gap-3 justify-end">
-            <Button
-              className="hover:opacity-90 active:opacity-100"
-              variant="solid"
-              style={{
-                backgroundColor: darkBlue,
-                paddingInline: '1rem',
-                fontWeight: 600,
-                fontSize: '16px',
-                color: 'white',
-              }}
-              size="md"
-              onClick={() => setPreview(true)}
-            >
-              Xem trước
-            </Button>
-            <Button
-              className="hover:opacity-90 active:opacity-100"
-              variant="solid"
-              style={{
-                backgroundColor: darkBlue,
-                paddingInline: '1rem',
-                fontWeight: 600,
-                fontSize: '16px',
-                color: 'white',
-              }}
-              size="md"
-            >
-              Thanh toán và in
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <Modal open={preview} onClose={() => setPreview(false)}>
-        <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
-          <ModalClose />
-          {/* Header */}
-          <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
-          {/* Info of pharmacy */}
-          <div className="px-2 overflow-y-auto mt-4">
-            <div className="font-semibold">Thông tin nhà dược</div>
-
-            <div className="px-2">
-              <div className="flex">
-                <span>Tên nhà dược</span>
-                <p>: abc</p>
-              </div>
-              <div className="flex">
-                <span>Địa chỉ nhà dược</span>
-                <p>: abc</p>
-              </div>
-              <div className="flex">
-                <span>Thồng tin liên hệ</span>
-                <p>: abc</p>
+                {/* Dose Availble */}
+                <div className="px-2 text-h5 mt-8">
+                  <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
+                    <div className="flex items-center">
+                      <span className="w-1/2 italic font-medium flex justify-start">Liều thuốc: Đau mỏi vai gáy</span>
+                      <div className="w-1/2 flex justify-end">
+                        <button>
+                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="pt-3">
+                      <TitleListPre>
+                        {/* Data */}
+                        {listMedicine.map((item, index) => (
+                          <ItemListPre key={index} />
+                        ))}
+                      </TitleListPre>
+                    </div>
+                    <span className="pt-3 pb-1 text-right font-medium">
+                      Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="text-h4 font-bold flex justify-center items-center mt-3">HÓA ĐƠN</div>
-            {/* Info of customer */}
-            <div className="flex my-3">
-              <div className="flex flex-col w-[70%]">
-                <span>
-                  Họ tên khách hàng: <span className="font-semibold">Hoàng Văn Phúc</span>
-                </span>
-                <span>
-                  Địa chỉ: <span className="font-semibold">KTX khu A, DHQG tp HCM</span>
-                </span>
-              </div>
-
-              <div className="flex flex-col w-[30%]">
-                <span>
-                  Tuổi: <span className="font-semibold">21</span>
-                </span>
-                <span>
-                  Giới tính: <span className="font-semibold">Nam</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-8">
-              {/* Info of Medicine */}
-              <Medicine />
-              {/* Info of Prescription */}
-              <div className="text-[18px] font-semibold">Kê đơn</div>
-              <Prescription />
-              {/* Info of Dose */}
-              <Dose />
-              {/* Info of Price and Note */}
-              <div className="flex w-full">
-                <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-                  Thanh toán (VNĐ)
-                </span>
+            {/* Infor checkout */}
+            <div className="">
+              <div className="flex items-center mt-5">
+                <span className="w-full font-semibold border-b-2 border-text_blur/30">Thanh toán (VNĐ)</span>
               </div>
               <div className="flex w-full">
                 <div className="w-1/2"></div>
@@ -390,30 +458,54 @@ export default function BillCreate() {
                     <span>Tiền thừa:</span>
                   </div>
                   <div className="w-1/2 flex gap-3 flex-col">
-                    <span>750,000 đ</span>
-                    <span>750,000 đ</span>
-                    <span>0 đ</span>
+                    <span className="text-secondary">750,000 đ</span>
+                    <input
+                      type="text"
+                      value="750,000 đ"
+                      className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
+                      disabled
+                    />
+                    <span className="text-tertiary">0 đ</span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-col w-full">
-                <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-                <div className=" w-full">
-                  <textarea
-                    name="comment"
-                    id="comment"
-                    cols="30"
-                    rows="3"
-                    className="w-full rounded-md border-text_blur/50 border-2 p-2"
-                    disabled
-                  ></textarea>
-                </div>
+            {/* Note Bill */}
+            <div className="flex flex-col w-full items-center mt-5">
+              <span className="w-full font-semibold pb-1">Ghi chú hóa đơn</span>
+              <div className=" w-full">
+                <textarea
+                  name="comment"
+                  id="comment"
+                  cols="30"
+                  rows="3"
+                  className="w-full rounded-md border-text_blur/50 border-2 p-2"
+                ></textarea>
               </div>
             </div>
           </div>
-        </ModalDialog>
-      </Modal>
+        </div>
+
+        {/* Area control button */}
+        <div className="w-full flex py-3 px-6 flex-shrink-0">
+          {/* Cancel Btn */}
+          <div className="w-1/2">
+            <Button size="medium" modifier={'danger'} width={120}>
+              Loại bỏ
+            </Button>
+          </div>
+          {/* Preview Btn */}
+          <div className="w-1/2 flex gap-5 justify-end">
+            <Button size="medium" modifier={'dark-primary'} width={120} onClick={() => setPreview(true)}>
+              Xem trước
+            </Button>
+            <Button size="medium" modifier={'dark-primary'} onClick={handleCheckout}>
+              Thanh toán và in
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
