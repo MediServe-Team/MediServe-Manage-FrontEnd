@@ -150,11 +150,11 @@ export default function BillCreate() {
     <div className="h-full flex gap-3">
       <div className="flex flex-col justify-between px-5 bg-white rounded-xl w-[40%]">
         {/* navigate on page */}
-        <div className="flex justify-start pt-3">
+        <div className="flex justify-start pt-3 flex-shrink-0">
           <SubNavigate navs={navList} />
         </div>
         {/* Navigated page */}
-        <div className="w-full flex-1">
+        <div className="flex-1 w-full min-h-0">
           <Outlet context={{ setProducts, setMedicines }} />
         </div>
       </div>
