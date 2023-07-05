@@ -3,10 +3,12 @@ import { Outlet } from 'react-router-dom';
 import { BsX } from 'react-icons/bs';
 import { getUserId } from '../../Auth/AuthSlice';
 import { useSelector } from 'react-redux';
+import formatToVND from '../../../helpers/formatToVND';
 // component
 import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
 import { Button } from '../../../components';
 import { CustomerInfor, DoseInBill } from '../components/Bill';
+import { toast } from 'react-toastify';
 
 function BillCreate() {
   const [navList, setNavList] = useState([]);
@@ -15,6 +17,9 @@ function BillCreate() {
   const [medicines, setMedicines] = useState([]);
   const [doses, setDoses] = useState([]);
   const staffId = useSelector(getUserId);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [moneyCustomerGive, setMoneyCustomerGive] = useState('');
+  const [note, setNote] = useState('');
 
   // Tab Navigate
   useEffect(() => {
@@ -30,10 +35,6 @@ function BillCreate() {
       {
         name: 'Kê đơn',
         path: '/bills/create/new-dose',
-      },
-      {
-        name: 'Liều có sẵn',
-        path: '/bills/create/available-dose',
       },
     ];
     setNavList(navs);
@@ -74,16 +75,34 @@ function BillCreate() {
     });
     const data = {
       staffId,
-      totalPayment: 0,
-      givenByCustomer: 0,
+      totalPayment: totalPrice,
+      givenByCustomer: Number(moneyCustomerGive),
       ...customer,
       products: productsData,
       medicines: medicineData,
       newPrescriptions: doses,
+      note,
     };
 
-    console.log(doses);
+    if (!data?.customerId && !data.guest) {
+      toast.warning('Vui lòng thêm đầy đủ thông tin khách hàng');
+      return;
+    }
+    if (!moneyCustomerGive) {
+      toast.warning('Vui lòng nhập tiền khách đưa');
+      return;
+    }
+    // call api to create receipt
+    console.log(data);
   };
+
+  useEffect(() => {
+    const productPrice = products.reduce((pd, curr) => pd + curr.totalPrice, 0);
+    const medicicePrice = medicines.reduce((mc, curr) => mc + curr.totalPrice, 0);
+    const dosePrice = doses.reduce((d, curr) => d + curr.totalPrice, 0);
+
+    setTotalPrice(productPrice + medicicePrice + dosePrice);
+  }, [products, medicines, doses]);
 
   return (
     <div className="h-full flex gap-3">
@@ -204,23 +223,27 @@ function BillCreate() {
               <div className="flex items-center mt-5">
                 <span className="w-full font-semibold border-b-2 border-text_blur/30">Thanh toán (VNĐ)</span>
               </div>
-              <div className="flex w-full">
+              <div className="w-full flex">
                 <div className="w-1/2"></div>
-                <div className="flex w-1/2">
-                  <div className="w-1/2 flex flex-col gap-3 font-medium">
-                    <span>Tổng tiền phải trả:</span>
-                    <span>Tiền khách đưa:</span>
-                    <span>Tiền thừa:</span>
+                <div className="w-1/2 flex flex-col gap-3 font-medium">
+                  <div className="flex gap-3 items-center">
+                    <span className="min-w-[150px]">Tổng tiền phải trả: </span>
+                    <span className="text-secondary pl-2">{formatToVND(totalPrice)}</span>
                   </div>
-                  <div className="w-1/2 flex gap-3 flex-col">
-                    <span className="text-secondary">750,000 đ</span>
+                  <div className="flex gap-3 items-center">
+                    <span className="min-w-[150px]">Tiền khách đưa:</span>
                     <input
                       type="text"
-                      value="750,000 đ"
-                      className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
-                      disabled
+                      value={moneyCustomerGive}
+                      onChange={(e) => setMoneyCustomerGive(e.target.value)}
+                      className="pl-2 w-[100px] py-1 border-2 border-text_primary/20 focus:border-text_primary outline-none rounded-md transition-colors duration-300"
                     />
-                    <span className="text-tertiary">0 đ</span>
+                  </div>
+                  <div className="flex gap-3 items-center">
+                    <span className="min-w-[150px]">Tiền thừa:</span>
+                    <span className="text-tertiary pl-2">
+                      {moneyCustomerGive > totalPrice ? formatToVND(moneyCustomerGive - totalPrice) : formatToVND(0)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -235,7 +258,9 @@ function BillCreate() {
                   id="comment"
                   cols="30"
                   rows="3"
-                  className="w-full rounded-md border-text_blur/50 border-2 p-2"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="w-full rounded-md border-text_primary/20 focus:border-text_primary outline-none transition-colors duration-300 border-2 p-2"
                 ></textarea>
               </div>
             </div>
