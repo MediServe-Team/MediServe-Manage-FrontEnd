@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MedicineItem } from '../../../dose/components';
+import MedicineItem from '../../components/MedicineItem';
 import { Button, EmptyImage, SearchOnChange } from '../../../../components';
 import SearchResultItem from '../../../stock/components/SearchResultItem';
 import { useForm } from 'react-hook-form';
@@ -10,15 +10,17 @@ import Tippy from '@tippyjs/react/headless';
 import { useDebounce } from '../../../../hooks';
 // service
 import { filterMedicineStockService } from '../../../medicine/medicineServices';
+import { useOutletContext } from 'react-router-dom';
 
 function AddDose() {
   const [listMedicine, setListMedicine] = useState([]);
   const [visibleMedicineResult, setVisibleMedicineResult] = useState(true);
   const [searchMedicineResult, setSearchMedicineResult] = useState([]);
   const [searchMedicineValue, setSearchMedicineValue] = useState('');
+  // useOutlet context
+  const { setDoses } = useOutletContext();
   // debounce
   const medicineDebounced = useDebounce(searchMedicineValue, 500);
-
   //* list ref to MedicineItem
   const medicineItemRefs = useRef([]);
   //* resize width for tippy search result box
@@ -45,7 +47,6 @@ function AddDose() {
     const filterMedicine = async () => {
       if (medicineDebounced) {
         const result = await filterMedicineStockService(medicineDebounced);
-        console.log(result.data);
         setSearchMedicineResult(result.data);
       }
     };
@@ -108,7 +109,9 @@ function AddDose() {
         if (passValidate) {
           const data = getValues();
           data.listMedicines = listMedicines;
-          console.log('DDDD: ', data);
+          setDoses((prev) => {
+            return [...prev, data];
+          });
         }
       }
     }
