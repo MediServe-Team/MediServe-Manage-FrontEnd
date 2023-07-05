@@ -1,19 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
+import { BsX } from 'react-icons/bs';
+// component
 import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
 import { Button } from '../../../components';
-// component
-import { CustomerInfor } from '../components/Bill';
-import { BsX } from 'react-icons/bs';
-// import { Modal, ModalClose, ModalDialog } from '@mui/joy';
+import { CustomerInfor, DoseInBill } from '../components/Bill';
 
-export default function BillCreate() {
+function BillCreate() {
   const [navList, setNavList] = useState([]);
   const customerRef = useRef();
-  // product & medicine in bill
   const [products, setProducts] = useState([]);
   const [medicines, setMedicines] = useState([]);
-  // dose in bill
   const [doses, setDoses] = useState([]);
 
   // Tab Navigate
@@ -61,67 +58,27 @@ export default function BillCreate() {
     console.log(doses);
   }, [doses]);
 
-  const NewDoseItem = (dose) => {
-    return (
-      <div className="px-2 text-h5">
-        <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-          <div className="flex items-center">
-            <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: {dose.dose.diagnose}</span>
-            <div className="w-1/2 flex justify-end">
-              <button>
-                <BsX size={25} style={{ color: '#A8A8A8' }} />
-              </button>
-            </div>
-          </div>
-          <div className="pt-3">
-            <TitleListPre>
-              {console.log(dose.dose?.listMedicines)}
-              {/* Data */}
-              {dose.dose?.listMedicines &&
-                dose.dose.listMedicines.map((item, index) => (
-                  <ItemListPre
-                    key={index}
-                    medicineName={dose.dose.medicineName}
-                    sellUnit={dose.dose.sellUnit}
-                    morning={dose.dose.morning}
-                    noon={dose.dose.noon}
-                    night={dose.dose.night}
-                    quantity={dose.dose.quantity}
-                    sellPrice={dose.dose.sellPrice}
-                  />
-                ))}
-            </TitleListPre>
-          </div>
-          <div className="pt-3 pb-1 flex justify-between">
-            <span>*{dose.dose.note}</span>
-            <span className=" font-medium">
-              Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   useEffect(() => {
     console.log(doses);
   }, [doses]);
 
   return (
     <div className="h-full flex gap-3">
+      {/*//* Subpage left */}
       <div className="flex flex-col justify-between px-5 bg-white rounded-xl w-[40%]">
         {/* navigate on page */}
         <div className="flex justify-start pt-3 flex-shrink-0">
           <SubNavigate navs={navList} />
         </div>
-        {/* Navigated page */}
+        {/* outlet page */}
         <div className="flex-1 w-full min-h-0">
           <Outlet context={{ setProducts, setMedicines, setDoses }} />
         </div>
       </div>
 
-      {/* Sub page right */}
+      {/*//* Sub page right */}
       <div className="flex flex-col h-full w-[60%] bg-white rounded-xl">
+        {/* header */}
         <header className="border-b-2 border-text_blur/50 pl-6 pt-4 pb-1 w-full">
           <h3 className="text-h4 text-text_primary font-bold">Tạo hóa đơn</h3>
         </header>
@@ -131,7 +88,7 @@ export default function BillCreate() {
             {/* Customer info */}
             <CustomerInfor ref={customerRef} />
 
-            {/* Info product in dose */}
+            {/* Products info */}
             {products && products.length > 0 && (
               <div>
                 <div className="flex items-center">
@@ -152,7 +109,7 @@ export default function BillCreate() {
                         totalPrice={product.totalPrice}
                       >
                         <button onClick={() => handleDeleteProduct(index)}>
-                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                          <BsX size={25} className="text-text_blur" />
                         </button>
                       </ItemListMP>
                     ))}
@@ -161,7 +118,7 @@ export default function BillCreate() {
               </div>
             )}
 
-            {/* Info  medicine in dose */}
+            {/* Medicines info */}
             {medicines && medicines.length > 0 && (
               <div>
                 <div className="flex items-center">
@@ -182,7 +139,7 @@ export default function BillCreate() {
                         totalPrice={medicine.totalPrice}
                       >
                         <button onClick={() => handleDeleteMedicine(index)}>
-                          <BsX size={25} style={{ color: '#A8A8A8' }} />
+                          <BsX size={25} className="text-text_blur" />
                         </button>
                       </ItemListMP>
                     ))}
@@ -191,45 +148,22 @@ export default function BillCreate() {
               </div>
             )}
 
-            {/* Info Prescription */}
+            {/* Prescription Info */}
             {true && (
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">Thông tin kê đơn</span>
                 <div>
-                  {/* new Dose */}
+                  {/*//* New */}
                   <div className="flex flex-col gap-2">
-                    {doses.length > 0 && doses.map((item, index) => <NewDoseItem key={index} dose={item} />)}
+                    {doses.length > 0 && doses.map((item, index) => <DoseInBill key={index} dose={item} />)}
                   </div>
 
-                  {/* Dose Availble */}
-                  <div className="px-2 text-h5 mt-8">
-                    <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-                      <div className="flex items-center">
-                        <span className="w-1/2 italic font-medium flex justify-start">Liều thuốc: Đau mỏi vai gáy</span>
-                        <div className="w-1/2 flex justify-end">
-                          <button>
-                            <BsX size={25} style={{ color: '#A8A8A8' }} />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="pt-3">
-                        <TitleListPre>
-                          {/* Data */}
-                          {[1, 1].map((item, index) => (
-                            <ItemListPre key={index} />
-                          ))}
-                        </TitleListPre>
-                      </div>
-                      <span className="pt-3 pb-1 text-right font-medium">
-                        Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-                      </span>
-                    </div>
-                  </div>
+                  {/*//* Availble */}
                 </div>
               </div>
             )}
 
-            {/* Infor checkout */}
+            {/* Checkout Info */}
             <div className="">
               <div className="flex items-center mt-5">
                 <span className="w-full font-semibold border-b-2 border-text_blur/30">Thanh toán (VNĐ)</span>
@@ -294,3 +228,5 @@ export default function BillCreate() {
     </div>
   );
 }
+
+export default BillCreate;

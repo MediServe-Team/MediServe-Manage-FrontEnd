@@ -14,7 +14,6 @@ function MedicineItem(
     trigger,
     clearErrors,
     getValues,
-    setValue,
     reset,
     formState: { errors },
   } = useForm({ mode: 'onChange', resolver: yupResolver(addMedicineInDoseSchema) });
