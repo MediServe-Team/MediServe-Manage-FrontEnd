@@ -9,3 +9,4 @@ export { default as Medicine } from './Medicine';
 export { default as Prescription } from './Prescription';
 export { default as Dose } from './Dose';
 export { default as AddSellItem } from './AddSellItem';
+export { default as AddDoseItem } from './AddDoseItem';
