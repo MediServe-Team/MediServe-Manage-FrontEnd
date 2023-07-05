@@ -6,7 +6,19 @@ import { MdOutlineClose } from 'react-icons/md';
 import classNames from 'classnames';
 
 function MedicineItem(
-  { number, medicineId, medicineName, packingSpecification, medicineUnit, morning, noon, night, quantity, onRemove },
+  {
+    number,
+    medicineId,
+    medicineName,
+    packingSpecification,
+    medicineUnit,
+    sellPrice,
+    morning,
+    noon,
+    night,
+    quantity,
+    onRemove,
+  },
   ref,
 ) {
   const {
@@ -26,6 +38,10 @@ function MedicineItem(
       if (passValidate) {
         clearErrors();
         const data = getValues();
+        data.medicineName = medicineName;
+        data.packingSpecification = packingSpecification;
+        data.sellPrice = sellPrice;
+        data.medicineUnit = medicineUnit;
         return data;
       }
       return;
