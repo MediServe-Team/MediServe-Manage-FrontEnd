@@ -1,42 +1,48 @@
 import { BsX } from 'react-icons/bs';
 import { TitleListPre, ItemListPre } from '../../components';
+import formatToVND from '../../../../helpers/formatToVND';
 
-function DoseInBill({ dose }) {
+function DoseInBill({ diagnose, listMedicines, note, totalPrice, quantity, onRemove }) {
   return (
     <div className="px-2 text-h5">
       <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
         <div className="flex items-center">
-          <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: {dose.dose.diagnose}</span>
+          <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: {diagnose}</span>
           <div className="w-1/2 flex justify-end">
-            <button>
+            <button onClick={onRemove}>
               <BsX size={25} style={{ color: '#A8A8A8' }} />
             </button>
           </div>
         </div>
         <div className="pt-3">
           <TitleListPre>
-            {console.log(dose.dose?.listMedicines)}
             {/* Data */}
-            {dose.dose?.listMedicines &&
-              dose.dose.listMedicines.map((item, index) => (
+            {listMedicines &&
+              Array.isArray(listMedicines) &&
+              listMedicines.map((item, index) => (
                 <ItemListPre
                   key={index}
-                  medicineName={dose.dose.medicineName}
-                  sellUnit={dose.dose.sellUnit}
-                  morning={dose.dose.morning}
-                  noon={dose.dose.noon}
-                  night={dose.dose.night}
-                  quantity={dose.dose.quantity}
-                  sellPrice={dose.dose.sellPrice}
+                  medicineName={item.medicineName}
+                  sellUnit={item.medicineUnit}
+                  morning={item.morning}
+                  noon={item.noon}
+                  night={item.night}
+                  quantity={item.quantity}
+                  sellPrice={item.sellPrice}
                 />
               ))}
           </TitleListPre>
         </div>
-        <div className="pt-3 pb-1 flex justify-between">
-          <span>*{dose.dose.note}</span>
-          <span className=" font-medium">
-            Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-          </span>
+        <div className="pt-3 pb-1 flex flex-col">
+          {note && <i>ghi chú: {note}</i>}
+          <div className="flex justify-between">
+            <span>
+              số lượng: x <b>{quantity}</b>
+            </span>
+            <span className=" font-medium">
+              Tổng giá: <span className="text-secondary font-normal">{formatToVND(totalPrice)}</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>

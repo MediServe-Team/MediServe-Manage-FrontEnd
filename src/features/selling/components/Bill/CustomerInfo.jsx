@@ -59,18 +59,19 @@ function CustomerInfor({}, ref) {
   const renderSearchCustomerResult = () => {
     return (
       <div className="flex flex-col">
-        {customerResults.map((account, index) => (
-          <div
-            className="flex justify-around items-center py-2 hover:bg-text_blur/10 cursor-pointer"
-            key={index}
-            onClick={() => handleAddCustomerSystem(account)}
-          >
-            <p className="font-medium">{account.fullName}</p>
-            <p className="text-text_blur">{account.gender === 0 ? 'Nữ' : 'Nam'}</p>
-            <p className="text-text_blur">{account.age} tuổi</p>
-            <p className="text-text_blur">{account.email}</p>
-          </div>
-        ))}
+        {customerResults &&
+          customerResults.map((account, index) => (
+            <div
+              className="flex justify-around items-center py-2 hover:bg-text_blur/10 cursor-pointer"
+              key={index}
+              onClick={() => handleAddCustomerSystem(account)}
+            >
+              <p className="font-medium">{account.fullName}</p>
+              <p className="text-text_blur">{account.gender === 0 ? 'Nữ' : 'Nam'}</p>
+              <p className="text-text_blur">{account.age} tuổi</p>
+              <p className="text-text_blur">{account.email}</p>
+            </div>
+          ))}
       </div>
     );
   };
@@ -193,7 +194,7 @@ function CustomerInfor({}, ref) {
         //* Customer have account:
         <div className="flex flex-col gap-4">
           <Tippy
-            visible={visibleCustomerResult && customerResults.length > 0}
+            visible={visibleCustomerResult && customerResults?.length > 0}
             interactive={true}
             placement="bottom-start"
             onClickOutside={() => setVisibleCustomerResult(false)}

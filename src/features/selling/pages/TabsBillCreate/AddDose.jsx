@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import MedicineItem from '../../components/MedicineItem';
-import { Button, EmptyImage, SearchOnChange } from '../../../../components';
+import { Button, EmptyImage, SearchOnChange, Modal } from '../../../../components';
 import SearchResultItem from '../../../stock/components/SearchResultItem';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,12 +11,16 @@ import { useDebounce } from '../../../../hooks';
 // service
 import { filterMedicineStockService } from '../../../medicine/medicineServices';
 import { useOutletContext } from 'react-router-dom';
+import { AiOutlineClose } from 'react-icons/ai';
 
 function AddDose() {
   const [listMedicine, setListMedicine] = useState([]);
   const [visibleMedicineResult, setVisibleMedicineResult] = useState(true);
   const [searchMedicineResult, setSearchMedicineResult] = useState([]);
   const [searchMedicineValue, setSearchMedicineValue] = useState('');
+  // modal
+  const [openModal, setOpenModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   // useOutlet context
   const { setDoses } = useOutletContext();
   // debounce
@@ -77,8 +81,8 @@ function AddDose() {
   };
 
   //* add medicine
-  const handleAddMedicineToDose = (medicineId, medicineName, packingSpecification, sellUnit) => {
-    const newListMedicine = [...listMedicine, { medicineId, medicineName, packingSpecification, sellUnit }];
+  const handleAddMedicineToDose = (medicineId, medicineName, packingSpecification, sellUnit, sellPrice) => {
+    const newListMedicine = [...listMedicine, { medicineId, medicineName, packingSpecification, sellUnit, sellPrice }];
     setListMedicine(newListMedicine);
   };
 
@@ -108,10 +112,18 @@ function AddDose() {
         const passValidate = await trigger();
         if (passValidate) {
           const data = getValues();
+          // calc price of dose
+          const totalPrice = listMedicines.reduce((acc, curr) => {
+            return acc + Number(curr.sellPrice) * Number(curr.quantity);
+          }, 0);
           data.listMedicines = listMedicines;
+          data.quantity = Number(quantity);
+          data.totalPrice = totalPrice * Number(quantity);
+          setOpenModal(false);
           setDoses((prev) => {
             return [...prev, data];
           });
+          handleClearFormCreateDose();
         }
       }
     }
@@ -139,6 +151,7 @@ function AddDose() {
               item.medicine.medicineName,
               item.medicine.packingSpecification,
               item.medicine.sellUnit,
+              item.sellPrice,
             )
           }
         />
@@ -148,9 +161,35 @@ function AddDose() {
     );
   };
 
+  //* modal: close
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setQuantity(1);
+  };
+
+  //* modal: open
+  const handleOpenModal = async () => {
+    // check validate data
+    if (medicineItemRefs.current.length > 0 && listMedicine.length > 0) {
+      let checkValidate = true;
+      await medicineItemRefs.current.map(async (item) => {
+        if (item) {
+          const data = await item.getData();
+          if (!data) checkValidate = false;
+        }
+      });
+      if (checkValidate) {
+        const passValidate = await trigger();
+        if (passValidate) {
+          setOpenModal(true);
+        }
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col bg-white rounded-lg h-full min-h-0">
-      <div className="px-5 flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Search */}
         <div className="mt-5">
           <Tippy
@@ -207,6 +246,7 @@ function AddDose() {
                 medicineName={item.medicineName}
                 packingSpecification={item.packingSpecification}
                 medicineUnit={item.sellUnit}
+                sellPrice={item.sellPrice}
                 onRemove={() => handleRemoveMedicineFromDose(index)}
               />
             ))
@@ -238,12 +278,39 @@ function AddDose() {
             >
               Làm rỗng
             </Button>
-            <Button styleBtn={'solid'} modifier={'dark_primary'} size={'medium'} width={100} onClick={handleCreateDose}>
+            <Button styleBtn={'solid'} modifier={'dark_primary'} size={'medium'} width={100} onClick={handleOpenModal}>
               Thêm
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal showModal={openModal}>
+        <div className="w-[300px] flex flex-col items-center gap-5">
+          <header className="w-full flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="text-text_primary font-bold text-h4">Nhập số lượng</h3>
+              <p className="text-text_blur text-h6">Thêm số lượng cho thuốc</p>
+            </div>
+            {/* close modal update */}
+            <button className="w-[40px] h-full flex outline-none" onClick={handleCloseModal}>
+              <AiOutlineClose className="text-[20px] m-auto" />
+            </button>
+          </header>
+          {/* input */}
+          <input
+            type="text"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="text-center border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+          />
+          {/* Button */}
+          <Button size={'medium'} width={140} modifier={'dark-primary'} onClick={handleCreateDose}>
+            Xác nhận
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

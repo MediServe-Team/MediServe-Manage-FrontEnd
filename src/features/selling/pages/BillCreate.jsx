@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BsX } from 'react-icons/bs';
+import { getUserId } from '../../Auth/AuthSlice';
+import { useSelector } from 'react-redux';
 // component
 import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
 import { Button } from '../../../components';
@@ -12,6 +14,7 @@ function BillCreate() {
   const [products, setProducts] = useState([]);
   const [medicines, setMedicines] = useState([]);
   const [doses, setDoses] = useState([]);
+  const staffId = useSelector(getUserId);
 
   // Tab Navigate
   useEffect(() => {
@@ -48,19 +51,39 @@ function BillCreate() {
     setMedicines([...newMedicine.slice(0, index), ...newMedicine.slice(index + 1)]);
   };
 
-  //todo: Checkout
-  const handleCheckout = async () => {
-    const customerData = await customerRef.current.getCustomer();
-    console.log(customerData);
+  //*TODO: new prescriptions
+  const handleDeleteNewPres = (index) => {
+    const newPres = [...doses];
+    setDoses([...newPres.slice(0, index), ...newPres.slice(index + 1)]);
   };
 
-  useEffect(() => {
-    console.log(doses);
-  }, [doses]);
+  //todo: Checkout
+  const handleCheckout = async () => {
+    // get customer
+    const customerData = await customerRef.current.getCustomer();
+    const customer = customerData?.id ? { customerId: customerData.id } : { guest: customerData };
+    // get products data
+    const productsData = products.map((pd) => {
+      const { productId, quantity, totalPrice } = pd;
+      return { productId, quantity, totalPrice };
+    });
+    // get medicines data
+    const medicineData = medicines.map((mc) => {
+      const { medicineId, quantity, totalPrice } = mc;
+      return { medicineId, quantity, totalPrice };
+    });
+    const data = {
+      staffId,
+      totalPayment: 0,
+      givenByCustomer: 0,
+      ...customer,
+      products: productsData,
+      medicines: medicineData,
+      newPrescriptions: doses,
+    };
 
-  useEffect(() => {
     console.log(doses);
-  }, [doses]);
+  };
 
   return (
     <div className="h-full flex gap-3">
@@ -155,7 +178,20 @@ function BillCreate() {
                 <div>
                   {/*//* New */}
                   <div className="flex flex-col gap-2">
-                    {doses.length > 0 && doses.map((item, index) => <DoseInBill key={index} dose={item} />)}
+                    {doses.length > 0 &&
+                      doses.map((item, index) => {
+                        return (
+                          <DoseInBill
+                            key={index}
+                            diagnose={item.diagnose}
+                            listMedicines={item.listMedicines}
+                            note={item.note}
+                            quantity={item.quantity}
+                            totalPrice={item.totalPrice}
+                            onRemove={() => handleDeleteNewPres(index)}
+                          />
+                        );
+                      })}
                   </div>
 
                   {/*//* Availble */}
