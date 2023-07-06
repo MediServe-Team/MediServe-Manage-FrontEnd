@@ -142,7 +142,7 @@ function Bill() {
                   customerName={item.customerId ? item.customer.fullName : item.guest.fullName}
                   totalPrice={item.totalPayment}
                 >
-                  <Link to={`/bills/${index}`}>Chi tiết</Link>
+                  <Link to={`/bills/${item.id}`}>Chi tiết</Link>
                 </ItemBill>
               </div>
             ))}

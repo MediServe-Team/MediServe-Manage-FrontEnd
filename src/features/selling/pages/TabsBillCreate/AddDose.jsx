@@ -124,7 +124,8 @@ function AddDose() {
             noon: Number(noon),
             packingSpecification,
             quantity: Number(quantity),
-            sellPrice: Number(quantity),
+            sellPrice: Number(sellPrice),
+            totalPrice: Number(quantity) * Number(sellPrice),
           });
         }
         return acc;

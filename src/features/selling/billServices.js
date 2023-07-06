@@ -24,3 +24,8 @@ export const filterBillService = async (staffName, customerName, fromDate, toDat
   );
   return response.data;
 };
+
+export const getBillService = async (billId) => {
+  const response = await axiosBase.get(`/receipts/detail/${billId}`);
+  return response.data;
+};

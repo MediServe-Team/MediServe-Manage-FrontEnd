@@ -97,6 +97,9 @@ function BillCreate() {
     if (!moneyCustomerGive) {
       toast.warning('Vui lòng nhập tiền khách đưa');
       return;
+    } else if (Number(moneyCustomerGive) < Number(totalPrice)) {
+      toast.warning('Khách đưa chưa đủ tiền');
+      return;
     }
 
     // call api to create receipt
