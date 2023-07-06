@@ -1,27 +1,49 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { IoIosArrowDown } from 'react-icons/io';
 import { Button, Pagination } from '../../../components';
 import { BiFilterAlt } from 'react-icons/bi';
 import { ItemBill, TitleBillList } from '../components';
 import { Link } from 'react-router-dom';
+// services
+import useBill from '../hooks/useBill';
 
 function Bill() {
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
   const refFromDate = useRef();
   const refToDate = useRef();
   const [activeFilter, setActiveFilter] = useState(false);
-  const [listBill, setListBill] = useState([1, 1, 1, 1, 1, 1, 1, 1, 1]);
-  const [activeDetail, setActiveDetail] = useState(false);
+  // use bill
+  const {
+    bills,
+    customerName,
+    staffName,
+    fromDate,
+    toDate,
+    pageNumber,
+    pageLength,
+    setCustomerName,
+    setStaffName,
+    setFromDate,
+    setToDate,
+    setPageNumber,
+  } = useBill();
 
   const handleActiveFilter = () => {
     setActiveFilter((pre) => !pre);
   };
 
-  const handleActiveDetail = () => {
-    setActiveDetail((pre) => !pre);
-  };
+  useEffect(() => {
+    if (activeFilter === false) {
+      setCustomerName('');
+      setStaffName('');
+      const resetDate = new Date();
+      // set date is 1 day ago
+      resetDate.setDate(resetDate.getDate() - 1);
+      setFromDate(resetDate);
+      setToDate(new Date());
+      setPageNumber(1);
+    }
+  }, [activeFilter]);
 
   return (
     <div className="w-full h-full">
@@ -42,13 +64,17 @@ function Bill() {
             <div className="flex gap-3 items-center">
               <input
                 type="text"
-                placeholder="Mã nhân viên"
-                className="w-[140px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
+                placeholder="Tên nhân viên"
+                value={staffName}
+                onChange={(e) => setStaffName(e.target.value)}
+                className="w-[200px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
               />
               <input
                 type="text"
-                placeholder="Mã khách hàng"
-                className="w-[140px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
+                placeholder="Tên khách hàng"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="w-[200px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
               />
               <div
                 className="flex items-center justify-between border-2 w-[120px] h-[34px] border-gray-400 rounded-md px-2 cursor-pointer"
@@ -90,9 +116,9 @@ function Bill() {
                 <IoIosArrowDown className="text-gray-400" />
               </div>
 
-              <Button styleBtn={'solid'} size={'medium'} width={120}>
+              {/* <Button styleBtn={'solid'} size={'medium'} width={120}>
                 Tìm kiếm
-              </Button>
+              </Button> */}
             </div>
           </form>
         </div>
@@ -104,9 +130,18 @@ function Bill() {
           </div>
           {/* List*/}
           <div className="flex flex-col gap-3 flex-1 overflow-y-auto pb-20 min-h-0">
-            {listBill.map((item, index) => (
+            {bills.map((item, index) => (
               <div>
-                <ItemBill key={index} activeDetail={activeDetail}>
+                <ItemBill
+                  key={index}
+                  billId={item.id}
+                  staffId={item.staffId}
+                  staffName={item.staff.fullName}
+                  createdAt={item.createdAt}
+                  customerId={item.customerId ? item.customerId : item.guestId}
+                  customerName={item.customerId ? item.customer.fullName : item.guest.fullName}
+                  totalPrice={item.totalPayment}
+                >
                   <Link to={`/bills/${index}`}>Chi tiết</Link>
                 </ItemBill>
               </div>
@@ -117,7 +152,7 @@ function Bill() {
         <div className="flex justify-center relative">
           {/* {pageLength > 0 && ( */}
           <div className="absolute -top-[70px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
-            <Pagination pageLength={7} pageNumber={1} setPageNumber={() => {}} />
+            <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
           </div>
           {/* )} */}
         </div>
