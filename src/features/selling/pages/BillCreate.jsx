@@ -5,10 +5,12 @@ import { getUserId } from '../../Auth/AuthSlice';
 import { useSelector } from 'react-redux';
 import formatToVND from '../../../helpers/formatToVND';
 // component
-import { SubNavigate, ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
+import { SubNavigate, ItemListMP, TitleListMP } from '../components';
 import { Button } from '../../../components';
 import { CustomerInfor, DoseInBill } from '../components/Bill';
 import { toast } from 'react-toastify';
+// services
+import { createBillService } from '../billServices';
 
 function BillCreate() {
   const [navList, setNavList] = useState([]);
@@ -88,14 +90,36 @@ function BillCreate() {
       toast.warning('Vui lòng thêm đầy đủ thông tin khách hàng');
       return;
     }
+    if (doses.length === 0 && products.length === 0 && medicines.length === 0) {
+      toast.warning('Hóa đơn đang trống');
+      return;
+    }
     if (!moneyCustomerGive) {
       toast.warning('Vui lòng nhập tiền khách đưa');
       return;
     }
+
     // call api to create receipt
-    console.log(data);
+    const result = await createBillService(data);
+    if (result.status === 201) {
+      toast.success('Tạo hóa đơn thành công');
+      handleClearBill();
+    } else toast.error('Hóa đơn chưa được tạo thành công');
   };
 
+  //* handle clear bill
+  const handleClearBill = () => {
+    // setCus;
+    customerRef.current.clearCustomer();
+    setProducts([]);
+    setMedicines([]);
+    setDoses([]);
+    setNote('');
+    setMoneyCustomerGive('');
+    setTotalPrice(0);
+  };
+
+  //* calc total price
   useEffect(() => {
     const productPrice = products.reduce((pd, curr) => pd + curr.totalPrice, 0);
     const medicicePrice = medicines.reduce((mc, curr) => mc + curr.totalPrice, 0);
@@ -191,7 +215,7 @@ function BillCreate() {
             )}
 
             {/* Prescription Info */}
-            {true && (
+            {doses && doses?.length > 0 && (
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">Thông tin kê đơn</span>
                 <div>
@@ -271,7 +295,7 @@ function BillCreate() {
         <div className="w-full flex py-3 px-6 flex-shrink-0">
           {/* Cancel Btn */}
           <div className="w-1/2">
-            <Button size="medium" modifier={'danger'} width={120}>
+            <Button size="medium" modifier={'danger'} width={120} onClick={handleClearBill}>
               Loại bỏ
             </Button>
           </div>

@@ -102,9 +102,30 @@ function AddDose() {
       const listMedicines = await medicineItemRefs.current.reduce(async (acc, curr) => {
         if (curr) {
           const data = await curr.getData();
+          const {
+            medicineId,
+            medicineName,
+            medicineUnit,
+            morning,
+            night,
+            noon,
+            packingSpecification,
+            quantity,
+            sellPrice,
+          } = data;
           if (!data) checkValidate = false;
           acc = await Promise.resolve(acc);
-          acc.push(data);
+          acc.push({
+            medicineId: Number(medicineId),
+            medicineName,
+            medicineUnit,
+            morning: Number(morning),
+            night: Number(night),
+            noon: Number(noon),
+            packingSpecification,
+            quantity: Number(quantity),
+            sellPrice: Number(quantity),
+          });
         }
         return acc;
       }, []);

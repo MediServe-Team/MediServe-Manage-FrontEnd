@@ -25,6 +25,7 @@ function CustomerInfor({}, ref) {
     register,
     getValues,
     trigger,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(InforGuestSchema) });
 
@@ -34,11 +35,20 @@ function CustomerInfor({}, ref) {
         const passValidate = await trigger();
         if (passValidate) {
           const customerInfo = getValues();
-          return customerInfo;
+          return {
+            fullName: customerInfo.fullName,
+            age: Number(customerInfo.age),
+            gender: Boolean(customerInfo.gender),
+            address: customerInfo.address,
+          };
         }
       } else if (Object.keys(cusomerSystem).length !== 0) {
         return cusomerSystem;
       }
+    },
+    clearCustomer: () => {
+      setCustomerSystem({});
+      reset({ fullName: '', address: '', age: '' });
     },
   }));
 
@@ -151,11 +161,11 @@ function CustomerInfor({}, ref) {
             {/* Name customer */}
             <input
               type="text"
-              {...register('name')}
+              {...register('fullName')}
               placeholder="Họ tên khách hàng"
               className={classNames(
                 'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
-                errors.name?.message ? 'border-danger' : 'border-text_primary/20',
+                errors.fullName?.message ? 'border-danger' : 'border-text_primary/20',
               )}
             />
             {/* Address */}
@@ -180,11 +190,18 @@ function CustomerInfor({}, ref) {
             {/* Gender */}
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-3">
-                <input id="gender-male" type="radio" name="gender" value={1} {...register('gender')} defaultChecked />
+                <input
+                  id="gender-male"
+                  type="radio"
+                  name="gender"
+                  value={true}
+                  {...register('gender')}
+                  defaultChecked
+                />
                 <label htmlFor="gender-male">Nam</label>
               </div>
               <div className="flex items-center gap-3">
-                <input id="gender-female" type="radio" name="gender" {...register('gender')} value={0} />
+                <input id="gender-female" type="radio" name="gender" {...register('gender')} value={false} />
                 <label htmlFor="gender-female">Nữ</label>
               </div>
             </div>
