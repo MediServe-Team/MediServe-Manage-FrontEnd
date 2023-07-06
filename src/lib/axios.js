@@ -3,7 +3,7 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:5000/api';
 
 export const axiosBase = axios.create({
   baseURL: BASE_URL,
-  timeout: 6000,
+  // timeout: 6000,
 });
 
 export const axiosPrivate = axios.create({

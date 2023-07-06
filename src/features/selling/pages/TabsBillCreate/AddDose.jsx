@@ -102,9 +102,31 @@ function AddDose() {
       const listMedicines = await medicineItemRefs.current.reduce(async (acc, curr) => {
         if (curr) {
           const data = await curr.getData();
+          const {
+            medicineId,
+            medicineName,
+            medicineUnit,
+            morning,
+            night,
+            noon,
+            packingSpecification,
+            quantity,
+            sellPrice,
+          } = data;
           if (!data) checkValidate = false;
           acc = await Promise.resolve(acc);
-          acc.push(data);
+          acc.push({
+            medicineId: Number(medicineId),
+            medicineName,
+            medicineUnit,
+            morning: Number(morning),
+            night: Number(night),
+            noon: Number(noon),
+            packingSpecification,
+            quantity: Number(quantity),
+            sellPrice: Number(sellPrice),
+            totalPrice: Number(quantity) * Number(sellPrice),
+          });
         }
         return acc;
       }, []);
@@ -222,7 +244,7 @@ function AddDose() {
 
         {/* Name of dose */}
         <div className="pt-4 pb-1">
-          <h3 className="text-text_primary font-medium">Tên liều thuốc:</h3>
+          <h3 className="text-text_primary font-medium">Chuẩn đoán:</h3>
           <input
             type="text"
             className={classNames(
