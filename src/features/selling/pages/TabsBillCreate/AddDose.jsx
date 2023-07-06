@@ -243,7 +243,7 @@ function AddDose() {
 
         {/* Name of dose */}
         <div className="pt-4 pb-1">
-          <h3 className="text-text_primary font-medium">Tên liều thuốc:</h3>
+          <h3 className="text-text_primary font-medium">Chuẩn đoán:</h3>
           <input
             type="text"
             className={classNames(
