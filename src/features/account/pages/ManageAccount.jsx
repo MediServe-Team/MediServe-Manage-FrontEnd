@@ -4,8 +4,24 @@ import CustomerItem from '../components/CustomerItem';
 import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
 import { AccountCustomer, AccountStaff } from '../pages';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function ManageAccount() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Accounts',
+        slug: '/accounts',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
   const [listUser, setListUser] = useState(all);

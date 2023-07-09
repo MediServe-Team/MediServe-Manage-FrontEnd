@@ -15,8 +15,24 @@ import formatToVND from '../../../helpers/formatToVND';
 import { toast } from 'react-toastify';
 // select category from redux store
 import { getlistCategories } from '../../category/categorySlice';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function StockInto() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Stock Into',
+        slug: '/stock/into',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [merchandises, setMerchandises] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);

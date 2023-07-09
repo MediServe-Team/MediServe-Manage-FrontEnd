@@ -2,7 +2,7 @@ import { BsPencilSquare } from 'react-icons/bs';
 
 function CustomerProfile() {
   return (
-    <div className="h-full w-full bg-white rounded-xl px-14 py-8 relative">
+    <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">
         <div className="w-3/5 pr-24">
           <h1 className="text-dark_primary text-h3 font-bold mb-2">Thông tin cá nhân</h1>
@@ -20,8 +20,8 @@ function CustomerProfile() {
           <div className="bg-orange-50 rounded-xl border-slate-400 border-solid border-2 h-[210px] py-2 px-3 relative">
             <h1 className="font-bold text-h4 text-dark_primary mb-2">Ảnh hồ sơ</h1>
             <div>
-              <img className="h-[130px] mx-auto" src="https://i.ibb.co/cDz1NGp/86.jpg" alt="Failed" />
-              <button className=" bg-primary hover:bg-dark_primary/80 active:bg-dark_primary rounded-full p-2 absolute right-24 bottom-3">
+              <img className="h-[120px] mx-auto" src="https://i.ibb.co/cDz1NGp/86.jpg" alt="Failed" />
+              <button className=" bg-primary hover:bg-dark_primary/80 active:bg-dark_primary rounded-full p-2 absolute right-24 bottom-6">
                 <BsPencilSquare className="text-white" />
               </button>
             </div>
@@ -50,7 +50,7 @@ function CustomerProfile() {
         </div>
       </div>
 
-      <div className="flex mt-7">
+      <div className="flex mt-5">
         <div className="w-3/5">
           <div className="pr-24">
             <p className="titleInputProfile">Địa chỉ thường trú</p>
@@ -82,7 +82,7 @@ function CustomerProfile() {
         </div>
       </div>
 
-      <div className="flex mt-7">
+      <div className="flex mt-5">
         <div className="w-3/5"></div>
 
         <div className="flex w-2/5 justify-end items-end">

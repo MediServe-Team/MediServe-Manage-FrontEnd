@@ -4,7 +4,7 @@ import { IoMdCloudUpload } from 'react-icons/io';
 import { TbRefresh } from 'react-icons/tb';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getListUnits } from '../../../slices/unitSlice';
 // import lib handle form
 import { useForm } from 'react-hook-form';
@@ -13,8 +13,23 @@ import { CreateProductSchema } from '../../../validations/createProduct';
 import classNames from 'classnames';
 import { createProductServices } from '../productServices';
 import { toast } from 'react-toastify';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function ProductCreate() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Products Add',
+        slug: '/products/add',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [listImg, setListImg] = useState([]);
   const [barcode, setBarcode] = useState('');
   const [importUnit, setImportUnit] = useState('');

@@ -1,21 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  breadcrumbList: [
+    {
+      name: 'Home',
+      slug: '/',
+    },
+  ],
+};
+
 const breadcrumbSlice = createSlice({
+  initialState,
   name: 'breadcrumb',
-  initialState: {
-    breadcrumbList: [
-      {
-        name: 'haha',
-        slug: '',
-      },
-    ],
-  },
   reducers: {
     addNewBreadcrumb: (state, action) => {
-      state.breadcrumb.push(action.payload);
+      state.breadcrumbList.push(action.payload);
     },
     removeLastBreadcrumb: (state) => {
-      state.breadcrumb.pop();
+      state.breadcrumbList.pop();
     },
   },
 });

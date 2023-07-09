@@ -7,8 +7,24 @@ import { ItemBill, TitleBillList } from '../components';
 import { Link } from 'react-router-dom';
 // services
 import useBill from '../hooks/useBill';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Bill() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Bills',
+        slug: '/bills',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const refFromDate = useRef();
   const refToDate = useRef();
   const [activeFilter, setActiveFilter] = useState(false);
