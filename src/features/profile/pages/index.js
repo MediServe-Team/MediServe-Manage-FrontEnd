@@ -1,1 +1,1 @@
-export { default as Profile } from './StaffProfile';
+export { default as Profile } from './ManageProfile';

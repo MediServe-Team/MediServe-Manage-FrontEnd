@@ -11,13 +11,28 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { doseNameSchema } from '../../../validations/addMedicineInDose';
 // get user ID
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getUserId } from '../../Auth/AuthSlice';
 // service call api
 import { createDoseService, filterDoseService } from '../doseServices';
 import { toast } from 'react-toastify';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Dose() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Doses',
+        slug: '/doses',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const staffId = useSelector(getUserId);
   const [listMedicine, setListMedicine] = useState([]);
   const [searchDoseValue, setSearchDoseValue] = useState('');

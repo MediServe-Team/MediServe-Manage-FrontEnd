@@ -6,12 +6,14 @@ import authSlice from './features/Auth/AuthSlice';
 import categorySlice from './features/category/categorySlice';
 import stockSlice from './features/stock/stockSlice';
 import unitSlice from './slices/unitSlice';
+import breadcrumbSlice from './slices/breadcrumbSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
   category: categorySlice,
   stock: stockSlice,
   unit: unitSlice,
+  breadcrumb: breadcrumbSlice,
 });
 
 const persistConfig = {

@@ -4,6 +4,7 @@ import { SubNavigate } from '../components';
 import { SearchOnChange } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInventoryStock, getLengthAll, getLengthExp, getLengthPreExp, getLengthPreSoldOut } from '../stockSlice';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Stock() {
   const [navList, setNavList] = useState([]);
@@ -11,6 +12,19 @@ function Stock() {
   const [searchValue, setSearchValue] = useState('');
   // dispatch
   const dispatch = useDispatch();
+
+  // addBreadcrumb
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Stock All',
+        slug: '/stock/all',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
 
   const handleSearchValueChange = (e) => {
     setSearchValue(e.target.value);

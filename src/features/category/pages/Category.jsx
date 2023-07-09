@@ -1,10 +1,25 @@
 import CategotyItem from '../components/CategoryItem';
 import CategotyItemAdd from '../components/CategoryItemAdd';
 import { getlistCategories } from '../categorySlice';
-
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Category() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Category',
+        slug: '/category',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const listCategory = useSelector(getlistCategories);
 
   return (

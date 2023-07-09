@@ -3,8 +3,24 @@ import { SearchOnChange, SubNavigate } from '../../../components';
 import { MedicineGrid } from './SubPage';
 import { useSelector } from 'react-redux';
 import { useDebounce } from '../../.././hooks';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Medicine() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Medicines All',
+        slug: '/medicines/all',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [navList, setNavList] = useState([]);
   // Search
   const [searchValue, setSearchValue] = useState('');

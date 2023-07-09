@@ -11,8 +11,24 @@ import { CustomerInfor, DoseInBill } from '../components/Bill';
 import { toast } from 'react-toastify';
 // services
 import { createBillService } from '../billServices';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function BillCreate() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Bills Create',
+        slug: '/bills/create/product',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [navList, setNavList] = useState([]);
   const customerRef = useRef();
   const [products, setProducts] = useState([]);
