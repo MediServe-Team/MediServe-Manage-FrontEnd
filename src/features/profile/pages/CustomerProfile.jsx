@@ -1,6 +1,6 @@
 import { BsPencilSquare } from 'react-icons/bs';
 
-function CustomerProfile() {
+function CustomerProfile({ name, fullName, gender, age, dateOfBirth, phoneNumber, avatar, address }) {
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">
@@ -75,10 +75,10 @@ function CustomerProfile() {
         <div className="w-2/5">
           <p className="titleInputProfile">Mật khẩu</p>
           <input type="password" className="inputProfile" />
-          <div className="mt-7">
+          {/* <div className="mt-7">
             <p className="titleInputProfile">Số điểm tích lũy</p>
             <input type="number" className="inputProfile" />
-          </div>
+          </div> */}
         </div>
       </div>
 
