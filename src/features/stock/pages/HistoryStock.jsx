@@ -13,7 +13,7 @@ import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcru
 function HistoryStock() {
   // addBreadcrumb
   const dispatch = useDispatch();
-  useEffect(() => {
+  const createBreadcrumb = () => {
     dispatch(
       addNewBreadcrumb({
         name: 'Stock History',
@@ -23,7 +23,8 @@ function HistoryStock() {
     return () => {
       dispatch(removeLastBreadcrumb());
     };
-  }, [dispatch]);
+  };
+  createBreadcrumb();
 
   const [sortVisible, setSortVisible] = useState(false);
   const refFromDate = useRef();

@@ -7,7 +7,7 @@ import routes from '../config/routes.js';
 import Login from '../pages/Login.jsx';
 
 // Private Page
-import Dashboard from '../pages/Dashboard.jsx';
+import { Dashboard } from '../features/dashboard/pages';
 
 // Stock
 import { Stock } from '../features/stock/pages';
@@ -32,7 +32,7 @@ import { Dose } from '../features/dose/pages';
 
 import { Category } from '../features/category/pages';
 
-import { Account, AccountCustomer, AccountStaff, ManageAccount } from '../features/account/pages';
+import { ManageAccount } from '../features/account/pages';
 
 // Bill
 import { Bill } from '../features/selling/pages';
