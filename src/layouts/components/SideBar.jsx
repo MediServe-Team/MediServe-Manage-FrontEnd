@@ -14,6 +14,7 @@ import { TbCategory2 } from 'react-icons/tb';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { IoIosExit } from 'react-icons/io';
 import { BsPersonVcardFill } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 
 const MENUS = [
   {
@@ -86,6 +87,8 @@ function SideBar() {
   const [menuOpenId, setMenuOpenId] = useState(-1);
   const navigate = useNavigate();
 
+  const state = useSelector((state) => state);
+
   const transition = useTransition(expand, {
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 1, scale: 1 },
@@ -112,7 +115,7 @@ function SideBar() {
   };
 
   const handleLogout = () => {
-    console.log('logout');
+    console.log(state);
   };
 
   const renderMenu = () => {
