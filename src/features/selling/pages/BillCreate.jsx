@@ -20,7 +20,7 @@ function BillCreate() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Bills Create',
+        name: 'Tạo hóa đơn',
         slug: '/bills/create/product',
       }),
     );

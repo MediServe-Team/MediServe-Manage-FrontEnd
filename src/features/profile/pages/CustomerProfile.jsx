@@ -1,6 +1,6 @@
 import { BsPencilSquare } from 'react-icons/bs';
 
-function CustomerProfile({ name, fullName, gender, age, dateOfBirth, phoneNumber, avatar, address }) {
+function CustomerProfile({ email, name, fullName, gender, age, dateOfBirth, phoneNumber, avatar, address }) {
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">
@@ -13,7 +13,7 @@ function CustomerProfile({ name, fullName, gender, age, dateOfBirth, phoneNumber
           </p>
 
           <p className="titleInputProfile">Email</p>
-          <input type="email" className="inputProfile" placeholder="Ex:username@gmail.com" />
+          <input type="email" className="inputProfile" value={email} />
         </div>
 
         <div className="w-2/5">
@@ -33,7 +33,7 @@ function CustomerProfile({ name, fullName, gender, age, dateOfBirth, phoneNumber
         <div className="flex w-3/5">
           <div className="w-1/3 pr-14">
             <p className="titleInputProfile">Tên</p>
-            <input type="text" className="inputProfile" />
+            <input type="text" className="inputProfile" value={name} />
           </div>
           <div className="w-2/3 pr-24">
             <p className="titleInputProfile">Tên đầy đủ</p>
@@ -73,8 +73,14 @@ function CustomerProfile({ name, fullName, gender, age, dateOfBirth, phoneNumber
         </div>
 
         <div className="w-2/5">
-          <p className="titleInputProfile">Mật khẩu</p>
-          <input type="password" className="inputProfile" />
+          <div>
+            <p className="titleInputProfile">Mật khẩu mới</p>
+            <input type="password" className="inputProfile" />
+          </div>
+          <div className="mt-7">
+            <p className="titleInputProfile">Nhập lại mật khẩu mới</p>
+            <input type="password" className="inputProfile" />
+          </div>
           {/* <div className="mt-7">
             <p className="titleInputProfile">Số điểm tích lũy</p>
             <input type="number" className="inputProfile" />

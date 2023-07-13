@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   breadcrumbList: [
     {
-      name: 'Home',
+      name: 'Trang chủ',
       slug: '/',
     },
   ],

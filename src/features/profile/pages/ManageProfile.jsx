@@ -13,7 +13,7 @@ export default function ManageProfile() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Profile',
+        name: 'Thông tin cá nhân',
         slug: '/profile',
       }),
     );
@@ -22,10 +22,12 @@ export default function ManageProfile() {
     };
   }, [dispatch]);
 
+  const token = useSelector((state) => state.auth?.accessToken);
   useEffect(() => {
     const getProfile = async () => {
-      const result = await getProfileServices();
+      const result = await getProfileServices(token);
       setProfile(result);
+      console.log(result);
     };
     getProfile();
   }, []);
@@ -35,6 +37,7 @@ export default function ManageProfile() {
     if (role === 'USER')
       return (
         <CustomerProfile
+          email={profile.email}
           name={profile.name}
           fullName={profile.fullName}
           gender={profile.gender}

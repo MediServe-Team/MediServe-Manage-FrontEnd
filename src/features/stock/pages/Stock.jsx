@@ -17,7 +17,7 @@ function Stock() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Stock All',
+        name: 'Kiểm kho',
         slug: '/stock/all',
       }),
     );

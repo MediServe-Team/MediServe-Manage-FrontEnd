@@ -12,7 +12,7 @@ function Medicine() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Medicines All',
+        name: 'Danh sách thuốc',
         slug: '/medicines/all',
       }),
     );

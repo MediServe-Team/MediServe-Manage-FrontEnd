@@ -1,7 +1,11 @@
 import { axiosBase } from '../../lib/axios';
 
-export const getProfileServices = () => {
-  return axiosBase.get('/me/profile');
+export const getProfileServices = (token) => {
+  return axiosBase.get('/me/profile', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const updateProfileServices = async (data) => {

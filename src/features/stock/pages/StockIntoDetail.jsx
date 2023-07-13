@@ -13,11 +13,18 @@ function StockIntoDetail() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Stock Invoice Detail',
+        name: 'Lịch sử nhập kho',
+        slug: '/stock/history',
+      }),
+    );
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Chi tiết nhập kho',
         slug: `/stock/invoice/${id}`,
       }),
     );
     return () => {
+      dispatch(removeLastBreadcrumb());
       dispatch(removeLastBreadcrumb());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

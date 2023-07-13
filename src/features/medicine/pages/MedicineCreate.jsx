@@ -21,7 +21,7 @@ function MedicineCreate() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Medicines Add',
+        name: 'Thêm thuốc',
         slug: '/medicines/add',
       }),
     );

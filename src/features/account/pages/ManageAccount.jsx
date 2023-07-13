@@ -13,7 +13,7 @@ function ManageAccount() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Accounts',
+        name: 'Tài khoản',
         slug: '/accounts',
       }),
     );
