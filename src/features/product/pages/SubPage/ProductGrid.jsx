@@ -13,6 +13,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 // service
 import { deleteProductService } from '../../productServices';
 import { toast } from 'react-toastify';
+// navigate
+import { useNavigate } from 'react-router-dom';
 
 const overlay = {
   hidden: {
@@ -62,6 +64,8 @@ function ProductGrid({ searchValue }) {
   const [loadData, setLoadData] = useState(false);
   const overlayRef = useRef(null);
   const { categoryId } = useParams();
+  // navigate
+  const navigate = useNavigate();
   // modal
   const [openModalDelete, setOpenModalDelete] = useState(false);
   // check permit
@@ -105,6 +109,13 @@ function ProductGrid({ searchValue }) {
     } else {
       toast.error('Xóa sản phẩm thất bại!');
     }
+  };
+
+  // Update product
+  const handleUpdateProduct = () => {
+    const productId = products[selected].id;
+    // navigate to update product page
+    navigate(`/products/update/${productId}`);
   };
 
   return (
@@ -216,7 +227,7 @@ function ProductGrid({ searchValue }) {
                     {/* button control */}
                     {checkPermit && (
                       <div className="min-h-0 flex justify-end gap-5 pt-5">
-                        <Button size={'medium'} modifier={'dark-primary'}>
+                        <Button size={'medium'} modifier={'dark-primary'} onClick={handleUpdateProduct}>
                           Cập nhật sản phẩm
                         </Button>
                         <Button size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>

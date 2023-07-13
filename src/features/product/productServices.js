@@ -36,3 +36,8 @@ export const deleteProductService = async (productId) => {
   const response = await axiosBase.delete(`/products/delete/${productId}`);
   return response.data;
 };
+
+export const getOneProductService = async (productId) => {
+  const response = await axiosBase.get(`/products/detail/${productId}`);
+  return response.data;
+};

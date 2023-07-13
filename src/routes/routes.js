@@ -26,7 +26,7 @@ import { Medicine } from '../features/medicine/pages';
 import { MedicineCreate } from '../features/medicine/pages';
 
 import { Product } from '../features/product/pages';
-import { ProductCreate } from '../features/product/pages';
+import { ProductCreate, ProductUpdate } from '../features/product/pages';
 
 import { Dose } from '../features/dose/pages';
 
@@ -77,6 +77,7 @@ const privateRouters = [
   //* products
   { path: routes.productManage, component: Product },
   { path: routes.productCreate, component: ProductCreate },
+  { path: routes.productUpdate, component: ProductUpdate },
   { path: routes.doseManage, component: Dose },
   { path: routes.categoryManage, component: Category },
   { path: routes.accountManage, component: ManageAccount },
