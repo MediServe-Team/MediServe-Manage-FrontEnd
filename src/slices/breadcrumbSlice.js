@@ -14,12 +14,21 @@ const breadcrumbSlice = createSlice({
   name: 'breadcrumb',
   reducers: {
     addNewBreadcrumb: (state, action) => {
-      state.breadcrumbList.push(action.payload);
+      let i = 0;
+      state.breadcrumbList.forEach((e) => {
+        if (e.name === action.payload.name) {
+          i = i + 1;
+        }
+      });
+      if (i === 0) {
+        state.breadcrumbList.push(action.payload);
+      }
     },
     removeLastBreadcrumb: (state) => {
       state.breadcrumbList.pop();
     },
   },
 });
-export const { addNewBreadcrumb, removeLastBreadcrumb } = breadcrumbSlice.actions;
+
+export const { addNewBreadcrumb, removeLastBreadcrumb, refreshBreadcrumb } = breadcrumbSlice.actions;
 export default breadcrumbSlice.reducer;

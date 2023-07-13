@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getMerchandiseInventoryService } from './stockServices';
 
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
 };
 
 // action get merchandise inventory in stock
-export const getInventoryStock = createAsyncThunk('stock/inventory', async ({}, thunkAPI) => {
+export const getInventoryStock = createAsyncThunk('stock/inventory', async (thunkAPI) => {
   try {
     const result = await getMerchandiseInventoryService();
     return result.data;

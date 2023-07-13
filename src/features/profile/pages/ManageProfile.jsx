@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AdminProfile from './AdminProfile';
 import CustomerProfile from './CustomerProfile';
 import StaffProfile from './StaffProfile';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
-import { getProfileServices } from '../profileServices';
+import { getProfile } from '../profileSlice';
 
 export default function ManageProfile() {
-  const [profile, setProfile] = useState({});
+  const token = useSelector((state) => state.auth?.accessToken);
   // addBreadcrumb
   const dispatch = useDispatch();
   useEffect(() => {
@@ -17,37 +17,15 @@ export default function ManageProfile() {
         slug: '/profile',
       }),
     );
+    dispatch(getProfile(token));
     return () => {
       dispatch(removeLastBreadcrumb());
     };
-  }, [dispatch]);
-
-  const token = useSelector((state) => state.auth?.accessToken);
-  useEffect(() => {
-    const getProfile = async () => {
-      const result = await getProfileServices(token);
-      setProfile(result);
-      console.log(result);
-    };
-    getProfile();
-  }, []);
+  }, [dispatch, token]);
 
   const role = useSelector((state) => state.auth?.user?.role);
   const renderProfile = (role) => {
-    if (role === 'USER')
-      return (
-        <CustomerProfile
-          email={profile.email}
-          name={profile.name}
-          fullName={profile.fullName}
-          gender={profile.gender}
-          age={profile.age}
-          dateOfBirth={profile.dateOfBirth}
-          phoneNumber={profile.phoneNumber}
-          avatar={profile.avatar}
-          address={profile.address}
-        />
-      );
+    if (role === 'USER') return <CustomerProfile />;
     else if (role === 'STAFF') return <StaffProfile />;
     else if (role === 'ADMIN') return <AdminProfile />;
   };
