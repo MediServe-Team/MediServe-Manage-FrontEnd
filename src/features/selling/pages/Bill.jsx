@@ -131,7 +131,7 @@ function Bill() {
           {/* List*/}
           <div className="flex flex-col gap-3 flex-1 overflow-y-auto pb-20 min-h-0">
             {bills.map((item, index) => (
-              <div>
+              <div key={index}>
                 <ItemBill
                   key={index}
                   billId={item.id}
