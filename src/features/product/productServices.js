@@ -31,3 +31,8 @@ export const filterProductService = async (searchValue) => {
   const response = await axiosBase.get(`/products/filter?searchValue=${searchValue}`);
   return response.data;
 };
+
+export const deleteProductService = async (productId) => {
+  const response = await axiosBase.delete(`/products/delete/${productId}`);
+  return response.data;
+};
