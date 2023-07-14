@@ -13,6 +13,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 // service
 import { deleteMedicineService } from '../../medicineServices';
 import { toast } from 'react-toastify';
+// navigate
+import { useNavigate } from 'react-router-dom';
 
 const overlay = {
   hidden: {
@@ -62,6 +64,8 @@ function MedicineGrid({ searchValue }) {
   const [loadData, setLoadData] = useState(false);
   const overlayRef = useRef(null);
   const { categoryId } = useParams();
+  // navigate
+  const navigate = useNavigate();
   // modal
   const [openModalDelete, setOpenModalDelete] = useState(false);
   // check permit
@@ -105,6 +109,13 @@ function MedicineGrid({ searchValue }) {
     } else {
       toast.error('Xóa thuốc thất bại!');
     }
+  };
+
+  // Update medicine
+  const handleUpdateMedicine = () => {
+    const medicineId = medicines[selected].id;
+    // navigate to update medicine page
+    navigate(`/medicines/update/${medicineId}`);
   };
 
   return (
@@ -221,7 +232,7 @@ function MedicineGrid({ searchValue }) {
                     {/* button control */}
                     {checkPermit && (
                       <div className="min-h-0 flex justify-end gap-5 pt-5">
-                        <Button size={'medium'} modifier={'dark-primary'}>
+                        <Button size={'medium'} modifier={'dark-primary'} onClick={handleUpdateMedicine}>
                           Cập nhật thuốc
                         </Button>
                         <Button size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>

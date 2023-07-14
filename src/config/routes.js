@@ -12,6 +12,7 @@ const routes = {
   medicineManage: '/medicines/:categoryId',
   medicineManageWithFistSubPage: '/medicines/all',
   medicineCreate: '/medicines/add',
+  medicineUpdate: '/medicines/update/:medicineId',
 
   productManage: '/products/:categoryId',
   productCreate: '/products/add',
