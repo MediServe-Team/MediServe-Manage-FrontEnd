@@ -39,3 +39,36 @@ export const filterMedicineStockService = async (searchValue) => {
   const response = await axiosBase.get(`/medicines/filter-stock?searchValue=${searchValue}`);
   return response.data;
 };
+
+export const deleteMedicineService = async (medicineId) => {
+  const response = await axiosBase.delete(`/medicines/delete/${medicineId}`);
+  return response.data;
+};
+
+export const getOneMedicineService = async (medicineId) => {
+  const response = await axiosBase.get(`/medicines/${medicineId}`);
+  return response.data;
+};
+
+export const updateMedicineService = async (medicineId, data) => {
+  const response = await axiosBase.put(`/medicines/update/${medicineId}`, {
+    categoryId: data?.categoryId,
+    medicineName: data?.medicineName,
+    registrationNumber: data?.registrationNumber,
+    dosageForm: data?.dosageForm,
+    productContent: data?.productContent,
+    chemicalName: data?.chemicalName,
+    chemicalCode: data?.chemicalCode,
+    packingSpecification: data?.packingSpecification,
+    barCode: data?.barCode,
+    sellUnit: data?.sellUnit,
+    inputUnit: data?.inputUnit,
+    applyToAffectedAreaCode: data?.applyToAffectedAreaCode,
+    applyToAffectedArea: data?.applyToAffectedArea,
+    medicineFunction: data?.medicineFunction,
+    medicineImage: data?.medicineImage,
+    isPrescription: data?.isPrescription,
+    note: data?.note,
+  });
+  return response.data;
+};

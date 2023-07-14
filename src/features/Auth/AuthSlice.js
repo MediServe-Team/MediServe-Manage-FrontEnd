@@ -67,5 +67,6 @@ export const { getUser } = AuthSlice.actions;
 
 // get state from auth
 export const getUserId = (state) => state.auth.user?.id;
+export const getPermitList = (state) => state.auth.user?.permitList;
 
 export default AuthSlice.reducer;
