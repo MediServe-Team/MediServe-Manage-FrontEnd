@@ -11,7 +11,7 @@ import { CreateMedicineSchema } from '../../../validations/createMedicine';
 import classNames from 'classnames';
 import { toast } from 'react-toastify';
 // services
-import { getOneMedicineService } from '../medicineServices';
+import { getOneMedicineService, updateMedicineService } from '../medicineServices';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,7 +57,6 @@ function MedicineUpdate() {
   useEffect(() => {
     const getDataMedicineUpdate = async () => {
       const result = await getOneMedicineService(medicineId);
-      console.log(result);
       // set data
       setBarcode(result.data.barCode);
       setCategoryId(result.data.categoryId);
@@ -168,12 +167,13 @@ function MedicineUpdate() {
       note: dataForm.note,
     };
 
-    // const result = await createMedicineServices(bodyRequest);
-    // if (result.status === 201) {
-    //   toast.success('Tạo mới sản phẩm thành công!');
-    // } else {
-    //   toast.error('Hệ thống gặp sự cố khi tạo sẩn phẩm!');
-    // }
+    const result = await updateMedicineService(medicineId, bodyRequest);
+    if (result.status === 200) {
+      toast.success('Cập nhật sản phẩm thành công!');
+      navigate(-1);
+    } else {
+      toast.error('Hệ thống gặp sự cố khi cập nhật sẩn phẩm!');
+    }
   };
 
   return (
@@ -432,7 +432,7 @@ function MedicineUpdate() {
 
           {/* Button create medicine */}
           <div className="flex-1 flex justify-between items-end">
-            <Button size={'medium'} modifier={'danger'} width={150} onClick={() => navigate(-1)}>
+            <Button type={'button'} size={'medium'} modifier={'danger'} width={150} onClick={() => navigate(-1)}>
               Hủy
             </Button>
             <Button
