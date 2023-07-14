@@ -11,7 +11,7 @@ import { CreateProductSchema } from '../../../validations/createProduct';
 import classNames from 'classnames';
 import { toast } from 'react-toastify';
 // services
-import { getOneProductService } from '../productServices';
+import { getOneProductService, updateProductService } from '../productServices';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -141,8 +141,8 @@ function ProductUpdate() {
     setTrackErrors(newErrors);
   };
 
-  //* Handle before submit data to create new Product
-  const handleSubmitCreateProduct = async (dataForm) => {
+  //* Handle before submit data to update Product
+  const handleSubmitUpdateProduct = async (dataForm) => {
     if (!trackErrors.passErrs) return;
     const bodyRequest = {
       categoryId: categoryId,
@@ -161,12 +161,13 @@ function ProductUpdate() {
       note: dataForm.note,
     };
 
-    // const result = await createProductServices(bodyRequest);
-    // if (result.status === 201) {
-    //   toast.success('Tạo mới sản phẩm thành công!');
-    // } else {
-    //   toast.error('Hệ thống gặp sự cố khi tạo sẩn phẩm!');
-    // }
+    const result = await updateProductService(productId, bodyRequest);
+    if (result.status === 200) {
+      toast.success('Cập nhật sản phẩm thành công!');
+      navigate(-1);
+    } else {
+      toast.error('Hệ thống gặp sự cố khi cập nhật phẩm!');
+    }
   };
 
   return (
@@ -174,7 +175,7 @@ function ProductUpdate() {
       <form
         id="create-product-form"
         className="h-full flex justify-between gap-8"
-        onSubmit={handleSubmit(handleSubmitCreateProduct)}
+        onSubmit={handleSubmit(handleSubmitUpdateProduct)}
       >
         {/* First column */}
         <div className="w-1/3 h-full flex flex-col gap-[10px]">
@@ -372,7 +373,7 @@ function ProductUpdate() {
 
           {/* Button create product */}
           <div className="flex-1 flex justify-between items-end">
-            <Button size={'medium'} modifier={'danger'} width={150} onClick={() => navigate(-1)}>
+            <Button type={'button'} size={'medium'} modifier={'danger'} width={150} onClick={() => navigate(-1)}>
               Hủy
             </Button>
             <Button
