@@ -39,3 +39,8 @@ export const filterMedicineStockService = async (searchValue) => {
   const response = await axiosBase.get(`/medicines/filter-stock?searchValue=${searchValue}`);
   return response.data;
 };
+
+export const deleteMedicineService = async (medicineId) => {
+  const response = await axiosBase.delete(`/medicines/delete/${medicineId}`);
+  return response.data;
+};

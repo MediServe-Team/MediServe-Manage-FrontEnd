@@ -5,8 +5,14 @@ import { MedicineItem } from '../../components';
 import { Pagination } from '../../../../components';
 import { useParams } from 'react-router-dom';
 import { getMedicinesService } from '../../medicineServices';
-import { Button } from '../../../../components';
+import { Button, Modal } from '../../../../components';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { getPermitList } from '../../../Auth/AuthSlice';
+import { AiOutlineClose } from 'react-icons/ai';
+// service
+import { deleteMedicineService } from '../../medicineServices';
+import { toast } from 'react-toastify';
 
 const overlay = {
   hidden: {
@@ -53,8 +59,17 @@ function MedicineGrid({ searchValue }) {
   const [pageLength, setPageLength] = useState(0);
   const [selected, setSelected] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
+  const [loadData, setLoadData] = useState(false);
   const overlayRef = useRef(null);
   const { categoryId } = useParams();
+  // modal
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  // check permit
+  const permits = useSelector(getPermitList);
+  const [checkPermit, setCheckPermit] = useState(false);
+  useEffect(() => {
+    if (permits && Array.isArray(permits)) setCheckPermit(permits.includes(3));
+  }, [permits]);
 
   useEffect(() => {
     const getMedicines = async () => {
@@ -62,9 +77,10 @@ function MedicineGrid({ searchValue }) {
       setPageLength(result.data.totalPage);
       setMedicines(result.data.medicines);
       setIsOpen(false);
+      setOpenModalDelete(false);
     };
     getMedicines();
-  }, [categoryId, searchValue, pageNumber]);
+  }, [categoryId, searchValue, pageNumber, loadData]);
 
   const handleSelectMedicineItem = (index) => {
     setSelected(index);
@@ -74,6 +90,20 @@ function MedicineGrid({ searchValue }) {
   const handleClickOutSide = (event) => {
     if (event.target === overlayRef.current) {
       setIsOpen(false);
+    }
+  };
+
+  // Modal delete
+  const handleDeleteMedicine = async () => {
+    const medicineId = medicines[selected].id;
+    //* delete medicine
+    const result = await deleteMedicineService(medicineId);
+    if (result.status === 200) {
+      toast.success('Xóa thuốc thành công!');
+      setIsOpen(false);
+      setLoadData(!loadData);
+    } else {
+      toast.error('Xóa thuốc thất bại!');
     }
   };
 
@@ -187,6 +217,18 @@ function MedicineGrid({ searchValue }) {
                         <p>{medicines[selected].note}</p>
                       </div>
                     </div>
+
+                    {/* button control */}
+                    {checkPermit && (
+                      <div className="min-h-0 flex justify-end gap-5 pt-5">
+                        <Button size={'medium'} modifier={'dark-primary'}>
+                          Cập nhật thuốc
+                        </Button>
+                        <Button size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>
+                          Xóa thuốc
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -194,6 +236,37 @@ function MedicineGrid({ searchValue }) {
           </motion.div>
         )}
       </AnimatePresence>
+      <Modal showModal={openModalDelete}>
+        <div className="w-[300px] flex flex-col items-center gap-5 relative">
+          {/* Info modal */}
+          <header className="w-full flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="text-text_primary font-bold text-h4">Xác nhận</h3>
+              <p className="text-text_blur text-h6">Bạn chắc chắn xác nhận muốn xóa thuốc này ra khỏi hệ thống?</p>
+            </div>
+            {/* close modal delete */}
+            <button className="outline-none absolute right-0 top-0" onClick={() => setOpenModalDelete(false)}>
+              <AiOutlineClose className="text-[20px] m-auto" />
+            </button>
+          </header>
+          {/* Button control modal*/}
+          <div className="flex justify-between items-center mt-5 gap-5">
+            <Button
+              size={'medium'}
+              styleBtn={'outline'}
+              modifier={'gray'}
+              width={120}
+              type={'button'}
+              onClick={() => setOpenModalDelete(false)}
+            >
+              Hủy
+            </Button>
+            <Button size={'medium'} modifier={'danger'} width={120} type={'button'} onClick={handleDeleteMedicine}>
+              Xóa
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
