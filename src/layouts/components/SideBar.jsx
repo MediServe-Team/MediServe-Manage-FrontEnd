@@ -15,6 +15,10 @@ import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { IoIosExit } from 'react-icons/io';
 import { BsPersonVcardFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
+//
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../../features/Auth/AuthSlice';
+import { useAxiosWithToken } from '../../hooks';
 
 const MENUS = [
   {
@@ -86,6 +90,8 @@ function SideBar() {
   const [openSubmenu, setOpenSubmenu] = useState(true);
   const [menuOpenId, setMenuOpenId] = useState(-1);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const axiosWithToken = useAxiosWithToken();
 
   const state = useSelector((state) => state);
 
@@ -115,7 +121,7 @@ function SideBar() {
   };
 
   const handleLogout = () => {
-    console.log(state);
+    dispatch(logoutAction(axiosWithToken));
   };
 
   const renderMenu = () => {
