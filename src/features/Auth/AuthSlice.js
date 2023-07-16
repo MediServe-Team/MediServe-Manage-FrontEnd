@@ -64,9 +64,11 @@ export const AuthSlice = createSlice({
 });
 
 export const { getUser } = AuthSlice.actions;
+export const { setAccessToken } = AuthSlice.actions;
 
 // get state from auth
 export const getUserId = (state) => state.auth.user?.id;
 export const getPermitList = (state) => state.auth.user?.permitList;
+export const getAccessToken = (state) => state.auth.accessToken;
 
 export default AuthSlice.reducer;
