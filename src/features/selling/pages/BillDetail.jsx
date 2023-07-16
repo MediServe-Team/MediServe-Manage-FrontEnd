@@ -1,11 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BsArrowLeftCircleFill } from 'react-icons/bs';
 import { ItemListMP, TitleListMP, TitleListPre, ItemListPre } from '../components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+// service
+import { getBillService } from '../billServices';
+import formatToVND from '../../../helpers/formatToVND';
 
 function BillDetail() {
-  const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5', '3', '4', '5']);
+  const [medicines, setMedicines] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [presciptions, setPrescriptions] = useState([]);
+  const [customerInfo, setCustomerInfo] = useState({});
+  const [bill, setBill] = useState({});
+
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const getBillDetail = async () => {
+      const result = await getBillService(id);
+      //* detach data:
+      const { note, totalPayment, givenByCustomer } = result.data;
+      const { DetailReceiptMedicines } = result.data;
+      const { DetailReceiptProducts } = result.data;
+      const { DetailReceiptPrescriptions } = result.data;
+      const { customer, guest } = result.data;
+      const billData = { note, totalPayment, givenByCustomer };
+      const medicinesData = [...DetailReceiptMedicines];
+      const productsData = [...DetailReceiptProducts];
+      const prescriptionsData = [...DetailReceiptPrescriptions];
+
+      setBill(billData);
+      setProducts(productsData);
+      setMedicines(medicinesData);
+      setPrescriptions(prescriptionsData);
+      if (guest && Object.keys(guest).length !== 0) setCustomerInfo({ ...guest });
+      else setCustomerInfo({ ...customer });
+    };
+    getBillDetail();
+  }, [id]);
 
   return (
     <div className="h-full w-full bg-white rounded-xl flex flex-col ">
@@ -17,94 +50,143 @@ function BillDetail() {
       </header>
 
       <div className="h-[90%] w-full overflow-y-auto">
-        <div className="flex w-full h-[15%] px-9 items-center">
+        <div className="flex w-full pt-5 pb-3 px-9 items-center">
           <span className="text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
             Thông tin khách hàng
           </span>
         </div>
 
-        <div className="flex px-9 h-[15%]">
-          <div className="flex w-full h-full px-9 rounded-md border-2 border-text_blur">
-            <div className="w-2/3 flex flex-col justify-start items-center h-full">
+        <div className="flex px-9 ">
+          <div className="flex w-full h-full px-9 py-5 rounded-md border-2 border-text_blur">
+            <div className="w-2/3 flex flex-col justify-start items-center gap-3">
               <span className="font-medium w-full h-1/2 flex items-center">
-                Họ tên khách hàng<span className="font-normal">: Hoàng Văn Phúc</span>
+                Họ tên khách hàng<span className="font-normal">: {customerInfo?.fullName}</span>
               </span>
               <span className="font-medium w-full h-1/2 flex items-center">
-                Địa chỉ<span className="font-normal">: KTX Khu A, ĐHQG Hồ Chí Minh</span>
+                Địa chỉ<span className="font-normal">: {customerInfo?.address}</span>
               </span>
             </div>
-            <div className="w-1/3 flex flex-col justify-start items-center h-full">
+            <div className="w-1/3 flex flex-col justify-start items-center gap-3">
               <span className="font-medium w-full h-1/2 flex items-center">
-                Tuổi<span className="font-normal">: 21</span>
+                Tuổi<span className="font-normal">: {customerInfo?.age}</span>
               </span>
               <span className="font-medium w-full h-1/2 flex items-center">
-                Giới tính<span className="font-normal">: Nam</span>
+                Giới tính<span className="font-normal">: {customerInfo?.gender === true ? 'Nam' : 'Nữ'}</span>
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex h-[15%] w-full px-9 items-center mt-5">
-          <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
-            Thông tin sản phẩm/ thuốc
-          </span>
-        </div>
-        <div className="px-9">
-          <TitleListMP>
-            {/* Data */}
-            {listMedicine.map((item, index) => (
-              <ItemListMP key={index} item={item} />
+        {/* Product info  */}
+        {products && products.length > 0 && (
+          <div>
+            <div className="flex pt-5 pb-3 w-full px-9 items-center mt-5">
+              <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
+                Thông tin sản phẩm
+              </span>
+            </div>
+            <div className="px-9">
+              <TitleListMP title={'Tên sản phẩm'}>
+                {/* Data */}
+                {products.map((product, index) => (
+                  <ItemListMP
+                    key={index}
+                    number={index + 1}
+                    name={product?.product?.productName}
+                    unit={product?.product?.sellUnit}
+                    quantity={product?.quantity}
+                    totalPrice={product?.totalPrice}
+                    sellPrice={Number(product?.totalPrice) / Number(product?.quantity)}
+                  />
+                ))}
+              </TitleListMP>
+            </div>
+          </div>
+        )}
+
+        {/* Medicine info  */}
+        {medicines && medicines.length > 0 && (
+          <div>
+            <div className="flex pt-5 pb-3 w-full px-9 items-center mt-5">
+              <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
+                Thông tin thuốc
+              </span>
+            </div>
+            <div className="px-9">
+              <TitleListMP title={'Tên thuốc'}>
+                {/* Data */}
+                {medicines.map((medicine, index) => (
+                  <ItemListMP
+                    key={index}
+                    number={index + 1}
+                    name={medicine?.medicine?.medicineName}
+                    unit={medicine?.medicine?.sellUnit}
+                    quantity={medicine?.quantity}
+                    totalPrice={medicine?.totalPrice}
+                    sellPrice={Number(medicine?.totalPrice) / Number(medicine?.quantity)}
+                  />
+                ))}
+              </TitleListMP>
+            </div>
+          </div>
+        )}
+
+        {/* Prescription info */}
+        {presciptions && presciptions.length > 0 && (
+          <div>
+            <div className="flex pt-5 pb-3 w-full px-9 items-center mt-5">
+              <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
+                Thông tin kê đơn
+              </span>
+            </div>
+            {presciptions.map((presciption) => (
+              <div className="px-9 text-h5">
+                <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
+                  <div className="flex items-center">
+                    <span className="w-1/2 italic font-medium flex justify-start">
+                      Chuẩn đoán: {presciption.prescription.diagnose}
+                    </span>
+                  </div>
+                  <div className="pt-3">
+                    <TitleListPre>
+                      {/* Data */}
+                      {presciption.prescription.MedicineGuides.map((guide, index) => (
+                        <ItemListPre
+                          key={index}
+                          medicineName={guide?.medicine?.medicineName}
+                          morning={guide.morning}
+                          noon={guide.noon}
+                          night={guide.night}
+                          quantity={guide.quantity}
+                          sellPrice={guide.totalPrice ? Number(guide.totalPrice) / Number(guide.quantity) : 0}
+                          sellUnit={guide?.medicine?.sellUnit}
+                        />
+                      ))}
+                    </TitleListPre>
+                  </div>
+
+                  <div className="pt-3 pb-1 flex flex-col">
+                    {presciption.note && <i>ghi chú: {presciption.note}</i>}
+                    <div className="flex justify-between">
+                      <span>
+                        số lượng: x <b>{presciption.quantity}</b>
+                      </span>
+                      <span className=" font-medium">
+                        Tổng giá:{' '}
+                        <span className="text-secondary font-normal">{formatToVND(presciption.totalPrice)}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
-          </TitleListMP>
-        </div>
-
-        <div className="flex h-[15%] w-full px-9 items-center mt-5">
-          <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
-            Thông tin kê đơn
-          </span>
-        </div>
-
-        <div className="px-9 text-h5">
-          <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-            <div className="flex items-center">
-              <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: Đau nhức xương khớp</span>
-            </div>
-            <div className="pt-3">
-              <TitleListPre>
-                {/* Data */}
-                {listMedicine.map((item, index) => (
-                  <ItemListPre key={index} item={item} />
-                ))}
-              </TitleListPre>
-            </div>
-            <span className="pt-3 pb-1 text-right font-medium">
-              Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-            </span>
           </div>
-        </div>
+        )}
 
-        <div className="px-9 text-h5 mt-8">
-          <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-            <div className="flex items-center">
-              <span className="w-1/2 italic font-medium flex justify-start">Liều thuốc: Đau mỏi vai gáy</span>
-            </div>
-            <div className="pt-3">
-              <TitleListPre>
-                {/* Data */}
-                {listMedicine.map((item, index) => (
-                  <ItemListPre key={index} />
-                ))}
-              </TitleListPre>
-            </div>
-            <span className="pt-3 pb-1 text-right font-medium">
-              Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="flex h-[15%] w-full px-9 items-center mt-5">
+        {/* Checkout info  */}
+        <div className="flex pt-5 pb-3 w-full px-9 items-center mt-5">
           <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-            Thanh toán (VNĐ)
+            Thông tin thanh toán (VNĐ)
           </span>
         </div>
         <div className="flex w-full">
@@ -116,22 +198,27 @@ function BillDetail() {
               <span>Tiền thừa:</span>
             </div>
             <div className="w-1/2 flex gap-3 flex-col">
-              <span className="text-secondary">750,000 đ</span>
+              <span className="text-secondary">{formatToVND(bill?.totalPayment ?? 0)}</span>
               <input
                 type="text"
-                value="750,000 đ"
+                value={formatToVND(bill?.givenByCustomer ?? 0)}
                 className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
                 disabled
               />
-              <span className="text-tertiary">0 đ</span>
+              <span className="text-tertiary">
+                {formatToVND(Number(bill.givenByCustomer) - Number(bill.totalPayment))}
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-9 items-center mt-5">
+        {/* Note bill */}
+        <div className="flex flex-col w-full px-9 items-center my-5">
           <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
           <div className=" w-full">
             <textarea
+              disabled
+              value={bill?.note}
               name="comment"
               id="comment"
               cols="30"

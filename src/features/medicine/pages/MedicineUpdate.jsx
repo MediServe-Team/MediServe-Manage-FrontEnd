@@ -1,46 +1,35 @@
 import { useState, useEffect } from 'react';
-import { UploadImg } from '../../.././components';
 import { IoMdCloudUpload } from 'react-icons/io';
-import { TbRefresh } from 'react-icons/tb';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getListUnits } from '../../../slices/unitSlice';
 // import lib handle form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CreateMedicineSchema } from '../../../validations/createMedicine';
 import classNames from 'classnames';
-import { createMedicineServices } from '../medicineServices';
 import { toast } from 'react-toastify';
-import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+// services
+import { getOneMedicineService, updateMedicineService } from '../medicineServices';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function MedicineCreate() {
-  // addBreadcrumb
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(
-      addNewBreadcrumb({
-        name: 'Thêm thuốc',
-        slug: '/medicines/add',
-      }),
-    );
-    return () => {
-      dispatch(removeLastBreadcrumb());
-    };
-  }, [dispatch]);
-
-  const [listImg, setListImg] = useState([]);
+function MedicineUpdate() {
+  const navigate = useNavigate();
+  const [medicineImg, setMedicineImg] = useState([]);
   const [barcode, setBarcode] = useState('');
   const [importUnit, setImportUnit] = useState('');
   const [sellUnit, setSellUnit] = useState('');
+  // state isPrescription
+  const [isPrescription, setIsPrescription] = useState(false);
   // getCategory
   const categories = useSelector((state) => state.category.categories);
   const [medicineCategories, setMedicineCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(null);
   const [trackErrors, setTrackErrors] = useState({
     passErrs: true,
-    listImg: '',
+    medicineImg: '',
     barcode: '',
     importUnit: '',
     sellUnit: '',
@@ -51,43 +40,75 @@ function MedicineCreate() {
   const {
     register,
     handleSubmit,
-    reset,
-    clearErrors,
+    setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(CreateMedicineSchema) });
 
   //* get data for units and categories
   const units = useSelector(getListUnits);
   useEffect(() => {
-    const filterMedicineCategories = categories.filter((item) => item.isMedicine);
-    setMedicineCategories(filterMedicineCategories);
+    const filtermedicineCategories = categories.filter((item) => item.isMedicine);
+    setMedicineCategories(filtermedicineCategories);
   }, [categories]);
 
+  const { medicineId } = useParams();
+
+  //* get data medicine update
+  useEffect(() => {
+    const getDataMedicineUpdate = async () => {
+      const result = await getOneMedicineService(medicineId);
+      // set data
+      setBarcode(result.data.barCode);
+      setCategoryId(result.data.categoryId);
+      setImportUnit(result.data.inputUnit);
+      setSellUnit(result.data.sellUnit);
+      setMedicineImg(result.data.medicineImage);
+      setIsPrescription(result.data.isPrescription);
+      // set data in form
+      setValue('medicineName', result.data.medicineName);
+      setValue('registrationNumber', result.data.registrationNumber);
+      setValue('dosageForm', result.data.dosageForm);
+      setValue('productContent', result.data.productContent);
+      setValue('chemicalName', result.data.chemicalName);
+      setValue('chemicalCode', result.data.chemicalCode);
+      setValue('packingSpecification', result.data.packingSpecification);
+      setValue('medicineFunction', result.data.medicineFunction);
+      setValue('applyToAffectedAreaCode', result.data.applyToAffectedAreaCode);
+      setValue('applyToAffectedArea', result.data.applyToAffectedArea);
+      setValue('note', result.data.note);
+    };
+    getDataMedicineUpdate();
+  }, []);
+
+  //* upload medicine img
+  const handleUploadMedicineImg = async (e) => {
+    const file = e.target.files[0];
+    // check cancle file
+    if (!file) return;
+    // convert file to base64
+    const data = await getBase64(file);
+    const medicineImg = document.querySelector('#upload-img');
+    medicineImg.src = data;
+    setMedicineImg(data);
+  };
+
+  //* upload barcode
   const handleUploadBarCode = async (e) => {
     const file = e.target.files[0];
     // check cancle file
     if (!file) return;
     // convert file to base64
     const data = await getBase64(file);
-    if (!barcode) {
-      const barcodeArea = document.querySelector('#medicine-barcode-form');
-      const barcodeImg = document.createElement('img');
-      barcodeImg.src = data;
-      barcodeImg.id = 'barcode-img';
-      barcodeImg.style = 'position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;';
-      barcodeArea.appendChild(barcodeImg);
-    } else {
-      const barcodeImg = document.querySelector('#barcode-img');
-      barcodeImg.src = data;
-    }
+    const barcodeImg = document.querySelector('#barcode-img');
+    barcodeImg.src = data;
     setBarcode(data);
   };
 
   //* Track errors passed
   useEffect(() => {
     let newErrors = { ...trackErrors };
-    if (listImg.length > 0 && barcode && importUnit && sellUnit && categoryId) newErrors.passErrs = true;
-    if (listImg.length > 0) newErrors.listImg = '';
+    if (medicineImg && barcode && importUnit && sellUnit && categoryId) newErrors.passErrs = true;
+    if (medicineImg) newErrors.medicineImg = '';
     if (barcode) newErrors.barcode = '';
     if (importUnit) newErrors.importUnit = '';
     if (sellUnit) newErrors.sellUnit = '';
@@ -95,14 +116,14 @@ function MedicineCreate() {
 
     setTrackErrors(newErrors);
     // eslint-disable-next-line
-  }, [listImg, barcode, importUnit, sellUnit, categoryId]);
+  }, [medicineImg, barcode, importUnit, sellUnit, categoryId]);
 
   //* Hanlde check errors before submit form
   const handleTrackErrors = () => {
     let newErrors = { ...trackErrors };
-    if (!(listImg.length > 0)) {
+    if (!medicineImg) {
       newErrors.passErrs = false;
-      newErrors.listImg = 'List image for medicine is required!';
+      newErrors.medicineImg = 'Image for medicine is required!';
     }
     if (!barcode) {
       newErrors.passErrs = false;
@@ -126,7 +147,6 @@ function MedicineCreate() {
   //* Handle before submit data to create new Medicine
   const handleSubmitCreateMedicine = async (dataForm) => {
     if (!trackErrors.passErrs) return;
-    const imgs = listImg.map((img) => img.data);
     const bodyRequest = {
       categoryId: categoryId,
       medicineName: dataForm.medicineName,
@@ -139,42 +159,21 @@ function MedicineCreate() {
       barCode: barcode,
       sellUnit: sellUnit,
       inputUnit: importUnit,
+      medicineFunction: dataForm.medicineFunction,
+      medicineImage: medicineImg,
       applyToAffectedAreaCode: dataForm.applyToAffectedAreaCode,
       applyToAffectedArea: dataForm.applyToAffectedArea,
-      medicineFunction: dataForm.medicineFunction,
-      medicineImage: imgs,
       isPrescription: dataForm.isPrescription === 'true' ? true : false,
       note: dataForm.note,
     };
 
-    const result = await createMedicineServices(bodyRequest);
-    if (result.status === 201) {
-      toast.success('Tạo mới sản phẩm thành công!');
+    const result = await updateMedicineService(medicineId, bodyRequest);
+    if (result.status === 200) {
+      toast.success('Cập nhật sản phẩm thành công!');
+      navigate(-1);
     } else {
-      toast.error('Hệ thống gặp sự cố khi tạo thuốc!');
+      toast.error('Hệ thống gặp sự cố khi cập nhật sẩn phẩm!');
     }
-  };
-
-  const handleClearForm = () => {
-    // clear display img barcode
-    const barcodeImg = document.querySelector('#barcode-img');
-    barcodeImg.remove();
-    // clear data
-    setListImg([]);
-    setBarcode('');
-    setImportUnit('');
-    setSellUnit('');
-    setCategoryId(null);
-    reset();
-    clearErrors();
-    setTrackErrors({
-      passErrs: false,
-      listImg: '',
-      barcode: '',
-      importUnit: '',
-      sellUnit: '',
-      category: '',
-    });
   };
 
   return (
@@ -186,9 +185,16 @@ function MedicineCreate() {
       >
         {/* First column */}
         <div className="w-1/3 h-full flex flex-col gap-[10px]">
-          <div>
-            <UploadImg listImg={listImg} setListImg={setListImg} />
-            {trackErrors.listImg && <span className="text-danger">Vui lòng thêm ảnh!</span>}
+          <div className="w-full flex justify-center items-center rounded-md h-[320px] bg-primary/10">
+            <div
+              className="w-4/5 h-4/5 border-2 bg-white border-text_primary rounded-md border-dashed relative cursor-pointer"
+              onClick={() => document.querySelector('#upload-img').click()}
+            >
+              <input id="upload-img" type="file" accept="image/*" hidden onChange={(e) => handleUploadMedicineImg(e)} />
+              {medicineImg && (
+                <img id="medicine-img" src={medicineImg} className="absolute top-0 left-0 w-full h-full object-cover" />
+              )}
+            </div>
           </div>
           {/* Barcode */}
           <div>
@@ -196,7 +202,6 @@ function MedicineCreate() {
               <span className="text-text_primary font-medium">Mã vạch</span>
               <div className="w-full h-[100px] flex justify-center items-center px-[10px] bg-primary/10 rounded-md">
                 <div
-                  id="medicine-barcode-form"
                   className="w-2/3 h-[80px] bg-white rounded-md border-2 border-text_primary border-dashed flex flex-col items-center justify-center relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-barcode').click()}
                 >
@@ -209,10 +214,13 @@ function MedicineCreate() {
                     hidden
                     onChange={(e) => handleUploadBarCode(e)}
                   />
+                  {barcode && (
+                    <img id="barcode-img" src={barcode} className="absolute top-0 left-0 w-full h-full object-cover" />
+                  )}
                 </div>
               </div>
             </div>
-            {trackErrors.barcode && <span className="text-danger">Vui lòng thêm mã vạch thuốc!</span>}
+            {trackErrors.barcode && <span className="text-danger">Vui lòng thêm mã vạch sản phẩm!</span>}
           </div>
           {/* Note */}
           <div className="flex flex-col flex-1">
@@ -229,7 +237,7 @@ function MedicineCreate() {
         <div className="w-1/3 h-full flex flex-col gap-[20px]">
           {/* medicine name */}
           <div className="flex flex-col gap-1">
-            <span className="text-text_primary font-medium">Tên thuốc</span>
+            <span className="text-text_primary font-medium">Tên sản phẩm</span>
             <input
               type="text"
               className={classNames(
@@ -253,7 +261,6 @@ function MedicineCreate() {
             />
           </div>
 
-          {/* apply to effected area code */}
           <div className="flex gap-5">
             <div className="flex flex-col gap-1">
               <span className="text-text_primary font-medium">Mã đường dùng</span>
@@ -308,10 +315,10 @@ function MedicineCreate() {
 
           {/* functional */}
           <div className="flex flex-col gap-1 flex-1">
-            <span className="text-text_primary font-medium">Chức năng thuốc</span>
+            <span className="text-text_primary font-medium">Chức năng sản phẩm</span>
             <textarea
               className="border-2 outline-none rounded-md p-2 flex-1 border-text_primary/20 focus:border-text_primary transition-all duration-200"
-              placeholder="Mô tả chức năng thuốc"
+              placeholder="Mô tả chức năng sản phẩm"
               {...register('medicineFunction')}
             />
           </div>
@@ -355,7 +362,7 @@ function MedicineCreate() {
                   id="radio-prescription"
                   name="type-medicine"
                   value={true}
-                  defaultChecked
+                  checked={isPrescription}
                   {...register('isPrescription')}
                 />
                 <label htmlFor="radio-prescription">Kê đơn</label>
@@ -366,6 +373,7 @@ function MedicineCreate() {
                   id="radio-non-prescription"
                   name="type-medicine"
                   value={false}
+                  checked={!isPrescription}
                   {...register('isPrescription')}
                 />
                 <label htmlFor="radio-non-prescription">Không kê đơn</label>
@@ -412,7 +420,7 @@ function MedicineCreate() {
 
           {/* Category */}
           <div className="flex flex-col gap-1">
-            <span className="text-text_primary font-medium">Danh mục thuốc</span>
+            <span className="text-text_primary font-medium">Danh mục sản phẩm</span>
             <SelectCategory
               height={40}
               categories={medicineCategories}
@@ -424,19 +432,17 @@ function MedicineCreate() {
 
           {/* Button create medicine */}
           <div className="flex-1 flex justify-between items-end">
-            <Button
-              styleBtn={'outline'}
-              size={'medium'}
-              width={150}
-              leftIcon={<TbRefresh className="text-[20px]" />}
-              onClick={() => {
-                handleClearForm();
-              }}
-            >
-              Làm rỗng
+            <Button type={'button'} size={'medium'} modifier={'danger'} width={150} onClick={() => navigate(-1)}>
+              Hủy
             </Button>
-            <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
-              Tạo thuốc
+            <Button
+              styleBtn={'solid'}
+              size={'medium'}
+              modifier={'dark-primary'}
+              width={150}
+              onClick={() => handleTrackErrors()}
+            >
+              Cập nhật
             </Button>
           </div>
         </div>
@@ -445,4 +451,4 @@ function MedicineCreate() {
   );
 }
 
-export default MedicineCreate;
+export default MedicineUpdate;
