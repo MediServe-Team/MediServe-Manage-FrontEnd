@@ -7,3 +7,7 @@ export const loginService = (email, password) => {
 export const refreshToken = async (token) => {
   return axiosPrivate.post('/auth/refreshToken');
 };
+
+export const logoutService = async (axiosWithToken) => {
+  return axiosWithToken.delete('/auth/logout');
+};

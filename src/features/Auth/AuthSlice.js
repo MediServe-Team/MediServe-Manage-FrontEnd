@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit';
-import { loginService } from './AuthServices';
+import { loginService, logoutService } from './AuthServices';
 
 const initialState = {
   user: {},
@@ -13,6 +13,14 @@ export const loginAction = createAsyncThunk('auth/login', async ({ email, passwo
   try {
     const response = await loginService(email, password);
     return response.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err);
+  }
+});
+
+export const logoutAction = createAsyncThunk('auth/logout', async (axiosWithToken, thunkAPI) => {
+  try {
+    await logoutService(axiosWithToken);
   } catch (err) {
     return thunkAPI.rejectWithValue(err);
   }
@@ -40,6 +48,14 @@ export const AuthSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.error = '';
       // if(action.payload)
+    });
+
+    // logout
+    builder.addCase(logoutAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = {};
+      state.accessToken = '';
+      state.error = '';
     });
 
     // list pending
