@@ -14,7 +14,7 @@ import { getProfile } from '../profileSlice';
 
 function CustomerProfile() {
   const profile = useSelector(getProfileData);
-  const [phone, setPhone] = useState(profile.phoneNumber);
+  const [phone, setPhone] = useState(profile?.phoneNumber);
   const token = useSelector((state) => state.auth?.accessToken);
   const dispatch = useDispatch();
   //* use Form

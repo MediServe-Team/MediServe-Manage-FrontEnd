@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { getAllCategory } from '../../category/categorySlice';
 import { getAllUnits } from '../../../slices/unitSlice';
-import { useDispatch } from 'react-redux';
-import Button from '../../../components/Button';
+import { getProfile } from '../../profile/profileSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -21,11 +21,13 @@ import { FaRegCalendarTimes } from 'react-icons/fa';
 
 function Dashboard() {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth?.accessToken);
 
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getAllUnits());
-  }, [dispatch]);
+    dispatch(getProfile(token));
+  }, [dispatch, token]);
 
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, TimeScale);
 

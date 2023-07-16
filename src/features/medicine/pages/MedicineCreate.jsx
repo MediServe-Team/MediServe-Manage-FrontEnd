@@ -429,7 +429,9 @@ function MedicineCreate() {
               size={'medium'}
               width={150}
               leftIcon={<TbRefresh className="text-[20px]" />}
-              onClick={() => handleClearForm()}
+              onClick={() => {
+                handleClearForm();
+              }}
             >
               Làm rỗng
             </Button>
