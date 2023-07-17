@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BsPencilSquare } from 'react-icons/bs';
 import { updateProfileSchema } from '../../../validations/updateProfile';
 import { useForm } from 'react-hook-form';
@@ -9,14 +9,18 @@ import { updateProfileServices } from '../profileServices';
 import { toast } from 'react-toastify';
 //react router
 import { useSelector, useDispatch } from 'react-redux';
-import { getProfileData } from '../profileSlice';
-import { getProfile } from '../profileSlice';
+// import { getProfileData } from '../profileSlice';
+// import { getProfile } from '../profileSlice';
+import { useAxiosWithToken } from '../../../hooks';
+import { getProfileServices } from '../profileServices';
 
 function CustomerProfile() {
   const profile = useSelector(getProfileData);
   const [phone, setPhone] = useState(profile?.phoneNumber);
   const token = useSelector((state) => state.auth?.accessToken);
   const dispatch = useDispatch();
+  const axiosWithToken = useAxiosWithToken();
+
   //* use Form
   const {
     register,
@@ -31,6 +35,14 @@ function CustomerProfile() {
       return;
     }
   };
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const result = await getProfileServices(axiosWithToken);
+      console.log(result);
+    };
+    getProfile();
+  }, []);
 
   //* Handle before submit data to create new Medicine
   const handleSubmitProfile = async (dataForm) => {
