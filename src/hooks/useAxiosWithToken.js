@@ -4,6 +4,8 @@ import { getAccessToken, setAccessToken } from '../features/Auth/AuthSlice';
 import { axiosPrivate } from '../lib/axios';
 import { refreshToken } from '../features/Auth/AuthServices';
 import { useNavigate } from 'react-router-dom';
+// redux persit
+import { persistor } from '../store';
 
 function useAxiosWithToken() {
   const dispatch = useDispatch();
@@ -36,13 +38,16 @@ function useAxiosWithToken() {
           //* set flag resend = true
           originRequest._resend = true;
           try {
-            const { newAccessToken } = await refreshToken();
+            const result = await refreshToken();
+            const { newAccessToken } = result.data;
             dispatch(setAccessToken(newAccessToken));
             //* re-config
             originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             //* re send request
             return axiosPrivate(originRequest);
           } catch (err) {
+            // clear redux persit
+            persistor.purge();
             navigate('/login', { replace: true });
           }
         } else {
