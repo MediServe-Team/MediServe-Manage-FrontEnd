@@ -70,38 +70,21 @@ function ManageProfile() {
     if (!file) return;
     // convert file to base64
     const data = await getBase64(file);
-    if (!identityCard) {
-      const cardArea = document.querySelector('#card-form');
-      const cardImg = document.createElement('img');
-      cardImg.src = data;
-      cardImg.id = 'card-img';
-      cardImg.style = 'position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;';
-      cardArea.appendChild(cardImg);
-    } else {
-      const cardImg = document.querySelector('#card-img');
-      cardImg.src = data;
-    }
+    const cardImg = document.querySelector('#card-img');
+    cardImg.src = data;
     setIdentityCard(data);
   };
 
   //todo: upload certificate
+  //todo: upload identity card
   const handleUploadCertificate = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     // convert file to base64
     const data = await getBase64(file);
-    if (!certificate) {
-      const certiArea = document.querySelector('#certificate-form');
-      const certiImg = document.createElement('img');
-      certiImg.src = data;
-      certiImg.id = 'certi-img';
-      certiImg.style = 'position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;';
-      certiArea.appendChild(certiImg);
-    } else {
-      const certiImg = document.querySelector('#certi-img');
-      certiImg.src = data;
-    }
-    certificate(data);
+    const certiImg = document.querySelector('#certi-img');
+    certiImg.src = data;
+    setCertificate(data);
   };
 
   //* Handle before submit data to create new Medicine
@@ -282,13 +265,6 @@ function ManageProfile() {
                     />
                   )}
                 />
-
-                {/* <input
-                  type="date"
-                  id="DateInput"
-                  className="border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2"
-                  {...register('dateOfBirth')}
-                /> */}
               </div>
               <div className="w-1/2">
                 <p className="text-text_primary font-medium">Số điện thoại</p>
@@ -313,13 +289,20 @@ function ManageProfile() {
                   className="h-[150px] w-[220px] bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center mt-2 relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-card').click()}
                 >
-                  <BsCloudUploadFill
-                    className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
-                    size={50}
-                  />
-                  <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
-                  <input id="upload-card" type="file" accept="image/*" hidden onChange={(e) => handleUploadCard(e)} />
-                  <input id="upload-card" type="file" accept="image/*" hidden />
+                  <div>
+                    <BsCloudUploadFill
+                      className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
+                      size={50}
+                    />
+                    <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
+                    <input id="upload-card" type="file" accept="image/*" hidden onChange={(e) => handleUploadCard(e)} />
+                    <img
+                      id="card-img"
+                      src={identityCard}
+                      className="absolute top-0 left-0 w-full h-full object-cover"
+                      hidden={identityCard ? false : true}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -343,19 +326,22 @@ function ManageProfile() {
                     hidden
                     onChange={(e) => handleUploadCertificate(e)}
                   />
+                  <img
+                    id="certi-img"
+                    src={certificate}
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    hidden={certificate ? false : true}
+                  />
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        <div className="flex">
-          <div className="w-3/5"></div>
-          <div className="flex w-2/5 justify-center items-end mt-10">
-            <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={120}>
-              Lưu thay đổi
-            </Button>
-          </div>
+        <div className="flex w-1/2 mt-10 justify-start">
+          <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={120}>
+            Lưu thay đổi
+          </Button>
         </div>
       </form>
     </div>
