@@ -24,7 +24,7 @@ function Dose() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Doses',
+        name: 'Liều thuốc',
         slug: '/doses',
       }),
     );

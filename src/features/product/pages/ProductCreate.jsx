@@ -21,7 +21,7 @@ function ProductCreate() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Products Add',
+        name: 'Thêm thuốc',
         slug: '/products/add',
       }),
     );

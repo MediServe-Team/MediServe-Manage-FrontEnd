@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { filterHistoryInvoiceService } from '../stockServices';
 
 const useStock = () => {
@@ -31,6 +31,7 @@ const useStock = () => {
 
   useEffect(() => {
     filterHistoryInvoice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort, fromDate, toDate, pageNumber]);
 
   return {

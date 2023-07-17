@@ -11,7 +11,7 @@ function Medicine() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Products All',
+        name: 'Danh sách sản phẩm',
         slug: '/products/all',
       }),
     );

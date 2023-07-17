@@ -1,5 +1,3 @@
-import Button from '../../../components/Button';
-
 function CustomerItem() {
   return (
     <div className="bg-white h-full w-11/12 mx-auto flex flex-shrink-0 px-0">

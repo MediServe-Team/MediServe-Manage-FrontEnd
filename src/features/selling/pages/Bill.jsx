@@ -16,7 +16,7 @@ function Bill() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Bills',
+        name: 'Danh sách hóa đơn',
         slug: '/bills',
       }),
     );

@@ -24,7 +24,7 @@ function StockInto() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Stock Into',
+        name: 'Nhập kho',
         slug: '/stock/into',
       }),
     );
@@ -64,6 +64,7 @@ function StockInto() {
       const result = await filterItemService(debounced, selectedIndex);
       setSearchResults(result.data);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced, selectedIndex]);
 
   const handleSearchValueChange = (e) => {
@@ -153,6 +154,7 @@ function StockInto() {
       }
       return acc;
     }, []);
+    // eslint-disable-next-line array-callback-return
     listItemPrice.map((item) => {
       totalImport += item.totalImportPrice;
       totalSell += item.totalSellPrice;

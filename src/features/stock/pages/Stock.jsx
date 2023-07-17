@@ -17,7 +17,7 @@ function Stock() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Stock All',
+        name: 'Kiểm kho',
         slug: '/stock/all',
       }),
     );
@@ -32,8 +32,8 @@ function Stock() {
 
   useEffect(() => {
     //* fetch data inventory stock
-    dispatch(getInventoryStock({}));
-  }, []);
+    dispatch(getInventoryStock());
+  }, [dispatch]);
 
   const lengthAll = useSelector(getLengthAll);
   const lengthPreSoldOut = useSelector(getLengthPreSoldOut);

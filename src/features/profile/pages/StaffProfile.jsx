@@ -1,6 +1,19 @@
 import { BsPencilSquare, BsCloudUploadFill } from 'react-icons/bs';
 
-function StaffProfile() {
+function StaffProfile({
+  email,
+  name,
+  fullName,
+  gender,
+  age,
+  dateOfBirth,
+  phoneNumber,
+  avatar,
+  address,
+  certificate,
+  identityCard,
+  numOfPPC,
+}) {
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">

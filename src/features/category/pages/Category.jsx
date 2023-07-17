@@ -11,7 +11,7 @@ function Category() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Category',
+        name: 'Danh mục',
         slug: '/category',
       }),
     );

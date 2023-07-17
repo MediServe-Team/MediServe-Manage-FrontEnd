@@ -16,7 +16,7 @@ function HistoryStock() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Stock History',
+        name: 'Lịch sử nhập kho',
         slug: '/stock/history',
       }),
     );
