@@ -9,7 +9,7 @@ export const axiosBase = axios.create({
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-  timeout: 6000,
+  // timeout: 6000,
 });
 
 export const axiosImage = axios.create({

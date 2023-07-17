@@ -4,8 +4,9 @@ export const loginService = (email, password) => {
   return axiosPrivate.post('/auth/login', { email, password });
 };
 
-export const refreshToken = async (token) => {
-  return axiosPrivate.post('/auth/refreshToken');
+export const refreshToken = async () => {
+  const response = await axiosPrivate.post('/auth/refreshToken');
+  return response.data;
 };
 
 export const logoutService = async (axiosWithToken) => {
