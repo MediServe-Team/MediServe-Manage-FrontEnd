@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getAccessToken, setAccessToken } from '../features/Auth/AuthSlice';
+import { getAccessToken, setAccessToken, resetState } from '../features/Auth/AuthSlice';
 import { axiosPrivate } from '../lib/axios';
 import { refreshToken } from '../features/Auth/AuthServices';
 import { useNavigate } from 'react-router-dom';
@@ -47,8 +47,10 @@ function useAxiosWithToken() {
             return axiosPrivate(originRequest);
           } catch (err) {
             // clear redux persit
-            persistor.purge();
-            navigate('/login', { replace: true });
+            await persistor.purge().then(() => {
+              dispatch(resetState());
+              navigate('/login', { replace: true });
+            });
           }
         } else {
           console.log('🚀 ~ file: useAxiosPrivate.js:48 ~ error');

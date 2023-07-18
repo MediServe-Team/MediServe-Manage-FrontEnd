@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Link, useNavigate } from 'react-router-dom';
 import routes from '../../config/routes';
@@ -14,10 +14,9 @@ import { TbCategory2 } from 'react-icons/tb';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { IoIosExit } from 'react-icons/io';
 import { BsPersonVcardFill } from 'react-icons/bs';
-import { useSelector } from 'react-redux';
 //
-import { useDispatch } from 'react-redux';
-import { logoutAction } from '../../features/Auth/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPermitList, logoutAction } from '../../features/Auth/AuthSlice';
 import { useAxiosWithToken } from '../../hooks';
 
 const MENUS = [
@@ -25,6 +24,7 @@ const MENUS = [
     title: 'Trang chủ',
     icon: ({ className }) => <MdAddHomeWork className={className} />,
     link: routes.dashboard,
+    permitId: 1,
   },
   {
     title: 'Quản lý kho',
@@ -35,6 +35,7 @@ const MENUS = [
       { title: 'Lịch sử nhập', link: routes.historyStockManage },
       { title: 'Kiểm kho', link: routes.stockManageWithFistSubPage },
     ],
+    permitId: 2,
   },
   {
     title: 'Quản lý thuốc',
@@ -44,6 +45,7 @@ const MENUS = [
       { title: 'Thuốc trong hệ thống', link: routes.medicineManageWithFistSubPage },
       { title: 'Thêm thuốc', link: routes.medicineCreate },
     ],
+    permitId: 3,
   },
   {
     title: 'Quản lý sản phẩm',
@@ -53,21 +55,25 @@ const MENUS = [
       { title: 'Danh sách sản phẩm', link: routes.productManageWithFistSubPage },
       { title: 'Thêm sản phẩm', link: routes.productCreate },
     ],
+    permitId: 4,
   },
   {
     title: 'Quản lý liều',
     icon: ({ className }) => <RiBillFill className={className} />,
     link: routes.doseManage,
+    permitId: 5,
   },
   {
     title: 'Quản lý danh mục',
     icon: ({ className }) => <TbCategory2 className={className} />,
     link: routes.categoryManage,
+    permitId: 6,
   },
   {
     title: 'Quản lý tài khoản',
     icon: ({ className }) => <RiAccountBoxFill className={className} />,
     link: routes.accountManage,
+    permitId: 8,
   },
   {
     title: 'Bán hàng',
@@ -77,11 +83,13 @@ const MENUS = [
       { title: 'Danh sách hóa đơn', link: routes.billManage },
       { title: 'Tạo hóa đơn', link: routes.billCreateWithFirstPage },
     ],
+    permitId: 7,
   },
   {
     title: 'Thông tin cá nhân',
     icon: ({ className }) => <BsPersonVcardFill className={className} />,
     link: routes.profile,
+    permitId: 9,
   },
 ];
 
@@ -92,8 +100,8 @@ function SideBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosWithToken = useAxiosWithToken();
-
-  const state = useSelector((state) => state);
+  const [menuPermits, setMenuPermits] = useState();
+  const permits = useSelector(getPermitList);
 
   const transition = useTransition(expand, {
     from: { opacity: 0, scale: 0 },
@@ -124,8 +132,19 @@ function SideBar() {
     dispatch(logoutAction(axiosWithToken));
   };
 
+  useEffect(() => {
+    if (permits) {
+      const accountPermits = MENUS.filter(
+        (item) => permits.includes(item.permitId) || [1, 3, 4, 9].includes(item.permitId),
+      );
+      setMenuPermits(accountPermits);
+    }
+  }, [permits]);
+
   const renderMenu = () => {
-    return MENUS.map((item, index) => {
+    if (!menuPermits || !Array.isArray(menuPermits)) return <></>;
+
+    return menuPermits.map((item, index) => {
       const Icon = item.icon;
 
       return (

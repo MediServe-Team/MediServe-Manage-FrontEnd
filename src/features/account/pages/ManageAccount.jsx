@@ -3,9 +3,13 @@ import StaffItem from '../components/StaffItem';
 import CustomerItem from '../components/CustomerItem';
 import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
+import { Button } from '../../../components';
 import { AccountCustomer, AccountStaff } from '../pages';
 import { useDispatch } from 'react-redux';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+// services
+import { getAllAccountService } from '../../../services/accountServices';
+import { useAxiosWithToken } from '../../../hooks';
 
 function ManageAccount() {
   // addBreadcrumb
@@ -22,31 +26,52 @@ function ManageAccount() {
     };
   }, [dispatch]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const all = ['staff', 'customer', 'customer', 'staff', 'staff', 'customer', 'staff', 'staff'];
-  const [listUser, setListUser] = useState(all);
-  const [role, setRole] = useState('customer');
-  const [filterCustomer, setFilterCustomer] = useState(false);
-  const [filterStaff, setFilterStaff] = useState(false);
+  // state
+  const [accounts, setAccounts] = useState([]);
+  const [filterOption, setFilterOption] = useState('all'); //* option filter in ['none', 'customer', 'staff', 'all']
+  const [filterAccounts, setFilterAccounts] = useState([]); //* filter from accounts and display in UI
+  // api with token
+  const axiosWithToken = useAxiosWithToken();
 
+  //* Get all accounts
   useEffect(() => {
-    if ((filterCustomer === true && filterStaff === true) || (filterCustomer === false && filterStaff === false)) {
-      setListUser(all);
-    } else if (filterCustomer === true) {
-      let result = all.filter((item) => item === 'customer');
-      setListUser(result);
-    } else if (filterStaff === true) {
-      let result = all.filter((item) => item === 'staff');
-      setListUser(result);
+    const getAllAccounts = async () => {
+      const result = await getAllAccountService(axiosWithToken);
+      console.log(result.data);
+      setAccounts(result.data);
+    };
+    getAllAccounts();
+  }, []);
+
+  //* Filter accounts
+  useEffect(() => {
+    let filters = [];
+    switch (filterOption) {
+      case 'all':
+        filters = accounts;
+        break;
+      case 'customer':
+        filters = accounts.filter((account) => account.role === 'USER');
+        break;
+      case 'staff':
+        filters = accounts.filter((account) => account.role === 'STAFF');
+        break;
+      default:
+        filters = [];
+        break;
     }
-  }, [all, filterCustomer, filterStaff]);
+    setFilterAccounts(filters);
+  }, [accounts, filterOption]);
 
-  const handleFilterCustomer = () => {
-    setFilterCustomer(!filterCustomer);
-  };
-
-  const handleFilterStaff = () => {
-    setFilterStaff(!filterStaff);
+  //* Handle change filter option
+  const handleChangeFilter = () => {
+    const checkboxCustomer = document.querySelector('#checkbox-customer');
+    const checkboxStaff = document.querySelector('#checkbox-staff');
+    // check option
+    if (checkboxCustomer.checked && checkboxStaff.checked) setFilterOption('all');
+    else if (checkboxCustomer.checked) setFilterOption('customer');
+    else if (checkboxStaff.checked) setFilterOption('staff');
+    else setFilterOption('none');
   };
 
   return (
@@ -58,55 +83,61 @@ function ManageAccount() {
             Tài Khoản
           </p>
           <div className="flex min-h-0 pt-2">
-            <Checkbox value="customer" size="small" onChange={handleFilterCustomer} />
+            <Checkbox
+              defaultChecked
+              id="checkbox-customer"
+              value="customer"
+              size="small"
+              onChange={handleChangeFilter}
+            />
             <p className="text-h6 my-auto">Khách Hàng</p>
           </div>
 
           <div className="flex min-h-0 pb-2">
-            <Checkbox value="staff" size="small" onChange={handleFilterStaff} />
+            <Checkbox defaultChecked id="checkbox-staff" value="staff" size="small" onChange={handleChangeFilter} />
             <p className="text-h6 my-auto">Nhân Viên</p>
           </div>
-          <div className="border-text_blur/60 border-t-2"></div>
+          <div className="border-text_primary/20 border-t-2"></div>
         </div>
 
+        {/* List Accounts */}
         <div className="flex h-4/6 min-h-0 pt-2 justify-center w-full">
           <div className="flex flex-col h-full overflow-y-auto gap-5 w-full">
-            {listUser.map((item, index) =>
-              item !== 'customer' ? (
-                <button
-                  className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
-                  order={item}
-                  key={index}
-                  onClick={() => setRole('staff')}
-                >
-                  <StaffItem order={item} key={index} />
-                </button>
-              ) : (
-                <button
-                  className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
-                  order={item}
-                  key={index}
-                  onClick={() => setRole('customer')}
-                >
-                  <CustomerItem order={item} key={index} />
-                </button>
-              ),
-            )}
+            {filterAccounts &&
+              Array.isArray(filterAccounts) &&
+              filterAccounts.map((account, index) =>
+                account.role === 'USER' ? (
+                  <button className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100" key={index}>
+                    <CustomerItem
+                      key={index}
+                      avatar={account.avatar}
+                      fullName={account.fullName}
+                      email={account.email}
+                    />
+                  </button>
+                ) : (
+                  <button className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100" key={index}>
+                    <StaffItem key={index} avatar={account.avatar} fullName={account.fullName} email={account.email} />
+                  </button>
+                ),
+              )}
           </div>
         </div>
 
         <div className="flex h-1/6 min-h-0 justify-center items-center">
-          <BtnAddAcc />
+          <Button size={'medium'} className={'px-5'} modifier={'dark-primary'}>
+            Thêm tài khoản
+          </Button>
         </div>
       </div>
-      {/* Info of accounts */}
+      {/* Info of accounts
       <div className={`${role === 'customer' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
         <AccountCustomer />
       </div>
 
       <div className={`${role === 'staff' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
         <AccountStaff />
-      </div>
+      </div> */}
     </div>
   );
 }

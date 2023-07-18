@@ -39,6 +39,7 @@ export const AuthSlice = createSlice({
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
     },
+    resetState: (state) => initialState,
   },
   extraReducers: (builder) => {
     // login
@@ -47,7 +48,6 @@ export const AuthSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.error = '';
-      // if(action.payload)
     });
 
     // logout
@@ -81,6 +81,7 @@ export const AuthSlice = createSlice({
 
 export const { getUser } = AuthSlice.actions;
 export const { setAccessToken } = AuthSlice.actions;
+export const { resetState } = AuthSlice.actions;
 
 // get state from auth
 export const getUserId = (state) => state.auth.user?.id;
