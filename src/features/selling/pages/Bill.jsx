@@ -1,51 +1,99 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { IoIosArrowDown } from 'react-icons/io';
-import { Button } from '@mui/joy';
+import { Button, Pagination } from '../../../components';
 import { BiFilterAlt } from 'react-icons/bi';
 import { ItemBill, TitleBillList } from '../components';
-import { BsArrowLeftCircleFill } from 'react-icons/bs';
-import { ItemListMedicine, TitleListMedicine, TitleListPre, ItemListPre } from '../components';
+import { Link } from 'react-router-dom';
+// services
+import useBill from '../hooks/useBill';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Bill() {
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Danh sách hóa đơn',
+        slug: '/bills',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const refFromDate = useRef();
   const refToDate = useRef();
   const [activeFilter, setActiveFilter] = useState(false);
-  const [listBill, setListBill] = useState([1, 1, 1, 1, 1]);
-  const [activeDetail, setActiveDetail] = useState(false);
-  const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
-
-  let red = 'rgba(255, 96, 96, 1)',
-    darkBlue = '#064861';
+  // use bill
+  const {
+    bills,
+    customerName,
+    staffName,
+    fromDate,
+    toDate,
+    pageNumber,
+    pageLength,
+    setCustomerName,
+    setStaffName,
+    setFromDate,
+    setToDate,
+    setPageNumber,
+  } = useBill();
 
   const handleActiveFilter = () => {
     setActiveFilter((pre) => !pre);
   };
 
-  const handleActiveDetail = () => {
-    setActiveDetail((pre) => !pre);
-  };
+  useEffect(() => {
+    if (activeFilter === false) {
+      setCustomerName('');
+      setStaffName('');
+      const resetDate = new Date();
+      // set date is 1 day ago
+      resetDate.setDate(resetDate.getDate() - 1);
+      setFromDate(resetDate);
+      setToDate(new Date());
+      setPageNumber(1);
+    }
+  }, [activeFilter]);
 
   return (
     <div className="w-full h-full">
-      <div className={`h-full w-full bg-white rounded-xl flex-col px-16 pt-2 ${activeDetail ? 'hidden' : 'flex'}`}>
-        <div className="flex flex-col h-[17%]">
-          <div className={`flex h-1/2 items-start justify-end ${activeFilter ? '' : 'invisible'}`}>
-            <div className="flex gap-3 justify-end">
+      <div className=" flex flex-col h-full bg-white rounded-xl px-16">
+        <div className="flex justify-between items-center py-8 flex-shrink-0">
+          <Button
+            variant="outlined"
+            styleBtn={'outline'}
+            size={'medium'}
+            leftIcon={<BiFilterAlt className="text-[20px]" />}
+            width={160}
+            onClick={handleActiveFilter}
+          >
+            {activeFilter ? 'Hủy bộ lọc' : 'Thêm bộ lọc'}
+          </Button>
+
+          <form className={`flex h-1/2 items-center justify-end ${activeFilter ? '' : 'invisible'}`}>
+            <div className="flex gap-3 items-center">
               <input
                 type="text"
-                placeholder="Mã nhân viên"
-                className="w-[16%] border-2 border-gray-400 rounded-lg px-3"
+                placeholder="Tên nhân viên"
+                value={staffName}
+                onChange={(e) => setStaffName(e.target.value)}
+                className="w-[200px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
               />
               <input
                 type="text"
-                placeholder="Mã khách hàng"
-                className="w-[18%] border-2 border-gray-400 rounded-lg px-3"
+                placeholder="Tên khách hàng"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="w-[200px] h-[34px] outline-none border-2 border-gray-400 rounded-md px-3"
               />
               <div
-                className="flex items-center justify-between border-2 w-[15%] border-gray-400 rounded-lg px-2 cursor-pointer"
+                className="flex items-center justify-between border-2 w-[120px] h-[34px] border-gray-400 rounded-md px-2 cursor-pointer"
                 onClick={() => refFromDate.current.setOpen(true)}
               >
                 <DatePicker
@@ -65,7 +113,7 @@ function Bill() {
               </div>
 
               <div
-                className="flex items-center justify-between border-2 w-[15%] border-gray-400 rounded-lg px-2 cursor-pointer"
+                className="flex items-center justify-between border-2 w-[120px] h-[34px] border-gray-400 rounded-md px-2 cursor-pointer"
                 onClick={() => refToDate.current.setOpen(true)}
               >
                 <DatePicker
@@ -84,218 +132,45 @@ function Bill() {
                 <IoIosArrowDown className="text-gray-400" />
               </div>
 
-              <Button
-                className="hover:opacity-90 active:opacity-100 w-[15%]"
-                variant="solid"
-                style={{ backgroundColor: darkBlue, fontSize: '16px', fontWeight: '400' }}
-                size="md"
-              >
+              {/* <Button styleBtn={'solid'} size={'medium'} width={120}>
                 Tìm kiếm
-              </Button>
+              </Button> */}
             </div>
-          </div>
-
-          <div className="flex h-1/2">
-            <div className="w-1/2">
-              <Button
-                className="hover:opacity-90 active:opacity-100 w-[30%]"
-                startDecorator={<BiFilterAlt size={20} />}
-                variant="outlined"
-                style={{
-                  color: activeFilter ? red : darkBlue,
-                  borderColor: activeFilter ? red : darkBlue,
-                  borderWidth: '2px',
-                  fontSize: '16px',
-                }}
-                onClick={handleActiveFilter}
-              >
-                {activeFilter ? 'Hủy bộ lọc' : 'Thêm bộ lọc'}
-              </Button>
-            </div>
-
-            <div className="w-1/2 flex justify-end gap-3">
-              <Button
-                className="hover:opacity-90 active:opacity-100 w-[21.8%] h-[80%]"
-                variant="outlined"
-                style={{
-                  color: red,
-                  borderColor: red,
-                  borderWidth: '2px',
-                  fontSize: '16px',
-                }}
-              >
-                Hủy xóa
-              </Button>
-
-              <Button
-                className="hover:opacity-90 active:opacity-100 w-[21.8%] h-[80%]"
-                variant="solid"
-                style={{
-                  backgroundColor: red,
-                  borderWidth: '2px',
-                  fontSize: '16px',
-                  paddingInline: '2.84rem',
-                }}
-              >
-                Xóa
-              </Button>
-            </div>
-          </div>
+          </form>
         </div>
-        {/* Title of List Invoice */}
-        <div className="flex flex-col h-[75%] bg-white">
-          <div className="h-[13%]">
+
+        {/* List Invoice */}
+        <div className="flex flex-col flex-1 bg-white min-h-0 pb-2">
+          <div className="pb-2">
             <TitleBillList />
           </div>
-          {/* List of Invoice */}
-          <div className="h-[87%] flex flex-col gap-3">
-            {listBill.map((item, index) => (
-              <div>
-                <ItemBill key={index} activeDetail={activeDetail}>
-                  <button id={index} onClick={handleActiveDetail}>
-                    Chi tiết
-                  </button>
+          {/* List*/}
+          <div className="flex flex-col gap-3 flex-1 overflow-y-auto pb-20 min-h-0">
+            {bills.map((item, index) => (
+              <div key={index}>
+                <ItemBill
+                  key={index}
+                  billId={item.id}
+                  staffId={item.staffId}
+                  staffName={item.staff.fullName}
+                  createdAt={item.createdAt}
+                  customerId={item.customerId ? item.customerId : item.guestId}
+                  customerName={item.customerId ? item.customer.fullName : item.guest.fullName}
+                  totalPrice={item.totalPayment}
+                >
+                  <Link to={`/bills/${item.id}`}>Chi tiết</Link>
                 </ItemBill>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-col h-[8%] bg-white"></div>
-      </div>
-
-      <div className={`h-full w-full bg-white rounded-xl flex-col ${activeDetail ? 'flex' : 'hidden'}`}>
-        <header className="border-b-2 border-text_blur/50 h-[10%] flex gap-3 pl-10 pt-5 pb-1 w-full">
-          <button className="text-text_primary text-h3" onClick={handleActiveDetail}>
-            <BsArrowLeftCircleFill />
-          </button>
-          <h3 className="text-h4 text-text_primary font-bold">Xem chi tiết hóa đơn</h3>
-        </header>
-
-        <div className="h-[90%] w-full overflow-y-auto">
-          <div className="flex w-full h-[15%] px-9 items-center">
-            <span className="text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
-              Thông tin khách hàng
-            </span>
+        <div className="flex justify-center relative">
+          {/* {pageLength > 0 && ( */}
+          <div className="absolute -top-[70px] bg-white p-2 rounded-lg shadow-[0px_2px_14px_3px_rgba(0,0,0,0.15)]">
+            <Pagination pageLength={pageLength} pageNumber={pageNumber} setPageNumber={setPageNumber} />
           </div>
-
-          <div className="flex px-9 h-[15%]">
-            <div className="flex w-full h-full px-9 rounded-md border-2 border-text_blur">
-              <div className="w-2/3 flex flex-col justify-start items-center h-full">
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Họ tên khách hàng<span className="font-normal">: Hoàng Văn Phúc</span>
-                </span>
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Địa chỉ<span className="font-normal">: KTX Khu A, ĐHQG Hồ Chí Minh</span>
-                </span>
-              </div>
-              <div className="w-1/3 flex flex-col justify-start items-center h-full">
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Tuổi<span className="font-normal">: 21</span>
-                </span>
-                <span className="font-medium w-full h-1/2 flex items-center">
-                  Giới tính<span className="font-normal">: Nam</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex h-[15%] w-full px-9 items-center mt-5">
-            <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
-              Thông tin sản phẩm/ thuốc
-            </span>
-          </div>
-          <div className="px-9">
-            <TitleListMedicine>
-              {/* Data */}
-              {listMedicine.map((item, index) => (
-                <ItemListMedicine key={index} item={item} />
-              ))}
-            </TitleListMedicine>
-          </div>
-
-          <div className="flex h-[15%] w-full px-9 items-center mt-5">
-            <span className="text-left text-[18px] font-semibold" style={{ textDecorationLine: 'underline' }}>
-              Thông tin kê đơn
-            </span>
-          </div>
-
-          <div className="px-9 text-h5">
-            <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-              <div className="flex items-center">
-                <span className="w-1/2 italic font-medium flex justify-start">Chuẩn đoán: Đau nhức xương khớp</span>
-              </div>
-              <div className="pt-3">
-                <TitleListPre>
-                  {/* Data */}
-                  {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} item={item} />
-                  ))}
-                </TitleListPre>
-              </div>
-              <span className="pt-3 pb-1 text-right font-medium">
-                Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-              </span>
-            </div>
-          </div>
-
-          <div className="px-9 text-h5 mt-8">
-            <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
-              <div className="flex items-center">
-                <span className="w-1/2 italic font-medium flex justify-start">Liều thuốc: Đau mỏi vai gáy</span>
-              </div>
-              <div className="pt-3">
-                <TitleListPre>
-                  {/* Data */}
-                  {listMedicine.map((item, index) => (
-                    <ItemListPre key={index} />
-                  ))}
-                </TitleListPre>
-              </div>
-              <span className="pt-3 pb-1 text-right font-medium">
-                Tổng giá đơn thuốc: <span className="text-secondary font-normal">250,000</span>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex h-[15%] w-full px-9 items-center mt-5">
-            <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-              Thanh toán (VNĐ)
-            </span>
-          </div>
-          <div className="flex w-full">
-            <div className="w-1/2"></div>
-            <div className="flex w-1/2">
-              <div className="w-1/2 flex flex-col gap-3 font-medium">
-                <span>Tổng tiền phải trả:</span>
-                <span>Tiền khách đưa:</span>
-                <span>Tiền thừa:</span>
-              </div>
-              <div className="w-1/2 flex gap-3 flex-col">
-                <span className="text-secondary">750,000 đ</span>
-                <input
-                  type="text"
-                  value="750,000 đ"
-                  className="pl-2 w-[60%] py-1 border-2 border-text_blur/50 rounded-lg"
-                  disabled
-                />
-                <span className="text-tertiary">0 đ</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col w-full px-9 items-center mt-5">
-            <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-            <div className=" w-full">
-              <textarea
-                name="comment"
-                id="comment"
-                cols="30"
-                rows="3"
-                className="w-full rounded-md border-text_blur/50 border-2 p-2"
-              ></textarea>
-            </div>
-          </div>
+          {/* )} */}
         </div>
       </div>
     </div>

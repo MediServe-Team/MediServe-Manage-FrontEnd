@@ -1,3 +1,4 @@
-export { default as NoPrescription } from './NoPrescription';
-export { default as Prescription } from './Prescription';
-export { default as AvailableDose } from './AvailableDose';
+export { default as AddMedicine } from './AddMedicine';
+export { default as AddDose } from './AddDose';
+export { default as AddAvailableDose } from './AddAvailableDose';
+export { default as AddProduct } from './AddProduct';

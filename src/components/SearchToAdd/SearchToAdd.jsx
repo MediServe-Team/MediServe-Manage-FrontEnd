@@ -7,7 +7,7 @@
 import React, { useState, forwardRef, useRef, useImperativeHandle } from 'react';
 import classNames from 'classnames';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
-import { TypeSelect } from '../TypeSelect';
+import TypeSelect from '../TypeSelect/TypeSelect.jsx';
 
 function SearchToAdd({ value, onChange, types, typeSelected, onClear, onTypeChange, className }, ref) {
   const [isFocus, setFocus] = useState(false);

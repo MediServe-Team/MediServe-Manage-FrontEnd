@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit';
-import { loginService } from './AuthServices';
+import { loginService, logoutService } from './AuthServices';
 
 const initialState = {
   user: {},
@@ -18,6 +18,14 @@ export const loginAction = createAsyncThunk('auth/login', async ({ email, passwo
   }
 });
 
+export const logoutAction = createAsyncThunk('auth/logout', async (axiosWithToken, thunkAPI) => {
+  try {
+    await logoutService(axiosWithToken);
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err);
+  }
+});
+
 export const AuthSlice = createSlice({
   name: 'auth',
   initialState,
@@ -31,6 +39,7 @@ export const AuthSlice = createSlice({
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
     },
+    resetState: (state) => initialState,
   },
   extraReducers: (builder) => {
     // login
@@ -39,7 +48,14 @@ export const AuthSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.error = '';
-      // if(action.payload)
+    });
+
+    // logout
+    builder.addCase(logoutAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.user = {};
+      state.accessToken = '';
+      state.error = '';
     });
 
     // list pending
@@ -64,8 +80,12 @@ export const AuthSlice = createSlice({
 });
 
 export const { getUser } = AuthSlice.actions;
+export const { setAccessToken } = AuthSlice.actions;
+export const { resetState } = AuthSlice.actions;
 
 // get state from auth
 export const getUserId = (state) => state.auth.user?.id;
+export const getPermitList = (state) => state.auth.user?.permitList;
+export const getAccessToken = (state) => state.auth.accessToken;
 
 export default AuthSlice.reducer;

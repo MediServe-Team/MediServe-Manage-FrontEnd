@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BillEntered, GroupByDate } from '../components';
 import { IoIosArrowDown } from 'react-icons/io';
 import DatePicker from 'react-datepicker';
@@ -7,8 +7,24 @@ import { Pagination, EmptyImage, Button } from '../../../components';
 import Tippy from '@tippyjs/react/headless';
 import useStock from '../hooks/useStock';
 import * as XLSX from 'xlsx';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function HistoryStock() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Lịch sử nhập kho',
+        slug: '/stock/history',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [sortVisible, setSortVisible] = useState(false);
   const refFromDate = useRef();
   const refToDate = useRef();
@@ -121,7 +137,7 @@ function HistoryStock() {
             <IoIosArrowDown className="text-gray-400" />
           </div>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+        <Button size="normal" styleBtn="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>

@@ -23,3 +23,8 @@ export const getDetailInvoiceServices = async (invoiceId) => {
   const response = await axiosBase.get(`/invoice-into-stocks/${invoiceId}`);
   return response.data;
 };
+
+export const getMerchandiseInventoryService = async () => {
+  const response = await axiosBase.get('/invoice-into-stocks/inventory');
+  return response.data;
+};

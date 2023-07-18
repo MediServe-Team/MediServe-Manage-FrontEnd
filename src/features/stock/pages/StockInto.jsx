@@ -15,8 +15,24 @@ import formatToVND from '../../../helpers/formatToVND';
 import { toast } from 'react-toastify';
 // select category from redux store
 import { getlistCategories } from '../../category/categorySlice';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function StockInto() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Nhập kho',
+        slug: '/stock/into',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [merchandises, setMerchandises] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -48,6 +64,7 @@ function StockInto() {
       const result = await filterItemService(debounced, selectedIndex);
       setSearchResults(result.data);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced, selectedIndex]);
 
   const handleSearchValueChange = (e) => {
@@ -137,6 +154,7 @@ function StockInto() {
       }
       return acc;
     }, []);
+    // eslint-disable-next-line array-callback-return
     listItemPrice.map((item) => {
       totalImport += item.totalImportPrice;
       totalSell += item.totalSellPrice;

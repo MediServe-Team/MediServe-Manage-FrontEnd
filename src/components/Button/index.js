@@ -1,14 +1,15 @@
 import React, { forwardRef } from 'react';
 import classNames from 'classnames';
-import styled from '@emotion/styled';
 
 /*
-    - type: 
+    - style: 
         - solid
         - outline
     - modifier:
         - danger
         - primary
+        - dark-primary
+        - gray
     - size:
         - normal
         - medium
@@ -32,12 +33,13 @@ import styled from '@emotion/styled';
 */
 
 const TYPES = ['solid', 'outline', 'disable'];
-const MODIFIERS = ['primary', 'danger'];
+const MODIFIERS = ['primary', 'dark-primary', 'danger', 'gray'];
 const SIZES = ['elasticity', 'normal', 'medium', 'large'];
 const SHAPES = ['rectangle', 'circle'];
 
 function Button(
   {
+    styleBtn,
     type,
     modifier,
     size,
@@ -57,7 +59,7 @@ function Button(
   ref,
 ) {
   // check props
-  const checkType = TYPES.includes(type) ? type : TYPES[0];
+  const checkType = TYPES.includes(styleBtn) ? styleBtn : TYPES[0];
   const checkModifier = MODIFIERS.includes(modifier) ? modifier : MODIFIERS[0];
   const checkSize = SIZES.includes(size) ? size : SIZES[0];
   const checkShape = SHAPES.includes(shape) ? shape : SHAPES[0];
@@ -80,19 +82,30 @@ function Button(
 
   return (
     <button
+      type={type}
       className={classNames(
         // style for button
         'flex justify-center items-center gap-2 shadow-sm transition-all duration-100',
-        // style for Type
+        // style for button
         {
           'bg-primary text-white hover:opacity-60 active:opacity-100':
             checkType === 'solid' && checkModifier === 'primary',
           'bg-danger text-white hover:opacity-60 active:opacity-100':
             checkType === 'solid' && checkModifier === 'danger',
+          'bg-text_primary text-white hover:opacity-60 active:opacity-100':
+            checkType === 'solid' && checkModifier === 'dark-primary',
+          'bg-text_blur text-white hover:opacity-60 active:opacity-100':
+            checkType === 'solid' && checkModifier === 'gray',
+
           'border-primary text-primary border-2 hover:bg-primary/10 active:bg-primary active:text-white transition-colors':
             checkType === 'outline' && checkModifier === 'primary',
           'border-danger text-danger border-2 hover:opacity-60 active:opacity-100':
             checkType === 'outline' && checkModifier === 'danger',
+          'border-text_primary text-text_primary border-2 hover:opacity-60 active:opacity-100':
+            checkType === 'outline' && checkModifier === 'dark-primary',
+          'border-text_blur text-gray border-2 hover:opacity-60 active:opacity-100':
+            checkType === 'outline' && checkModifier === 'gray',
+
           'border-text_blur bg-slate-200 cursor-default shadow-none': disabled,
         },
         // style for size

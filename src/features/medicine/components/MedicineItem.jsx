@@ -1,44 +1,26 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import classNames from 'classnames';
-
-function MedicineItem({ onclick }) {
+function MedicineItem({ id, medicineName, registrationNumber, medicineImage, packingSpecification, barCode, onclick }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="relative overflow-hidden">
         <div className="flex justify-center">
-          <img
-            src="https://intriphat.com/wp-content/uploads/2021/07/mau-hop-thuoc-dep-5.jpg"
-            alt="thuốc"
-            className="object-cover h-[200px]"
-          />
+          <img src={medicineImage} alt={medicineName} className="object-cover h-[200px]" />
         </div>
         <div className="flex flex-col">
-          <h3 className="text-h5 text-black font-medium">Levothyroxine (Viên)</h3>
-          <p className="text-h5 text-text_blur">hộp 4 vĩ x 20 viên</p>
+          <h3 className="text-h5 text-black font-medium">{medicineName}</h3>
+          <p className="text-h5 text-text_blur">{packingSpecification}</p>
         </div>
         <div className="flex flex-col">
           <p className="text-text_primary">
-            Mã sản phẩm: <span className="font-medium text-black">MsWD36</span>
+            Mã số thuốc: <span className="font-medium text-black">{id}</span>
           </p>
-          {/* Quantiry */}
-          <div className="flex gap-2">
-            <p className="text-text_primary">
-              Đã bán: <span className="font-medium text-secondary">306</span>
-            </p>
-            <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">480</span>
-            </p>
+          {/* Barcode */}
+          <div className="">
+            <img src={barCode} alt="" className="h-[80px]" />
           </div>
-          {/* Date */}
-          <div className="flex gap-2">
-            <p className="text-text_primary">
-              NSX: <span className="text-black text-h6">12/03/2022</span>
-            </p>
-            <p className="text-text_primary">
-              HSD: <span className="text-black text-h6">24/06/2023</span>
-            </p>
-          </div>
+          {/* registrationNumber */}
+          <p className="text-text_primary">
+            Số đăng ký: <span className="font-medium text-secondary">{registrationNumber}</span>
+          </p>
         </div>
       </div>
       {/* Button View detail */}

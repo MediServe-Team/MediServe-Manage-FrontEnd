@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAllCategoryServices } from './categoryServices';
 
 const initialState = {

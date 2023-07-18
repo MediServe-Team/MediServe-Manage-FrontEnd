@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
+import { FaSearchengin } from 'react-icons/fa';
 
-function SearchOnChange({ value, onChange, onClear, className }) {
+function SearchOnChange({ value, onChange, onClear, className, placeholder }) {
   const [isFocus, setFocus] = useState(false);
   const inputRef = useRef();
 
@@ -14,10 +15,14 @@ function SearchOnChange({ value, onChange, onClear, className }) {
           isFocus && 'border-[1px]',
         )}
       >
+        <div className="pl-2">
+          <FaSearchengin className="text-[20px] text-text_blur" />
+        </div>
         <input
           ref={inputRef}
           type="text"
           value={value}
+          placeholder={placeholder}
           onChange={onChange}
           className="flex-1 border-none outline-none bg-transparent pl-3 text-h5 w-auto"
           onFocus={() => setFocus(true)}

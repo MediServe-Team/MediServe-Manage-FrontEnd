@@ -4,8 +4,32 @@ import { GroupItem, ItemRowReadOnly } from '../components';
 import { useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { getDetailInvoiceServices } from '../stockServices';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function StockIntoDetail() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Lịch sử nhập kho',
+        slug: '/stock/history',
+      }),
+    );
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Chi tiết nhập kho',
+        slug: `/stock/invoice/${id}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+      dispatch(removeLastBreadcrumb());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const [invoice, setInvoice] = useState({});
   const [listMedicine, setListMedicine] = useState([]);
   const [listProduct, setListProduct] = useState([]);
@@ -59,7 +83,7 @@ function StockIntoDetail() {
             <span className="text-text_primary">Ghi chú:</span> {invoice.note}
           </p>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+        <Button size="normal" styleBtn="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>

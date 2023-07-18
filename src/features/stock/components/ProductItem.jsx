@@ -1,8 +1,24 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
+import formatToVND from '../../../helpers/formatToVND';
+import dateToString from '../../../helpers/dateToString';
 
-function ProductItem() {
+function ProductItem({
+  name,
+  image,
+  packingSpecification,
+  productId,
+  soldQuantity,
+  inputQuantity,
+  specification,
+  manufactureDate,
+  expirationDate,
+  lotNumber,
+  importPrice,
+  sellPrice,
+  invoiceId,
+}) {
   const [y, setY] = useState(400);
   const [opacity, setOpacity] = useState(0.3);
   const [hiden, setHiden] = useState(true);
@@ -18,29 +34,29 @@ function ProductItem() {
           />
         </div>
         <div className="flex flex-col">
-          <h3 className="text-h5 text-black font-medium">Levothyroxine (Viên)</h3>
-          <p className="text-h5 text-text_blur">hộp 4 vĩ x 20 viên</p>
+          <h3 className="text-h5 text-black font-medium">{name}</h3>
+          <p className="text-h5 text-text_blur whitespace-nowrap">{packingSpecification}</p>
         </div>
         <div className="flex flex-col">
           <p className="text-text_primary">
-            Mã sản phẩm: <span className="font-medium text-black">MsWD36</span>
+            Mã sản phẩm: <span className="font-medium text-black">{productId}</span>
           </p>
           {/* Quantiry */}
           <div className="flex gap-2">
             <p className="text-text_primary">
-              Đã bán: <span className="font-medium text-secondary">306</span>
+              Đã bán: <span className="font-medium text-secondary">{soldQuantity}</span>
             </p>
             <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">480</span>
+              Còn lại: <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
             </p>
           </div>
           {/* Date */}
           <div className="flex gap-2">
             <p className="text-text_primary">
-              NSX: <span className="text-black text-h6">12/03/2022</span>
+              NSX: <span className="text-black text-h6">{dateToString(manufactureDate)}</span>
             </p>
             <p className="text-text_primary">
-              HSD: <span className="text-black text-h6">24/06/2023</span>
+              HSD: <span className="text-black text-h6">{dateToString(expirationDate)}</span>
             </p>
           </div>
         </div>
@@ -53,48 +69,49 @@ function ProductItem() {
         >
           <div className="w-full h-full flex flex-col justify-between bg-gradient-to-t from-white to-primary/30 rounded-t-lg px-3 py-3">
             <div className="flex flex-col gap-1">
-              <h3 className="text-h5 text-black font-medium">Levothyroxine (Viên)</h3>
-              <p className="text-h5 text-text_blur">hộp 4 vĩ x 20 viên</p>
+              <h3 className="text-h5 text-black font-medium">{name}</h3>
+              <p className="text-h5 text-text_blur">{packingSpecification}</p>
             </div>
             {/* Mã số */}
             <div className="flex flex-col gap-1">
               <p className="text-text_primary">
-                Mã đơn nhập: <span className="font-medium text-black">MsWD36</span>
+                Mã đơn nhập: <span className="font-medium text-black">{invoiceId}</span>
               </p>
               <p className="text-text_primary">
-                Mã lô sản xuất: <span className="font-medium text-black">MsWD36</span>
+                Mã lô sản xuất: <span className="font-medium text-black">{lotNumber}</span>
               </p>
             </div>
             {/* Price */}
             <div className="flex flex-col gap-1">
               <p className="text-text_primary">
-                Giá nhập: <span className="font-medium text-danger">3.000 vnđ</span>
+                Giá nhập: <span className="font-medium text-danger">{formatToVND(importPrice)}</span>
               </p>
               <p className="text-text_primary">
-                Giá bán: <span className="font-medium text-tertiary">5.000 vnđ</span>
+                Giá bán: <span className="font-medium text-tertiary">{formatToVND(sellPrice)}</span>
               </p>
             </div>
             {/* other */}
             <div className="flex flex-col gap-1">
               <p className="text-text_primary">
-                Mã sản phẩm: <span className="font-medium text-black">MsWD36</span>
+                Mã sản phẩm: <span className="font-medium text-black">{productId}</span>
               </p>
               {/* Quantiry */}
               <div className="flex gap-2">
                 <p className="text-text_primary">
-                  Đã bán: <span className="font-medium text-secondary">306</span>
+                  Đã bán: <span className="font-medium text-secondary">{soldQuantity}</span>
                 </p>
                 <p className="text-text_primary">
-                  Còn lại: <span className="font-medium text-primary">480</span>
+                  Còn lại:{' '}
+                  <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
                 </p>
               </div>
               {/* Date */}
               <div className="flex gap-2">
                 <p className="text-text_primary">
-                  NSX: <span className="text-black text-h6">12/03/2022</span>
+                  NSX: <span className="text-black text-h6">{dateToString(manufactureDate)}</span>
                 </p>
                 <p className="text-text_primary">
-                  HSD: <span className="text-black text-h6">24/06/2023</span>
+                  HSD: <span className="text-black text-h6">{dateToString(expirationDate)}</span>
                 </p>
               </div>
             </div>

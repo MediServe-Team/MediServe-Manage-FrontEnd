@@ -1,22 +1,34 @@
-import {GoChevronRight} from 'react-icons/go'
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { GoChevronRight } from 'react-icons/go';
 
-function Breadcrumb ({listTab}) {
-    return (
-        <div className="flex gap-1">
-            {
-                listTab.map((tab, index) => {
-                    return(
-                        <div className='flex items-center' key={index}>
-                            <div className="flex border-2 border-gray-400 bg-light_gray rounded-md px-2">
-                                <span className='font-medium text-h6'>{tab}</span>
-                            </div>
-                            {!(index >= listTab.length - 1) && <GoChevronRight/> }
-                        </div>
-                    )
-                }) 
-            }
-        </div>
-    )
- }
+function Breadcrumb() {
+  const list = useSelector((state) => state.breadcrumb?.breadcrumbList);
+  const renderBreadcrumb = (list) => {
+    return list.length !== 0
+      ? list.map((tab, index) =>
+          index !== list.length - 1 ? (
+            <div className="flex items-center" key={index}>
+              <div className="flex border-2 border-gray-400 bg-light_gray rounded-md px-2">
+                <Link to={tab.slug} className="font-medium text-h6 whitespace-nowrap">
+                  {tab.name}
+                </Link>
+              </div>
+              {!(index >= list.length - 1) && <GoChevronRight />}
+            </div>
+          ) : (
+            <div className="flex items-center" key={index}>
+              <div className="flex border-2 border-gray-400 bg-light_gray rounded-md px-2">
+                <span className="font-medium text-h6 whitespace-nowrap">{tab.name}</span>
+              </div>
+              {!(index >= list.length - 1) && <GoChevronRight />}
+            </div>
+          ),
+        )
+      : '';
+  };
 
- export default Breadcrumb;
+  return <div className="flex flex-row">{renderBreadcrumb(list)}</div>;
+}
+
+export default Breadcrumb;
