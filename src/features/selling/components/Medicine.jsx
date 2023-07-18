@@ -1,15 +1,13 @@
-import { useState } from 'react';
+import formatToVND from '../../../helpers/formatToVND';
 
-export default function Medicine() {
-  const [listMedicine, setListMedicine] = useState([1, 1, 1, 1, 1]);
-
-  function Title({ children, title, isDrug }) {
+export default function Medicine({ title, data }) {
+  function Title({ children }) {
     return (
       <div className="flex flex-col h-full min-h-0">
         {/* heading */}
         <ul className="flex justify-between items-center gap-2 text-h5 font-medium border-b-2 border-text_blur/30 py-[5px]">
           <li className="flex-[12]">
-            <span>Sản phẩm</span>
+            <span>{title}</span>
           </li>
           <li className="flex-[5] text-center">
             <span>SL</span>
@@ -27,24 +25,26 @@ export default function Medicine() {
     );
   }
 
-  function Item({ item, children }) {
+  function Item({ name, unit, quantity, totalPrice, sellPrice, packingSpecification }) {
     return (
       <ul className="flex h-[60px] justify-between items-center gap-2 text-h5 border-b-2 border-text_blur/30">
         <li className="flex flex-[12] flex-col w-full truncate">
-          <span className="font-medium">Levothyroxine (Viên)</span>
-          <span className="text-text_blur">hộp 4 vĩ x 20 viên</span>
+          <span className="font-medium">
+            {name} ({unit})
+          </span>
+          <span className="text-text_blur">{packingSpecification}</span>
         </li>
 
         <li className="flex-[5] text-center">
-          <span>5</span>
+          <span>{quantity}</span>
         </li>
 
         <li className="flex-[5] text-center">
-          <span>10,000</span>
+          <span>{sellPrice}</span>
         </li>
 
         <li className="flex-[7] text-center">
-          <span>50,000</span>
+          <span>{formatToVND(totalPrice)}</span>
         </li>
       </ul>
     );
@@ -54,9 +54,34 @@ export default function Medicine() {
     <div className="">
       <Title>
         {/* Data */}
-        {listMedicine.map((item, index) => (
-          <Item key={index} item={item} />
-        ))}
+        {data &&
+          Array.isArray(data) &&
+          data.length > 0 &&
+          data.map((item, index) => (
+            <>
+              {item?.medicine ? (
+                <Item
+                  key={index}
+                  name={item?.medicine?.medicineName}
+                  unit={item?.medicine?.sellUnit}
+                  packingSpecification={item?.medicine?.packingSpecification}
+                  quantity={item?.quantity}
+                  totalPrice={item?.totalPrice}
+                  sellPrice={Number(item?.totalPrice) / Number(item?.quantity)}
+                />
+              ) : (
+                <Item
+                  key={index}
+                  name={item?.product?.productName}
+                  unit={item?.product?.sellUnit}
+                  packingSpecification={item?.product?.packingSpecification}
+                  quantity={item?.quantity}
+                  totalPrice={item?.totalPrice}
+                  sellPrice={Number(item?.totalPrice) / Number(item?.quantity)}
+                />
+              )}
+            </>
+          ))}
       </Title>
     </div>
   );

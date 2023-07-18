@@ -1,12 +1,13 @@
-// import { CustomSwitch, TitleShopping, ItemShopping } from '../components';
+import { CustomSwitch, TitleShopping, ItemShopping } from '../components';
 // import { FaShoppingCart } from 'react-icons/fa';
 // import { BiDollar } from 'react-icons/bi';
-// import { Modal, ModalClose, ModalDialog } from '@mui/joy';
-// import { Medicine, Prescription, Dose } from '../../selling/components';
+import { Modal as MuiModal, ModalClose, ModalDialog } from '@mui/joy';
+import { Medicine, Prescription, Dose } from '../../selling/components';
 import { useState, useEffect } from 'react';
 import { Button, Modal } from '../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-datepicker';
+import { BillPreview } from '../../selling/components/Bill';
 // form
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,6 +15,7 @@ import { updateAccountSchema } from '../../../validations/updateAccount';
 import classNames from 'classnames';
 // services
 import { updateAccountByIdService, deleteAccountService } from '../../../services/accountServices';
+import { getBillOfUserService } from '../../selling/billServices';
 import { useAxiosWithToken } from '../../../hooks';
 import { toast } from 'react-toastify';
 
@@ -21,6 +23,8 @@ function AccountCustomer({ data, reloadParentPage }) {
   const [filter, setFilter] = useState('');
   const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
   const [preview, setPreview] = useState(false);
+  const [bills, setBills] = useState([]);
+  const [billSelectedId, setBillSelectedId] = useState(null);
   const axiosWithToken = useAxiosWithToken();
   //* modal
   const [openModalDelete, setOpenModalDelete] = useState(false);
@@ -43,6 +47,13 @@ function AccountCustomer({ data, reloadParentPage }) {
       setValue('dateOfBirth', new Date(data?.dateOfBirth));
     }
     setValue('phoneNumber', data?.phoneNumber ?? '');
+
+    //* get all bill of user
+    const getBills = async () => {
+      const result = await getBillOfUserService(data.id);
+      setBills(result?.data ?? []);
+    };
+    getBills();
   }, [data]);
 
   const handleUpdateAccount = async (dataForm) => {
@@ -64,6 +75,17 @@ function AccountCustomer({ data, reloadParentPage }) {
     } else {
       toast.error('Hệ thống gặp sự cố xóa tài khoản!');
     }
+  };
+
+  //* PREVIEW BILL
+  const handlePreviewBill = (billId) => {
+    setBillSelectedId(billId);
+    setPreview(true);
+  };
+
+  const handleClosePreviewBill = () => {
+    setBillSelectedId(null);
+    setPreview(false);
   };
 
   return (
@@ -264,19 +286,27 @@ function AccountCustomer({ data, reloadParentPage }) {
           </div>
         </div> */}
 
-        {/* <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
-          <span className="text-[18px] font-medium min-h-0 mb-">Lịch sử mua hàng</span>
-          <TitleShopping>
-            {listShop.map((item, index) => (
-              <ItemShopping key={index} item={item}>
-                <button className="rounded-xl bg-primary/80 text-white py-1 px-5" onClick={() => setPreview(true)}>
-                  <span className="truncate">Chi tiết</span>
-                </button>
-              </ItemShopping>
-            ))}
-          </TitleShopping>
-        </div> */}
+        {bills && Array.isArray(bills) && bills.length > 0 && (
+          <div className="flex flex-col min-h-[60%] w-[90%] mt-4 mb-6 gap-3">
+            <span className="text-[18px] font-medium min-h-0 mb-">Lịch sử mua hàng</span>
+            <TitleShopping>
+              {bills.map((bill, index) => (
+                <ItemShopping key={index} data={bill}>
+                  <button
+                    className="rounded-xl bg-primary/80 text-white py-1 px-5"
+                    onClick={() => handlePreviewBill(bill.id)}
+                  >
+                    <span className="truncate">Chi tiết</span>
+                  </button>
+                </ItemShopping>
+              ))}
+            </TitleShopping>
+          </div>
+        )}
       </div>
+
+      {/* Preview bill */}
+      <BillPreview preview={preview} closePreview={handleClosePreviewBill} billId={billSelectedId} />
 
       {/* Modal Delete */}
       <Modal showModal={openModalDelete}>

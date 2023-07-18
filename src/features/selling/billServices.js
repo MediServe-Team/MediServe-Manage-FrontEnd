@@ -29,3 +29,8 @@ export const getBillService = async (billId) => {
   const response = await axiosBase.get(`/receipts/detail/${billId}`);
   return response.data;
 };
+
+export const getBillOfUserService = async (userId) => {
+  const response = await axiosBase.get(`/receipts/of-user/${userId}`);
+  return response.data;
+};
