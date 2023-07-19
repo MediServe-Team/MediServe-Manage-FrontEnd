@@ -9,21 +9,42 @@ import {
   ItemDose,
   PermissionItem,
 } from '../components';
-// import Button from '@mui/joy/Button';
 import { BiXCircle } from 'react-icons/bi';
-import { Modal, ModalClose, ModalDialog } from '@mui/joy';
+// import { Modal, ModalClose, ModalDialog } from '@mui/joy';
 import { Medicine, Prescription, Dose } from '../../selling/components';
 import { BsImage, BsPlusCircle, BsX } from 'react-icons/bs';
 // component
-import { Button } from '../../../components';
+import { Button, Modal } from '../../../components';
 import classNames from 'classnames';
 import DatePicker from 'react-datepicker';
+// services
+import { updateAccountStaffService, deleteAccountService } from '../../../services/accountServices';
+import { useAxiosWithToken } from '../../../hooks';
+import { toast } from 'react-toastify';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { updateAccountSchema } from '../../../validations/updateAccount';
+import { updateAccountStaffSchema } from '../../../validations/updateAccountStaff';
+import { AiOutlineClose } from 'react-icons/ai';
+
+// Permits in app
+const _PERMITS = [
+  { name: 'Trang chủ', permitId: 1 },
+  { name: 'Quản lý kho', permitId: 2 },
+  { name: 'Quản lý thuốc', permitId: 3 },
+  { name: 'Quản lý sản phẩm', permitId: 4 },
+  { name: 'Quản lý liều', permitId: 5 },
+  { name: 'Quản lý danh mục', permitId: 6 },
+  { name: 'Bán hàng', permitId: 7 },
+];
 
 function AccountStaff({ data, reloadParentPage }) {
+  //* state
+  const axiosWithToken = useAxiosWithToken();
+  const [permits, setPermits] = useState([]);
+  //* state modal
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openModalPermit, setOpenModalPermit] = useState(false);
   //* form
   const {
     register,
@@ -31,66 +52,57 @@ function AccountStaff({ data, reloadParentPage }) {
     setValue,
     control,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(updateAccountSchema) });
+  } = useForm({ resolver: yupResolver(updateAccountStaffSchema) });
 
-  const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
-  const [preview, setPreview] = useState(false);
-  const [listPermission, setListPermission] = useState([
-    { name: 'Trang chủ', active: true },
-    { name: 'Quản lý kho', active: false },
-    { name: 'Quản lý thuốc', active: false },
-    { name: 'Quản lý sản phẩm', active: false },
-    { name: 'Quản lý liều', active: false },
-    { name: 'Quản lý danh mục', active: false },
-    { name: 'Quản lý tài khoản', active: false },
-    { name: 'Bán hàng', active: false },
-    { name: 'Thông tin cá nhân', active: false },
-  ]);
-  const [listTemp, setListTemp] = useState([
-    { name: 'Trang chủ', active: true },
-    { name: 'Quản lý kho', active: false },
-    { name: 'Quản lý thuốc', active: false },
-    { name: 'Quản lý sản phẩm', active: false },
-    { name: 'Quản lý liều', active: false },
-    { name: 'Quản lý danh mục', active: false },
-    { name: 'Quản lý tài khoản', active: false },
-    { name: 'Bán hàng', active: false },
-    { name: 'Thông tin cá nhân', active: false },
-  ]);
-  const [openEditPer, setOpenEditPer] = useState(false);
-
-  let red = '#FF6060',
-    darkBlue = '#064861',
-    orange = '#EA7408';
-
+  //* Set value init in first access
   useEffect(() => {
-    listPermission.forEach((permission) => {
-      setListTemp((prev) =>
-        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
-      );
-    });
-  }, [listPermission]);
+    setValue('name', data?.name);
+    setValue('fullName', data?.fullName);
+    setValue('address', data?.address ?? '');
+    setValue('age', data?.age);
+    if (data?.dateOfBirth) {
+      setValue('dateOfBirth', new Date(data?.dateOfBirth));
+    }
+    setValue('phoneNumber', data?.phoneNumber ?? '');
+    setValue('numOfPPC', data?.numOfPPC);
+    setPermits(data?.permitList ?? []);
+  }, [data]);
 
-  const handleCloseModal = () => {
-    listPermission.forEach((permission) => {
-      setListTemp((prev) =>
-        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
-      );
-    });
+  //* Handle update account
+  const handleUpdateAccount = async (dataForm) => {
+    dataForm.permitList = permits;
+    const result = await updateAccountStaffService(axiosWithToken, data.id, dataForm);
+    if (result.status === 200) {
+      toast.success('Cập nhật thông tin thành công!');
+    } else {
+      toast.error('Hệ thống gặp sự cố khi cập nhật thông tin!');
+    }
   };
 
-  const handleSavePermission = () => {
-    setOpenEditPer(false);
-
-    listTemp.forEach((temp) => {
-      setListPermission((permission) =>
-        permission.map((item) => (item.name === temp.name ? { ...item, active: temp.active } : { ...item })),
-      );
-    });
+  //* Handle delete account
+  const handleDeleteAccount = async () => {
+    const result = await deleteAccountService(axiosWithToken, data.id);
+    if (result.status === 200) {
+      toast.success('Xóa tài khoản thành công!');
+      reloadParentPage((prevState) => !prevState);
+    } else {
+      toast.error('Hệ thống gặp sự cố xóa tài khoản!');
+    }
   };
 
-  const handleDeletePer = (name) => {
-    setListPermission((pre) => pre.map((item) => (item.name === name ? { ...item, active: false } : { ...item })));
+  // const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
+  // const [preview, setPreview] = useState(false);
+
+  //* Handle add permits
+  const handleAddPermits = (permitId) => {
+    const newPermits = [...permits, permitId];
+    setPermits([...newPermits]);
+  };
+
+  //* Handle delete permits
+  const handleDeletePermits = (permitId) => {
+    const newPermits = permits.filter((permit) => permit !== permitId);
+    setPermits([...newPermits]);
   };
 
   return (
@@ -108,7 +120,10 @@ function AccountStaff({ data, reloadParentPage }) {
       {/* Account Information */}
       <div className="flex flex-col h-[87.5%] overflow-y-auto w-full items-center">
         <div className="flex justify-center flex-shrink w-full py-6">
-          <div className="flex flex-col h-full w-[90%] border-text_blur/50 border-2 rounded-xl">
+          <form
+            onSubmit={handleSubmit(handleUpdateAccount)}
+            className="flex flex-col h-full w-[90%] border-text_blur/50 border-2 rounded-xl"
+          >
             <div className="flex flex-col min-h-0">
               <div className="flex gap-12 px-6 pb-2 py-3 border-b-2 border-text_blur/50">
                 <p className="w-full text-h6 font-medium pb-1">Thông tin cá nhân</p>
@@ -179,13 +194,19 @@ function AccountStaff({ data, reloadParentPage }) {
                   {/* Field cardIdentify */}
                   <div className="flex flex-col">
                     <span className="text-text_primary font-medium">CMND/ CCCD</span>
-                    <button className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl">
-                      <BsImage
-                        className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
-                        size={40}
-                      />
-                      <p className="text-text_primary">Chưa cung cấp</p>
-                    </button>
+                    <div className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center overflow-hidden">
+                      {data?.identityCard ? (
+                        <img src={data?.identityCard} alt="identityCard" className="w-full h-full object-cover" />
+                      ) : (
+                        <>
+                          <BsImage
+                            className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
+                            size={40}
+                          />
+                          <p className="text-text_primary">Chưa cung cấp</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* Field phoneNumber */}
@@ -238,124 +259,76 @@ function AccountStaff({ data, reloadParentPage }) {
                   {/* Field cerfication */}
                   <div className="flex flex-col">
                     <span className="text-text_primary font-medium">Bằng cấp</span>
-                    <button className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl">
-                      <BsImage
-                        className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
-                        size={40}
-                      />
-                      <p className="text-text_primary">Chưa cung cấp</p>
-                    </button>
+                    <div className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center overflow-hidden">
+                      {data?.certificate ? (
+                        <img src={data?.certificate} alt="certificate" className="w-full h-full object-cover" />
+                      ) : (
+                        <>
+                          <BsImage
+                            className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
+                            size={40}
+                          />
+                          <p className="text-text_primary">Chưa cung cấp</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            {/* Permits */}
+            {/* List Permits of Account */}
             <div className="flex flex-col flex-shrink px-6 my-4 gap-1">
-              <span className="text-h7 text-text_primary font-medium">Cấp quyền</span>
-              <div className="flex border-2 border-text_blur rounded-md p-1">
+              <span className="text-h6 text-text_primary font-medium">Quyền hạn</span>
+              <div className="flex border-2 border-text_blur rounded-md p-1 min-h-[40px]">
                 <div className="flex w-[93%] gap-3 overflow-x-auto">
-                  {listPermission.map((item, index) =>
-                    item.active ? (
-                      <div
-                        key={index}
-                        className="flex h-full rounded-md bg-secondary/80 justify-center items-center flex-grow-0 flex-shrink-0 p-2 gap-3"
-                      >
-                        <span className="text-white text-h6 h-full">{item.name}</span>
-                        <button className="flex items-center" onClick={() => handleDeletePer(item.name)}>
-                          <BsX size={20} />
-                        </button>
-                      </div>
-                    ) : null,
-                  )}
-                </div>
-
-                <div className="flex w-[7%] justify-center items-center">
-                  <button
-                    onClick={() => {
-                      setOpenEditPer(true);
-                    }}
-                  >
-                    <BsPlusCircle size={20} style={{ color: orange }} />
-                  </button>
-
-                  <Modal open={openEditPer} onClose={() => setOpenEditPer(false)}>
-                    <ModalDialog
-                      variant="outlined"
-                      style={{
-                        width: '45%',
-                        height: '70%',
-                        paddingInline: '0',
-                        paddingBlock: '0',
-                        borderTopLeftRadius: '1rem',
-                        borderTopRightRadius: '0px',
-                        borderBottomRightRadius: '1rem',
-                        borderBottomLeftRadius: '0px',
-                      }}
-                    >
-                      <div className="flex items-center border-b-2 border-text_blur/50 bg-primary rounded-tl-2xl py-2 px-3">
-                        <div className="">
-                          <div className="bg-[url('https://s3-alpha-sig.figma.com/img/711e/d2ed/22f41791a0dd8909af17f46dbccd8af8?Expires=1685923200&Signature=Df8uzSuQIW4cCzWheeEP6~zX9~~kTUXwRMI0VxZbii6FVFsUQlbaE~G6K3WHzQWHPAVZ7Dqeeh9x67BU2LT-uLA8QoRJLe35jgEP7X~mkSsYRzjq-NVZ4Ngi664ssb56eCMaV91WHVyKQ7oLf34ZArNon6l3B6C0nLFqFzYgvqvt~vydSdhqE8DDIHJUO1lr5PBmZWNx~a4OaBGC8nAwEttn96PrrxMk8wj~2cg43zH~GvKYbctogPw5GXe-d4QgKpt5ekmQmXqJWPYJQ1QrD-HcmqEt2KYe8X8~gBh0xL78ZCJ6KfpNPUs9Wmz4~7ZTe00tb8DXraicYGxDXDdszw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')] bg-cover h-10 w-10 rounded-full"></div>
-                        </div>
-
-                        <div className="flex justify-start items-center flex-grow pl-4">
-                          <span className="text-white text-h4 font-medium truncate">Trần Minh Quang</span>
-                        </div>
-
-                        <div className="flex items-center justify-end">
+                  {permits &&
+                    Array.isArray(permits) &&
+                    permits.length > 0 &&
+                    permits.map((permit, index) => {
+                      const permitDisplay = _PERMITS.find((item) => item.permitId === permit);
+                      return (
+                        <div
+                          key={index}
+                          className="flex h-full rounded-md bg-secondary/80 justify-center items-center flex-grow-0 flex-shrink-0 p-2 gap-3"
+                        >
+                          <span className="text-white text-h6 h-full">{permitDisplay.name}</span>
                           <button
-                            onClick={() => {
-                              handleCloseModal();
-                              setOpenEditPer(false);
-                            }}
+                            type="button"
+                            className="flex items-center"
+                            onClick={() => handleDeletePermits(permitDisplay.permitId)}
                           >
-                            <BiXCircle size={30} style={{ color: darkBlue }} />
+                            <BsX size={20} />
                           </button>
                         </div>
-                      </div>
-
-                      <div className="flex flex-grow p-8">
-                        <div className="flex gap-8 flex-wrap">
-                          {listTemp.map((item, index) => (
-                            <PermissionItem key={index} item={item} />
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex justify-end items-end gap-4 pr-4 pb-4 h-full">
-                        <Button
-                          className="hover:opacity-90 active:opacity-100"
-                          variant="solid"
-                          style={{
-                            backgroundColor: darkBlue,
-                            width: '5rem',
-                            height: '5rem',
-                            fontSize: '18px',
-                            borderRadius: '9999px',
-                          }}
-                          size="md"
-                          onClick={handleSavePermission}
-                        >
-                          Lưu
-                        </Button>
-                      </div>
-                    </ModalDialog>
-                  </Modal>
+                      );
+                    })}
+                </div>
+                {/* Button open modal add permit */}
+                <div className="flex w-[7%] justify-center items-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenModalPermit(true);
+                    }}
+                  >
+                    <BsPlusCircle size={20} className="text-secondary" />
+                  </button>
                 </div>
               </div>
             </div>
-
+            {/* Button control update and delete account */}
             <div className="flex flex-shrink">
               <div className="flex w-1/2 justify-start items-center min-h-0 min-w-0 text-h6 pl-5"></div>
               <div className="flex w-1/2 justify-end items-end min-h-0 min-w-0 pr-4 pb-3 gap-4">
-                <Button size={'medium'} modifier={'danger'}>
+                <Button type={'button'} size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>
                   Xóa tài khoản
                 </Button>
-                <Button size={'medium'} modifier={'dark-primary'} width={120}>
+                <Button type={'submit'} size={'medium'} modifier={'dark-primary'} width={120}>
                   Lưu
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
 
         {/* <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
@@ -399,6 +372,92 @@ function AccountStaff({ data, reloadParentPage }) {
           </TitleDose>  
         </div> */}
       </div>
+
+      {/* Modal add permits */}
+      <Modal showModal={openModalPermit}>
+        {/* Header modal add permits */}
+        <header className="flex items-center pb-3 border-b-2 border-text_blur/50 min-w-[400px] max-w-[400px]">
+          <div className="flex-shrink-0">
+            <img src={data?.avatar} alt="avatar" className="h-10 w-10 rounded-full object-cover" />
+          </div>
+          <div className="flex flex-col justify-start items-start flex-grow pl-4">
+            <span className="text-text_primary text-h5 font-medium truncate">{data?.fullName}</span>
+            <span className="text-text_blur text-h6 font-normal">Chọn quyền hạn muốn thêm</span>
+          </div>
+          <div className="flex items-center justify-end">
+            <button
+              type="button"
+              className="p-2 hover:bg-slate-100 rounded-md"
+              onClick={() => {
+                setOpenModalPermit(false);
+              }}
+            >
+              <AiOutlineClose size={24} />
+            </button>
+          </div>
+        </header>
+        {/* Body - Render permit rest of account */}
+        <div className="flex gap-3 max-w-full flex-wrap py-4 w-[400px]">
+          {(() => {
+            const permitRest = _PERMITS.filter((item) => !permits.includes(item.permitId));
+            return permitRest && Array.isArray(permitRest) && permitRest.length > 0 ? (
+              permitRest.map((item, index) => (
+                <PermissionItem key={index} name={item.name} onClick={() => handleAddPermits(item.permitId)} />
+              ))
+            ) : (
+              <></>
+            );
+          })()}
+        </div>
+        {/* Button control Modal add Permits */}
+        <div className="flex justify-end items-end gap-4 pt-4 h-full">
+          <Button
+            type={'button'}
+            size={'medium'}
+            modifier={'dark-primary'}
+            width={120}
+            onClick={() => setOpenModalPermit(false)}
+          >
+            Hoàn tất
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Modal Delete */}
+      <Modal showModal={openModalDelete}>
+        <div className="w-[300px] flex flex-col items-center gap-5 relative">
+          {/* Info modal */}
+          <header className="w-full flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="text-text_primary font-bold text-h4">Xác nhận</h3>
+              <p className="text-text_blur text-h6">
+                Bạn chắc chắn xác nhận muốn xóa tài khoản <b className="text-black">{data.fullName}</b> ra khỏi hệ
+                thống?
+              </p>
+            </div>
+            {/* close modal delete */}
+            <button className="outline-none absolute right-0 top-0" onClick={() => setOpenModalDelete(false)}>
+              <AiOutlineClose className="text-[20px] m-auto" />
+            </button>
+          </header>
+          {/* Button control modal*/}
+          <div className="flex justify-between items-center mt-5 gap-5">
+            <Button
+              size={'medium'}
+              styleBtn={'outline'}
+              modifier={'gray'}
+              width={120}
+              type={'button'}
+              onClick={() => setOpenModalDelete(false)}
+            >
+              Hủy
+            </Button>
+            <Button size={'medium'} modifier={'danger'} width={120} type={'button'} onClick={handleDeleteAccount}>
+              Xóa
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

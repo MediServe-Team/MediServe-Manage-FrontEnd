@@ -27,6 +27,20 @@ export const updateAccountByIdService = async (axiosWithToken, userId, data) => 
   return response.data;
 };
 
+export const updateAccountStaffService = async (axiosWithToken, userId, data) => {
+  const response = await axiosWithToken.put(`/users/update-user-info/${userId}`, {
+    name: data?.name,
+    fullName: data?.fullName,
+    address: data?.address,
+    age: data?.age,
+    dateOfBirth: data?.dateOfBirth,
+    phoneNumber: data?.phoneNumber,
+    numOfPPC: data?.numOfPPC,
+    permitList: data?.permitList,
+  });
+  return response.data;
+};
+
 export const deleteAccountService = async (axiosWithToken, userId) => {
   const response = await axiosWithToken.delete(`/users/${userId}`);
   return response.data;
