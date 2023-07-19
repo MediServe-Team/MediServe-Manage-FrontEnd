@@ -3,12 +3,12 @@ import StaffItem from '../components/StaffItem';
 import CustomerItem from '../components/CustomerItem';
 import Checkbox from '@mui/material/Checkbox';
 import { BtnAddAcc } from '../components';
-import { Button } from '../../../components';
+import { Button, EmptyImage } from '../../../components';
 import { AccountCustomer, AccountStaff } from '../pages';
 import { useDispatch } from 'react-redux';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 // services
-import { getAllAccountService } from '../../../services/accountServices';
+import { getAllAccountService, getAccountByIdService } from '../../../services/accountServices';
 import { useAxiosWithToken } from '../../../hooks';
 
 function ManageAccount() {
@@ -30,6 +30,8 @@ function ManageAccount() {
   const [accounts, setAccounts] = useState([]);
   const [filterOption, setFilterOption] = useState('all'); //* option filter in ['none', 'customer', 'staff', 'all']
   const [filterAccounts, setFilterAccounts] = useState([]); //* filter from accounts and display in UI
+  const [accountSlected, setAccountSelected] = useState(null);
+  const [reload, setReload] = useState(false);
   // api with token
   const axiosWithToken = useAxiosWithToken();
 
@@ -37,11 +39,12 @@ function ManageAccount() {
   useEffect(() => {
     const getAllAccounts = async () => {
       const result = await getAllAccountService(axiosWithToken);
-      console.log(result.data);
       setAccounts(result.data);
     };
     getAllAccounts();
-  }, []);
+    // reset account selected when reload data
+    setAccountSelected(null);
+  }, [reload]);
 
   //* Filter accounts
   useEffect(() => {
@@ -74,6 +77,20 @@ function ManageAccount() {
     else setFilterOption('none');
   };
 
+  //* Handle select Account Customer
+  const handleSelectCustomerAccount = async (accountId) => {
+    const result = await getAccountByIdService(axiosWithToken, accountId);
+    const accountData = { role: 'USER', data: result.data };
+    setAccountSelected(accountData);
+  };
+
+  //* Handle select Account Staff
+  const handleSelectStaffAccount = async (accountId) => {
+    const result = await getAccountByIdService(axiosWithToken, accountId);
+    const accountData = { role: 'STAFF', data: result.data };
+    setAccountSelected(accountData);
+  };
+
   return (
     <div className="flex h-full">
       {/* List of accounts */}
@@ -102,22 +119,25 @@ function ManageAccount() {
 
         {/* List Accounts */}
         <div className="flex h-4/6 min-h-0 pt-2 justify-center w-full">
-          <div className="flex flex-col h-full overflow-y-auto gap-5 w-full">
+          <div className="flex flex-col h-full overflow-y-auto gap-2 w-full">
             {filterAccounts &&
               Array.isArray(filterAccounts) &&
               filterAccounts.map((account, index) =>
                 account.role === 'USER' ? (
-                  <button className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100" key={index}>
-                    <CustomerItem
-                      key={index}
-                      avatar={account.avatar}
-                      fullName={account.fullName}
-                      email={account.email}
-                    />
+                  <button
+                    className="w-full flex-grow-0 flex-shrink-0 active:opacity-100"
+                    key={index}
+                    onClick={() => handleSelectCustomerAccount(account.id)}
+                  >
+                    <CustomerItem avatar={account.avatar} fullName={account.fullName} email={account.email} />
                   </button>
                 ) : (
-                  <button className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100" key={index}>
-                    <StaffItem key={index} avatar={account.avatar} fullName={account.fullName} email={account.email} />
+                  <button
+                    className="w-full flex-grow-0 flex-shrink-0 hover:opacity-80 active:opacity-100"
+                    key={index}
+                    onClick={() => handleSelectStaffAccount(account.id)}
+                  >
+                    <StaffItem avatar={account.avatar} fullName={account.fullName} email={account.email} />
                   </button>
                 ),
               )}
@@ -130,14 +150,21 @@ function ManageAccount() {
           </Button>
         </div>
       </div>
-      {/* Info of accounts
-      <div className={`${role === 'customer' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
-        <AccountCustomer />
-      </div>
 
-      <div className={`${role === 'staff' ? 'flex' : 'hidden'} flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
-        <AccountStaff />
-      </div> */}
+      {/* Info of accounts */}
+      {!accountSlected ? (
+        <div className="flex-col h-full w-3/4 bg-white rounded-2xl min-h-0 flex justify-center items-center">
+          <EmptyImage title="Chưa có tài khoản được chọn" />
+        </div>
+      ) : accountSlected?.role === 'USER' ? (
+        <div className={`flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
+          <AccountCustomer data={accountSlected.data} reloadParentPage={setReload} />
+        </div>
+      ) : (
+        <div className={`flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
+          <AccountStaff data={accountSlected.data} reloadParentPage={setReload} />
+        </div>
+      )}
     </div>
   );
 }

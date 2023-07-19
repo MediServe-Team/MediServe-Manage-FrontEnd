@@ -9,300 +9,329 @@ import {
   ItemDose,
   PermissionItem,
 } from '../components';
-import Button from '@mui/joy/Button';
-import Checkbox from '@mui/material/Checkbox';
 import { BiXCircle } from 'react-icons/bi';
-import { Modal, ModalClose, ModalDialog } from '@mui/joy';
+// import { Modal, ModalClose, ModalDialog } from '@mui/joy';
 import { Medicine, Prescription, Dose } from '../../selling/components';
-import { BsCloudUploadFill, BsPlusCircle, BsX } from 'react-icons/bs';
+import { BsImage, BsPlusCircle, BsX } from 'react-icons/bs';
+// component
+import { Button, Modal } from '../../../components';
+import classNames from 'classnames';
+import DatePicker from 'react-datepicker';
+// services
+import { updateAccountStaffService, deleteAccountService } from '../../../services/accountServices';
+import { useAxiosWithToken } from '../../../hooks';
+import { toast } from 'react-toastify';
+// form
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { updateAccountStaffSchema } from '../../../validations/updateAccountStaff';
+import { AiOutlineClose } from 'react-icons/ai';
 
-function AccountStaff() {
-  const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
-  const [preview, setPreview] = useState(false);
-  const [listPermission, setListPermission] = useState([
-    { name: 'Trang chủ', active: true },
-    { name: 'Quản lý kho', active: false },
-    { name: 'Quản lý thuốc', active: false },
-    { name: 'Quản lý sản phẩm', active: false },
-    { name: 'Quản lý liều', active: false },
-    { name: 'Quản lý danh mục', active: false },
-    { name: 'Quản lý tài khoản', active: false },
-    { name: 'Bán hàng', active: false },
-    { name: 'Thông tin cá nhân', active: false },
-  ]);
-  const [listTemp, setListTemp] = useState([
-    { name: 'Trang chủ', active: true },
-    { name: 'Quản lý kho', active: false },
-    { name: 'Quản lý thuốc', active: false },
-    { name: 'Quản lý sản phẩm', active: false },
-    { name: 'Quản lý liều', active: false },
-    { name: 'Quản lý danh mục', active: false },
-    { name: 'Quản lý tài khoản', active: false },
-    { name: 'Bán hàng', active: false },
-    { name: 'Thông tin cá nhân', active: false },
-  ]);
-  const [openEditPer, setOpenEditPer] = useState(false);
+// Permits in app
+const _PERMITS = [
+  { name: 'Trang chủ', permitId: 1 },
+  { name: 'Quản lý kho', permitId: 2 },
+  { name: 'Quản lý thuốc', permitId: 3 },
+  { name: 'Quản lý sản phẩm', permitId: 4 },
+  { name: 'Quản lý liều', permitId: 5 },
+  { name: 'Quản lý danh mục', permitId: 6 },
+  { name: 'Bán hàng', permitId: 7 },
+];
 
-  let red = '#FF6060',
-    darkBlue = '#064861',
-    orange = '#EA7408';
+function AccountStaff({ data, reloadParentPage }) {
+  //* state
+  const axiosWithToken = useAxiosWithToken();
+  const [permits, setPermits] = useState([]);
+  //* state modal
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openModalPermit, setOpenModalPermit] = useState(false);
+  //* form
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(updateAccountStaffSchema) });
 
+  //* Set value init in first access
   useEffect(() => {
-    listPermission.forEach((permission) => {
-      setListTemp((prev) =>
-        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
-      );
-    });
-  }, [listPermission]);
+    setValue('name', data?.name);
+    setValue('fullName', data?.fullName);
+    setValue('address', data?.address ?? '');
+    setValue('age', data?.age);
+    if (data?.dateOfBirth) {
+      setValue('dateOfBirth', new Date(data?.dateOfBirth));
+    }
+    setValue('phoneNumber', data?.phoneNumber ?? '');
+    setValue('numOfPPC', data?.numOfPPC);
+    setPermits(data?.permitList ?? []);
+  }, [data]);
 
-  const handleCloseModal = () => {
-    listPermission.forEach((permission) => {
-      setListTemp((prev) =>
-        prev.map((item) => (item.name === permission.name ? { ...item, active: permission.active } : { ...item })),
-      );
-    });
+  //* Handle update account
+  const handleUpdateAccount = async (dataForm) => {
+    dataForm.permitList = permits;
+    const result = await updateAccountStaffService(axiosWithToken, data.id, dataForm);
+    if (result.status === 200) {
+      toast.success('Cập nhật thông tin thành công!');
+    } else {
+      toast.error('Hệ thống gặp sự cố khi cập nhật thông tin!');
+    }
   };
 
-  const handleSavePermission = () => {
-    setOpenEditPer(false);
-
-    listTemp.forEach((temp) => {
-      setListPermission((permission) =>
-        permission.map((item) => (item.name === temp.name ? { ...item, active: temp.active } : { ...item })),
-      );
-    });
+  //* Handle delete account
+  const handleDeleteAccount = async () => {
+    const result = await deleteAccountService(axiosWithToken, data.id);
+    if (result.status === 200) {
+      toast.success('Xóa tài khoản thành công!');
+      reloadParentPage((prevState) => !prevState);
+    } else {
+      toast.error('Hệ thống gặp sự cố xóa tài khoản!');
+    }
   };
 
-  const handleDeletePer = (name) => {
-    setListPermission((pre) => pre.map((item) => (item.name === name ? { ...item, active: false } : { ...item })));
+  // const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
+  // const [preview, setPreview] = useState(false);
+
+  //* Handle add permits
+  const handleAddPermits = (permitId) => {
+    const newPermits = [...permits, permitId];
+    setPermits([...newPermits]);
+  };
+
+  //* Handle delete permits
+  const handleDeletePermits = (permitId) => {
+    const newPermits = permits.filter((permit) => permit !== permitId);
+    setPermits([...newPermits]);
   };
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-2xl">
       <div className="flex h-[12.5%] min-h-0">
         <div className="flex w-[10%] justify-end items-end">
-          <div className="bg-[url('https://s3-alpha-sig.figma.com/img/711e/d2ed/22f41791a0dd8909af17f46dbccd8af8?Expires=1685923200&Signature=Df8uzSuQIW4cCzWheeEP6~zX9~~kTUXwRMI0VxZbii6FVFsUQlbaE~G6K3WHzQWHPAVZ7Dqeeh9x67BU2LT-uLA8QoRJLe35jgEP7X~mkSsYRzjq-NVZ4Ngi664ssb56eCMaV91WHVyKQ7oLf34ZArNon6l3B6C0nLFqFzYgvqvt~vydSdhqE8DDIHJUO1lr5PBmZWNx~a4OaBGC8nAwEttn96PrrxMk8wj~2cg43zH~GvKYbctogPw5GXe-d4QgKpt5ekmQmXqJWPYJQ1QrD-HcmqEt2KYe8X8~gBh0xL78ZCJ6KfpNPUs9Wmz4~7ZTe00tb8DXraicYGxDXDdszw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')] bg-cover h-14 w-14 rounded-full"></div>
+          <img src={data.avatar} alt="avatar" className="h-14 w-14 rounded-full object-cover" />
         </div>
         <div className="flex flex-col w-[90%] justify-end items-start pl-6">
-          <div className="text-black text-h4 font-medium truncate">Trần Minh Quang</div>
-          <div className="text-text_primary text-h6 font-medium">1 phút trước</div>
+          <div className="text-black text-h4 font-medium truncate">{data.fullName}</div>
+          <div className="text-text_primary text-h6 font-medium">Nhân viên</div>
         </div>
       </div>
 
+      {/* Account Information */}
       <div className="flex flex-col h-[87.5%] overflow-y-auto w-full items-center">
         <div className="flex justify-center flex-shrink w-full py-6">
-          <div className="flex flex-col flex-shrink w-[90%] border-text_blur/50 border-2 rounded-xl">
-            <div className="flex h-[12%] min-h-0 justify-start pl-3 py-2">
-              <p className="text-h6 rounded-lg flex justify-center items-center px-3 py-1 bg-secondary/50">Nhân viên</p>
-            </div>
-
-            <div className="flex flex-col flex-shrink">
-              <div className="flex px-6 pb-2 pt-1">
-                <p className="w-full border-b-2 border-text_blur/50 text-h6 font-medium pb-1">Thông tin cá nhân</p>
-                <p className="w-full border-b-2 border-text_blur/50 text-h6 font-medium pb-1">Thông tin liên hệ</p>
-                <p className="w-full border-b-2 border-text_blur/50 text-h6 font-medium pb-1">Bằng cấp và chứng nhận</p>
+          <form
+            onSubmit={handleSubmit(handleUpdateAccount)}
+            className="flex flex-col h-full w-[90%] border-text_blur/50 border-2 rounded-xl"
+          >
+            <div className="flex flex-col min-h-0">
+              <div className="flex gap-12 px-6 pb-2 py-3 border-b-2 border-text_blur/50">
+                <p className="w-full text-h6 font-medium pb-1">Thông tin cá nhân</p>
+                <p className="w-full text-h6 font-medium pb-1">Thông tin liên hệ</p>
+                <p className="w-full text-h6 font-medium pb-1">Bằng cấp và chứng nhận</p>
               </div>
-
-              <div className="flex py-2 px-6 text-h7 min-h-0 min-w-0">
+              {/* Form account information */}
+              <div className="flex gap-12 py-2 px-6 text-h6 min-h-0 min-w-0">
+                {/* Field name */}
                 <div className="flex flex-col w-1/3 gap-5">
-                  <div className="flex flex-col pr-12">
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Tên</p>
-                    <input type="text" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.name?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('name')}
+                    />
                   </div>
-
-                  <div className="flex flex-col pr-12">
+                  {/* Field fullName */}
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Tên đầy đủ</p>
-                    <input type="text" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.fullName?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('fullName')}
+                    />
                   </div>
-
-                  <div className="flex pr-12 gap-5">
-                    <div className="flex flex-col w-1/4">
+                  {/* Field Age */}
+                  <div className="flex gap-5">
+                    <div className="flex flex-col flex-1">
                       <p className="text-text_primary font-medium">Tuổi</p>
-                      <input type="" className="inputAccount" />
+                      <input
+                        className={classNames(
+                          'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                          errors.age?.message ? 'border-danger' : 'border-text_primary/20',
+                        )}
+                        {...register('age')}
+                      />
                     </div>
-
-                    <div className="flex flex-col w-3/4">
+                    {/* Field dateOfBirth */}
+                    <div className="flex flex-col flex-[3]">
                       <p className="text-text_primary font-medium">Ngày sinh</p>
-                      <input type="date" className="inputAccount" />
+                      <Controller
+                        control={control}
+                        name="dateOfBirth"
+                        render={({ field }) => (
+                          <DatePicker
+                            className="border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2"
+                            selected={field?.value}
+                            onChange={(date) => {
+                              return field.onChange(date);
+                            }}
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
+                            maxDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            showYearDropdown
+                          />
+                        )}
+                      />
                     </div>
                   </div>
-
-                  <div className="flex flex-col pr-12">
+                  {/* Field cardIdentify */}
+                  <div className="flex flex-col">
                     <span className="text-text_primary font-medium">CMND/ CCCD</span>
-                    <button className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl">
-                      <BsCloudUploadFill
-                        className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
-                        size={40}
-                      />
-                      <p className="text-text_primary">Nhấn vào đây để thêm ảnh</p>
-                    </button>
+                    <div className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center overflow-hidden">
+                      {data?.identityCard ? (
+                        <img src={data?.identityCard} alt="identityCard" className="w-full h-full object-cover" />
+                      ) : (
+                        <>
+                          <BsImage
+                            className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
+                            size={40}
+                          />
+                          <p className="text-text_primary">Chưa cung cấp</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-
+                {/* Field phoneNumber */}
                 <div className="flex flex-col w-1/3 gap-5">
-                  <div className="flex flex-col pr-12">
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Số điện thoại</p>
-                    <input type="number" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.phoneNumber?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('phoneNumber')}
+                    />
                   </div>
-
-                  <div className="flex flex-col pr-12">
+                  {/* Field email */}
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Email</p>
-                    <input type="email" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                      )}
+                      defaultValue={data.email}
+                      disabled
+                    />
                   </div>
-
-                  <div className="flex flex-col pr-12">
+                  {/* Field address */}
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Địa chỉ</p>
-                    <input type="text" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.address?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('address')}
+                    />
                   </div>
                 </div>
-
+                {/* Field numOfPPC */}
                 <div className="flex flex-col w-1/3 gap-5">
-                  <div className="flex flex-col pr-12">
+                  <div className="flex flex-col">
                     <p className="text-text_primary font-medium">Số chứng chỉ hành nghề dược</p>
-                    <input type="number" className="inputAccount" />
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.numOfPPC?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('numOfPPC')}
+                    />
                   </div>
-
-                  <div className="flex flex-col pr-12">
+                  {/* Field cerfication */}
+                  <div className="flex flex-col">
                     <span className="text-text_primary font-medium">Bằng cấp</span>
-                    <button className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl">
-                      <BsCloudUploadFill
-                        className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
-                        size={40}
-                      />
-                      <p className="text-text_primary">Nhấn vào đây để thêm ảnh</p>
-                    </button>
+                    <div className="h-[7rem] w-full bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center overflow-hidden">
+                      {data?.certificate ? (
+                        <img src={data?.certificate} alt="certificate" className="w-full h-full object-cover" />
+                      ) : (
+                        <>
+                          <BsImage
+                            className="text-text_primary hover:text-text_primary/80 active:text-text_primary text-center mx-auto"
+                            size={40}
+                          />
+                          <p className="text-text_primary">Chưa cung cấp</p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
+            {/* List Permits of Account */}
             <div className="flex flex-col flex-shrink px-6 my-4 gap-1">
-              <span className="text-h7 text-text_primary font-medium">Cấp quyền</span>
-              <div className="flex border-2 border-text_blur rounded-xl py-2 pl-2">
+              <span className="text-h6 text-text_primary font-medium">Quyền hạn</span>
+              <div className="flex border-2 border-text_blur rounded-md p-1 min-h-[40px]">
                 <div className="flex w-[93%] gap-3 overflow-x-auto">
-                  {listPermission.map((item, index) =>
-                    item.active ? (
-                      <div
-                        key={index}
-                        className="flex h-full rounded-lg bg-secondary/80 justify-center items-center flex-grow-0 flex-shrink-0 px-2 py-1 gap-3"
-                      >
-                        <span className="text-white text-h6 h-full">{item.name}</span>
-                        <button className="flex items-center" onClick={() => handleDeletePer(item.name)}>
-                          <BsX size={20} />
-                        </button>
-                      </div>
-                    ) : null,
-                  )}
-                </div>
-
-                <div className="flex w-[7%] justify-center items-center">
-                  <button
-                    onClick={() => {
-                      setOpenEditPer(true);
-                    }}
-                  >
-                    <BsPlusCircle size={20} style={{ color: orange }} />
-                  </button>
-
-                  <Modal open={openEditPer} onClose={() => setOpenEditPer(false)}>
-                    <ModalDialog
-                      variant="outlined"
-                      style={{
-                        width: '45%',
-                        height: '70%',
-                        paddingInline: '0',
-                        paddingBlock: '0',
-                        borderTopLeftRadius: '1rem',
-                        borderTopRightRadius: '0px',
-                        borderBottomRightRadius: '1rem',
-                        borderBottomLeftRadius: '0px',
-                      }}
-                    >
-                      <div className="flex items-center border-b-2 border-text_blur/50 bg-primary rounded-tl-2xl py-2 px-3">
-                        <div className="">
-                          <div className="bg-[url('https://s3-alpha-sig.figma.com/img/711e/d2ed/22f41791a0dd8909af17f46dbccd8af8?Expires=1685923200&Signature=Df8uzSuQIW4cCzWheeEP6~zX9~~kTUXwRMI0VxZbii6FVFsUQlbaE~G6K3WHzQWHPAVZ7Dqeeh9x67BU2LT-uLA8QoRJLe35jgEP7X~mkSsYRzjq-NVZ4Ngi664ssb56eCMaV91WHVyKQ7oLf34ZArNon6l3B6C0nLFqFzYgvqvt~vydSdhqE8DDIHJUO1lr5PBmZWNx~a4OaBGC8nAwEttn96PrrxMk8wj~2cg43zH~GvKYbctogPw5GXe-d4QgKpt5ekmQmXqJWPYJQ1QrD-HcmqEt2KYe8X8~gBh0xL78ZCJ6KfpNPUs9Wmz4~7ZTe00tb8DXraicYGxDXDdszw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4')] bg-cover h-10 w-10 rounded-full"></div>
-                        </div>
-
-                        <div className="flex justify-start items-center flex-grow pl-4">
-                          <span className="text-white text-h4 font-medium truncate">Trần Minh Quang</span>
-                        </div>
-
-                        <div className="flex items-center justify-end">
+                  {permits &&
+                    Array.isArray(permits) &&
+                    permits.length > 0 &&
+                    permits.map((permit, index) => {
+                      const permitDisplay = _PERMITS.find((item) => item.permitId === permit);
+                      return (
+                        <div
+                          key={index}
+                          className="flex h-full rounded-md bg-secondary/80 justify-center items-center flex-grow-0 flex-shrink-0 p-2 gap-3"
+                        >
+                          <span className="text-white text-h6 h-full">{permitDisplay.name}</span>
                           <button
-                            onClick={() => {
-                              handleCloseModal();
-                              setOpenEditPer(false);
-                            }}
+                            type="button"
+                            className="flex items-center"
+                            onClick={() => handleDeletePermits(permitDisplay.permitId)}
                           >
-                            <BiXCircle size={30} style={{ color: darkBlue }} />
+                            <BsX size={20} />
                           </button>
                         </div>
-                      </div>
-
-                      <div className="flex flex-grow p-8">
-                        <div className="flex gap-8 flex-wrap">
-                          {listTemp.map((item, index) => (
-                            <PermissionItem key={index} item={item} />
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex justify-end items-end gap-4 pr-4 pb-4 h-full">
-                        <Button
-                          className="hover:opacity-90 active:opacity-100"
-                          variant="solid"
-                          style={{
-                            backgroundColor: darkBlue,
-                            width: '5rem',
-                            height: '5rem',
-                            fontSize: '18px',
-                            borderRadius: '9999px',
-                          }}
-                          size="md"
-                          onClick={handleSavePermission}
-                        >
-                          Lưu
-                        </Button>
-                      </div>
-                    </ModalDialog>
-                  </Modal>
+                      );
+                    })}
+                </div>
+                {/* Button open modal add permit */}
+                <div className="flex w-[7%] justify-center items-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenModalPermit(true);
+                    }}
+                  >
+                    <BsPlusCircle size={20} className="text-secondary" />
+                  </button>
                 </div>
               </div>
             </div>
-
+            {/* Button control update and delete account */}
             <div className="flex flex-shrink">
-              <div className="flex w-1/2 justify-start items-center min-h-0 min-w-0 text-h6 pl-5">
-                <CustomSwitch defaultChecked />
-                <span className="ml-3">Cho phép hoạt động</span>
-              </div>
+              <div className="flex w-1/2 justify-start items-center min-h-0 min-w-0 text-h6 pl-5"></div>
               <div className="flex w-1/2 justify-end items-end min-h-0 min-w-0 pr-4 pb-3 gap-4">
-                <Button
-                  variant="outlined"
-                  style={{
-                    color: red,
-                    borderColor: red,
-                    borderWidth: 2,
-                    paddingInline: '0.5rem',
-                    fontSize: '15px',
-                  }}
-                  size="md"
-                >
+                <Button type={'button'} size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>
                   Xóa tài khoản
                 </Button>
-                <Button
-                  className="hover:opacity-90 active:opacity-100"
-                  variant="solid"
-                  style={{ backgroundColor: darkBlue, paddingInline: '3rem', fontSize: '15px' }}
-                  size="md"
-                >
+                <Button type={'submit'} size={'medium'} modifier={'dark-primary'} width={120}>
                   Lưu
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
 
-        <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
+        {/* <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
           <span className="text-[18px] font-medium min-h-0 mb-">Hóa đơn đã tạo</span>
           <TitleShopping>
             {listShop.map((item, index) => (
@@ -314,102 +343,10 @@ function AccountStaff() {
             ))}
           </TitleShopping>
 
-          <Modal open={preview} onClose={() => setPreview(false)}>
-            <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
-              <ModalClose />
-              {/* Header */}
-              <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
-              {/* Info of pharmacy */}
-              <div className="px-2 overflow-y-auto mt-4">
-                <div className="font-semibold">Thông tin nhà dược</div>
+          // Modal preview 
+        </div> */}
 
-                <div className="px-2">
-                  <div className="flex">
-                    <span>Tên nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Địa chỉ nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Thồng tin liên hệ</span>
-                    <p>: abc</p>
-                  </div>
-                </div>
-
-                <div className="text-h4 font-bold flex justify-center items-center mt-3">HÓA ĐƠN</div>
-                {/* Info of customer */}
-                <div className="flex my-3">
-                  <div className="flex flex-col w-[70%]">
-                    <span>
-                      Họ tên khách hàng: <span className="font-semibold">Hoàng Văn Phúc</span>
-                    </span>
-                    <span>
-                      Địa chỉ: <span className="font-semibold">KTX khu A, DHQG tp HCM</span>
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col w-[30%]">
-                    <span>
-                      Tuổi: <span className="font-semibold">21</span>
-                    </span>
-                    <span>
-                      Giới tính: <span className="font-semibold">Nam</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-8">
-                  {/* Info of Medicine */}
-                  <Medicine />
-                  {/* Info of Prescription */}
-                  <div className="text-[18px] font-semibold">Kê đơn</div>
-                  <Prescription />
-                  {/* Info of Dose */}
-                  <Dose />
-                  {/* Info of Price and Note */}
-                  <div className="flex w-full">
-                    <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-                      Thanh toán (VNĐ)
-                    </span>
-                  </div>
-                  <div className="flex w-full">
-                    <div className="w-1/2"></div>
-                    <div className="flex w-1/2">
-                      <div className="w-1/2 flex flex-col gap-3 font-medium">
-                        <span>Tổng tiền phải trả:</span>
-                        <span>Tiền khách đưa:</span>
-                        <span>Tiền thừa:</span>
-                      </div>
-                      <div className="w-1/2 flex gap-3 flex-col">
-                        <span>750,000 đ</span>
-                        <span>750,000 đ</span>
-                        <span>0 đ</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-full">
-                    <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-                    <div className=" w-full">
-                      <textarea
-                        name="comment"
-                        id="comment"
-                        cols="30"
-                        rows="3"
-                        className="w-full rounded-md border-text_blur/50 border-2 p-2"
-                        disabled
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ModalDialog>
-          </Modal>
-        </div>
-
-        <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
+        {/* <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
           <span className="text-[18px] font-medium min-h-0 mb-">Đơn hàng đã nhập</span>
           <TitleStock>
             {listShop.map((item, index) => (
@@ -420,103 +357,9 @@ function AccountStaff() {
               </ItemStock>
             ))}
           </TitleStock>
+        </div> */}
 
-          <Modal open={preview} onClose={() => setPreview(false)}>
-            <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
-              <ModalClose />
-              {/* Header */}
-              <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
-              {/* Info of pharmacy */}
-              <div className="px-2 overflow-y-auto mt-4">
-                <div className="font-semibold">Thông tin nhà dược</div>
-
-                <div className="px-2">
-                  <div className="flex">
-                    <span>Tên nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Địa chỉ nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Thồng tin liên hệ</span>
-                    <p>: abc</p>
-                  </div>
-                </div>
-
-                <div className="text-h4 font-bold flex justify-center items-center mt-3">HÓA ĐƠN</div>
-                {/* Info of customer */}
-                <div className="flex my-3">
-                  <div className="flex flex-col w-[70%]">
-                    <span>
-                      Họ tên khách hàng: <span className="font-semibold">Hoàng Văn Phúc</span>
-                    </span>
-                    <span>
-                      Địa chỉ: <span className="font-semibold">KTX khu A, DHQG tp HCM</span>
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col w-[30%]">
-                    <span>
-                      Tuổi: <span className="font-semibold">21</span>
-                    </span>
-                    <span>
-                      Giới tính: <span className="font-semibold">Nam</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-8">
-                  {/* Info of Medicine */}
-                  <Medicine />
-                  {/* Info of Prescription */}
-                  <div className="text-[18px] font-semibold">Kê đơn</div>
-                  <Prescription />
-                  {/* Info of Dose */}
-                  <Dose />
-                  {/* Info of Price and Note */}
-                  <div className="flex w-full">
-                    <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-                      Thanh toán (VNĐ)
-                    </span>
-                  </div>
-                  <div className="flex w-full">
-                    <div className="w-1/2"></div>
-                    <div className="flex w-1/2">
-                      <div className="w-1/2 flex flex-col gap-3 font-medium">
-                        <span>Tổng tiền phải trả:</span>
-                        <span>Tiền khách đưa:</span>
-                        <span>Tiền thừa:</span>
-                      </div>
-                      <div className="w-1/2 flex gap-3 flex-col">
-                        <span>750,000 đ</span>
-                        <span>750,000 đ</span>
-                        <span>0 đ</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-full">
-                    <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-                    <div className=" w-full">
-                      <textarea
-                        name="comment"
-                        id="comment"
-                        cols="30"
-                        rows="3"
-                        className="w-full rounded-md border-text_blur/50 border-2 p-2"
-                        disabled
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ModalDialog>
-          </Modal>
-        </div>
-
-        <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
+        {/* <div className="flex flex-col min-h-[60%] w-[90%] mt-8 mb-6 gap-3">
           <span className="text-[18px] font-medium min-h-0 mb-">Liều thuốc đã tạo</span>
           <TitleDose>
             {listShop.map((item, index) => (
@@ -526,103 +369,95 @@ function AccountStaff() {
                 </button>
               </ItemDose>
             ))}
-          </TitleDose>
-
-          <Modal open={preview} onClose={() => setPreview(false)}>
-            <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
-              <ModalClose />
-              {/* Header */}
-              <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
-              {/* Info of pharmacy */}
-              <div className="px-2 overflow-y-auto mt-4">
-                <div className="font-semibold">Thông tin nhà dược</div>
-
-                <div className="px-2">
-                  <div className="flex">
-                    <span>Tên nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Địa chỉ nhà dược</span>
-                    <p>: abc</p>
-                  </div>
-                  <div className="flex">
-                    <span>Thồng tin liên hệ</span>
-                    <p>: abc</p>
-                  </div>
-                </div>
-
-                <div className="text-h4 font-bold flex justify-center items-center mt-3">HÓA ĐƠN</div>
-                {/* Info of customer */}
-                <div className="flex my-3">
-                  <div className="flex flex-col w-[70%]">
-                    <span>
-                      Họ tên khách hàng: <span className="font-semibold">Hoàng Văn Phúc</span>
-                    </span>
-                    <span>
-                      Địa chỉ: <span className="font-semibold">KTX khu A, DHQG tp HCM</span>
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col w-[30%]">
-                    <span>
-                      Tuổi: <span className="font-semibold">21</span>
-                    </span>
-                    <span>
-                      Giới tính: <span className="font-semibold">Nam</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-8">
-                  {/* Info of Medicine */}
-                  <Medicine />
-                  {/* Info of Prescription */}
-                  <div className="text-[18px] font-semibold">Kê đơn</div>
-                  <Prescription />
-                  {/* Info of Dose */}
-                  <Dose />
-                  {/* Info of Price and Note */}
-                  <div className="flex w-full">
-                    <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
-                      Thanh toán (VNĐ)
-                    </span>
-                  </div>
-                  <div className="flex w-full">
-                    <div className="w-1/2"></div>
-                    <div className="flex w-1/2">
-                      <div className="w-1/2 flex flex-col gap-3 font-medium">
-                        <span>Tổng tiền phải trả:</span>
-                        <span>Tiền khách đưa:</span>
-                        <span>Tiền thừa:</span>
-                      </div>
-                      <div className="w-1/2 flex gap-3 flex-col">
-                        <span>750,000 đ</span>
-                        <span>750,000 đ</span>
-                        <span>0 đ</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col w-full">
-                    <span className="w-full text-left text-h5 font-semibold pb-1">Ghi chú hóa đơn</span>
-                    <div className=" w-full">
-                      <textarea
-                        name="comment"
-                        id="comment"
-                        cols="30"
-                        rows="3"
-                        className="w-full rounded-md border-text_blur/50 border-2 p-2"
-                        disabled
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ModalDialog>
-          </Modal>
-        </div>
+          </TitleDose>  
+        </div> */}
       </div>
+
+      {/* Modal add permits */}
+      <Modal showModal={openModalPermit}>
+        {/* Header modal add permits */}
+        <header className="flex items-center pb-3 border-b-2 border-text_blur/50 min-w-[400px] max-w-[400px]">
+          <div className="flex-shrink-0">
+            <img src={data?.avatar} alt="avatar" className="h-10 w-10 rounded-full object-cover" />
+          </div>
+          <div className="flex flex-col justify-start items-start flex-grow pl-4">
+            <span className="text-text_primary text-h5 font-medium truncate">{data?.fullName}</span>
+            <span className="text-text_blur text-h6 font-normal">Chọn quyền hạn muốn thêm</span>
+          </div>
+          <div className="flex items-center justify-end">
+            <button
+              type="button"
+              className="p-2 hover:bg-slate-100 rounded-md"
+              onClick={() => {
+                setOpenModalPermit(false);
+              }}
+            >
+              <AiOutlineClose size={24} />
+            </button>
+          </div>
+        </header>
+        {/* Body - Render permit rest of account */}
+        <div className="flex gap-3 max-w-full flex-wrap py-4 w-[400px]">
+          {(() => {
+            const permitRest = _PERMITS.filter((item) => !permits.includes(item.permitId));
+            return permitRest && Array.isArray(permitRest) && permitRest.length > 0 ? (
+              permitRest.map((item, index) => (
+                <PermissionItem key={index} name={item.name} onClick={() => handleAddPermits(item.permitId)} />
+              ))
+            ) : (
+              <></>
+            );
+          })()}
+        </div>
+        {/* Button control Modal add Permits */}
+        <div className="flex justify-end items-end gap-4 pt-4 h-full">
+          <Button
+            type={'button'}
+            size={'medium'}
+            modifier={'dark-primary'}
+            width={120}
+            onClick={() => setOpenModalPermit(false)}
+          >
+            Hoàn tất
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Modal Delete */}
+      <Modal showModal={openModalDelete}>
+        <div className="w-[300px] flex flex-col items-center gap-5 relative">
+          {/* Info modal */}
+          <header className="w-full flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="text-text_primary font-bold text-h4">Xác nhận</h3>
+              <p className="text-text_blur text-h6">
+                Bạn chắc chắn xác nhận muốn xóa tài khoản <b className="text-black">{data.fullName}</b> ra khỏi hệ
+                thống?
+              </p>
+            </div>
+            {/* close modal delete */}
+            <button className="outline-none absolute right-0 top-0" onClick={() => setOpenModalDelete(false)}>
+              <AiOutlineClose className="text-[20px] m-auto" />
+            </button>
+          </header>
+          {/* Button control modal*/}
+          <div className="flex justify-between items-center mt-5 gap-5">
+            <Button
+              size={'medium'}
+              styleBtn={'outline'}
+              modifier={'gray'}
+              width={120}
+              type={'button'}
+              onClick={() => setOpenModalDelete(false)}
+            >
+              Hủy
+            </Button>
+            <Button size={'medium'} modifier={'danger'} width={120} type={'button'} onClick={handleDeleteAccount}>
+              Xóa
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

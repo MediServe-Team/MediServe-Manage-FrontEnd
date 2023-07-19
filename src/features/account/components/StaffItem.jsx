@@ -1,6 +1,6 @@
 function UserItem({ avatar, fullName, email }) {
   return (
-    <div className="bg-white h-full w-11/12 mx-auto flex flex-shrink-0 p-0">
+    <div className="bg-white hover:bg-slate-100 transition-colors duration-100 rounded-lg py-2 px-2 h-full w-11/12 mx-auto flex flex-shrink-0">
       <div className="flex w-3/12 justify-center items-center">
         <img src={avatar} alt="avatar" className="h-9 w-9 rounded-full object-cover flex-shrink-0" />
       </div>
