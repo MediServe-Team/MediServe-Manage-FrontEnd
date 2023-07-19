@@ -193,7 +193,7 @@ function ManageAccount() {
           </div>
         </header>
         {/* Body Modal */}
-        <FormCreateAccount onClose={() => setOpenModalCreateAccount(false)} />
+        <FormCreateAccount onClose={() => setOpenModalCreateAccount(false)} reloadParentPage={setReload} />
       </Modal>
     </div>
   );

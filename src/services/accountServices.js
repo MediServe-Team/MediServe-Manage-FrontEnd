@@ -45,3 +45,24 @@ export const deleteAccountService = async (axiosWithToken, userId) => {
   const response = await axiosWithToken.delete(`/users/${userId}`);
   return response.data;
 };
+
+export const createAccountService = async (axiosWithToken, data) => {
+  const response = await axiosWithToken
+    .post('/users/create', {
+      email: data?.email,
+      name: data?.name,
+      fullName: data?.fullName,
+      address: data?.address,
+      age: data?.age,
+      dateOfBirth: data?.dateOfBirth,
+      phoneNumber: data?.phoneNumber,
+      role: data?.role,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response;
+    });
+  return response;
+};

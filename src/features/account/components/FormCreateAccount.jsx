@@ -6,8 +6,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createAccountSchema } from '../../../validations/createAccount';
 import classNames from 'classnames';
+// services
+import { useAxiosWithToken } from '../../../hooks';
+import { createAccountService } from '../../../services/accountServices';
+import { toast } from 'react-toastify';
 
-function FormCreateAccount({ onClose }) {
+function FormCreateAccount({ onClose, reloadParentPage }) {
+  const axiosWithToken = useAxiosWithToken();
   //* form
   const {
     register,
@@ -18,7 +23,17 @@ function FormCreateAccount({ onClose }) {
 
   //* Handle create new account
   const handleCreateAccount = async (dataForm) => {
-    console.log(dataForm);
+    const result = await createAccountService(axiosWithToken, dataForm);
+    if (result.status === 409) {
+      toast.error('Email này đã tồn tại trên hệ thống!');
+    } else if (result.status === 201) {
+      toast.success('Tạo tài khoản thành công!');
+      //* handle close modal & reload parent page
+      onClose();
+      reloadParentPage((prevState) => !prevState);
+    } else {
+      toast.error('Hệ thống gặp vấn đề khi tạo tài khoản');
+    }
   };
 
   return (
