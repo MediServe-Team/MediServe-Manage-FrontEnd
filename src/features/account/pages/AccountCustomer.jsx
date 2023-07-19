@@ -1,8 +1,4 @@
-import { CustomSwitch, TitleShopping, ItemShopping } from '../components';
-// import { FaShoppingCart } from 'react-icons/fa';
-// import { BiDollar } from 'react-icons/bi';
-import { Modal as MuiModal, ModalClose, ModalDialog } from '@mui/joy';
-import { Medicine, Prescription, Dose } from '../../selling/components';
+import { TitleShopping, ItemShopping } from '../components';
 import { useState, useEffect } from 'react';
 import { Button, Modal } from '../../../components';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -20,8 +16,6 @@ import { useAxiosWithToken } from '../../../hooks';
 import { toast } from 'react-toastify';
 
 function AccountCustomer({ data, reloadParentPage }) {
-  const [filter, setFilter] = useState('');
-  const [listShop, setListShop] = useState([1, 1, 1, 1, 1]);
   const [preview, setPreview] = useState(false);
   const [bills, setBills] = useState([]);
   const [billSelectedId, setBillSelectedId] = useState(null);
@@ -225,67 +219,7 @@ function AccountCustomer({ data, reloadParentPage }) {
           </form>
         </div>
 
-        {/* <div className="flex flex-col min-h-[40%] w-[90%]">
-          <div className="w-full flex justify-end min-h-0">
-            <select className="px-2 py-1" onChange={({ target }) => setFilter(target.value)}>
-              <option value="date" className="bg-white">
-                Ngày
-              </option>
-              <option value="month" defaultChecked className="bg-white">
-                Tháng
-              </option>
-              <option value="year" className="bg-white">
-                Năm
-              </option>
-            </select>
-          </div>
-
-          <span className="text-[18px] font-medium min-h-0">Giá trị khách hàng</span>
-
-          <div className="flex gap-6 h-[70%] mt-3">
-            <div
-              className="flex h-full flex-col w-1/3 rounded-lg drop-shadow-lg"
-              style={{ background: 'linear-gradient(180deg, #3998BC 0%, rgba(126, 204, 234, 0.58) 100%)' }}
-            >
-              <div className="h-[30%]"></div>
-              <div className="h-[50%]"></div>
-              <span className="h-[20%] text-white text-end text-h8 font-medium pr-2 pb-2">Tần suất mua hàng</span>
-            </div>
-
-            <div className="flex h-full flex-col w-1/3 bg-white rounded-lg drop-shadow-lg">
-              <div className="h-[30%] w-full pl-2 pt-1">
-                <div className="rounded-full bg-orange-200/70 h-10 w-10 flex justify-center items-center">
-                  <div className="text-[22px] text-text_primary">
-                    <FaShoppingCart />
-                  </div>
-                </div>
-              </div>
-              <div className="h-[50%] flex justify-center items-center">
-                <span className="text-text_primary text-h2 font-medium">
-                  15<span className="text-h5 font-normal"> /tháng</span>
-                </span>
-              </div>
-              <span className="h-[20%] text-end text-h8 text-text_blur font-medium pr-2 pb-2">Số lần mua hàng</span>
-            </div>
-
-            <div className="flex h-full flex-col w-1/3 bg-white rounded-lg drop-shadow-lg">
-              <div className="h-[30%] w-full pl-2 pt-1">
-                <div className="rounded-full bg-tertiary/50 h-10 w-10 flex justify-center items-center">
-                  <div className="text-[28px] font-bold text-text_primary">
-                    <BiDollar />
-                  </div>
-                </div>
-              </div>
-              <div className="h-[50%] flex justify-center items-center">
-                <span className="text-text_primary text-h2 font-medium">
-                  650.000<span className="text-h5 font-normal"> vnđ</span>
-                </span>
-              </div>
-              <span className="h-[20%] text-end text-h8 text-text_blur font-medium pr-2 pb-2">Doanh thu mang lại</span>
-            </div>
-          </div>
-        </div> */}
-
+        {/* History customer purchase */}
         {bills && Array.isArray(bills) && bills.length > 0 && (
           <div className="flex flex-col min-h-[60%] w-[90%] mt-4 mb-6 gap-3">
             <span className="text-[18px] font-medium min-h-0 mb-">Lịch sử mua hàng</span>

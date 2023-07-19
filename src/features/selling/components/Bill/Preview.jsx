@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal as MuiModal, ModalClose, ModalDialog } from '@mui/joy';
-import { Medicine, Prescription, Dose } from '../../../selling/components';
+import { Medicine, Prescription } from '../../../selling/components';
 import formatToVND from '../../../../helpers/formatToVND';
 // services
 import { getBillService } from '../../billServices';
@@ -44,7 +44,7 @@ function BillPreview({ billId, preview, closePreview }) {
         <ModalDialog variant="outlined" style={{ width: '45%', fontSize: '16px', paddingLeft: '2rem' }}>
           <ModalClose />
           {/* Header */}
-          <header className="text-text_primary text-[18px] font-semibold">Hóa đơn xem trước</header>
+          <header className="text-text_primary text-[18px] font-semibold">Hóa đơn mua hàng</header>
           {/* Info of pharmacy */}
           <div className="px-2 overflow-y-auto mt-4">
             <div className="font-semibold">Thông tin nhà dược</div>
@@ -98,9 +98,9 @@ function BillPreview({ billId, preview, closePreview }) {
 
               {/* Info of Prescription */}
               <div className="text-[18px] font-semibold">Kê đơn</div>
-              <Prescription />
-              {/* Info of Dose */}
-              <Dose />
+              {presciptions && Array.isArray(presciptions) && presciptions.length > 0 && (
+                <Prescription data={presciptions} />
+              )}
               {/* Info of Price and Note */}
               <div className="flex w-full">
                 <span className="w-full text-left text-h5 font-semibold border-b-2 border-text_blur/30">
