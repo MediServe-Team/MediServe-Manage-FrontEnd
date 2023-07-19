@@ -17,10 +17,12 @@ import {
 } from 'chart.js';
 import { BsPeopleFill, BsHeadset, BsCashCoin } from 'react-icons/bs';
 import { FaRegCalendarTimes } from 'react-icons/fa';
+import { getLengthExp } from '../../stock/stockSlice';
 
 function Dashboard() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth?.accessToken);
+  const lengthExp = useSelector(getLengthExp);
 
   useEffect(() => {
     dispatch(getAllCategory());
@@ -111,13 +113,16 @@ function Dashboard() {
         <div className="bg-[#fa342d]/30 text-[#fa342d] h-full w-full rounded-2xl flex flex-col px-2">
           <div className="h-3/4 w-full flex gap-6 justify-center items-center text-[50px] font-semibold">
             <FaRegCalendarTimes />
-            <span>0</span>
+            <span>{lengthExp}</span>
           </div>
           <div className="h-1/4 w-full justify-center text-h5  font-medium flex">Số loại sản phẩm đã hết hạn</div>
         </div>
       </div>
       <div className="h-3/4 w-3/4 flex justify-center items-center">
         <Line options={options} data={data} />
+        <button type="button" onClick={() => console.log(new Date().toString())}>
+          click
+        </button>
       </div>
     </div>
   );
