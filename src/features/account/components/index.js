@@ -9,3 +9,4 @@ export { default as ItemStock } from './ItemStock';
 export { default as TitleDose } from './TitleDose';
 export { default as ItemDose } from './ItemDose';
 export { default as PermissionItem } from './PermissionItem';
+export { default as FormCreateAccount } from './FormCreateAccount';
