@@ -162,7 +162,7 @@ function ManageAccount() {
         </div>
       ) : (
         <div className={`flex-col h-full w-3/4 bg-white rounded-2xl min-h-0`}>
-          <AccountStaff />
+          <AccountStaff data={accountSlected.data} reloadParentPage={setReload} />
         </div>
       )}
     </div>
