@@ -84,6 +84,7 @@ export const { setAccessToken } = AuthSlice.actions;
 export const { resetState } = AuthSlice.actions;
 
 // get state from auth
+export const getUserData = (state) => state.auth.user;
 export const getUserId = (state) => state.auth.user?.id;
 export const getPermitList = (state) => state.auth.user?.permitList;
 export const getAccessToken = (state) => state.auth.accessToken;

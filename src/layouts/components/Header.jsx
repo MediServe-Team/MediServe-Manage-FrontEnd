@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import Tippy from '@tippyjs/react/headless';
 import SearchSelect from '../../components/SearchSelect/SearchSelect';
 import { IoMdNotificationsOutline } from 'react-icons/io';
+import { useSelector } from 'react-redux';
+import { getUserData } from '../../features/Auth/AuthSlice';
 
 const TYPES = [
   {
@@ -24,6 +26,7 @@ function Header() {
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [visibleResult, setVisibleResult] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const userData = useSelector(getUserData);
 
   const handleClear = () => {
     setSearchValue('');
@@ -82,12 +85,8 @@ function Header() {
 
         {/* Avatar */}
         <div className="flex items-center gap-2">
-          <img
-            src="https://res.cloudinary.com/dwskvqnkc/image/upload/v1681721772/samples/MediSever/default-avatar_ahyatj.png"
-            alt="avatar"
-            className="w-6 h-6 rounded-full"
-          />
-          <p className="font-medium">Phúc</p>
+          <img src={userData?.avatar} alt="avatar" className="w-8 h-8 rounded-full flex-shrink-0 object-cover" />
+          <p className="font-medium">{userData?.name}</p>
         </div>
       </div>
     </div>

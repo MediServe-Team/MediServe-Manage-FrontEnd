@@ -52,7 +52,7 @@ function AllProduct() {
             <ProductItem
               key={index}
               name={item?.medicine ? item.medicine.medicineName : item.product.productName}
-              image={item?.medicine ? item.medicine.medicineImage : item.product.medicineImage}
+              image={item?.medicine ? item.medicine.medicineImage : item.product.productImage}
               packingSpecification={
                 item?.medicine ? item.medicine.packingSpecification : item.product.packingSpecification
               }

@@ -27,11 +27,7 @@ function ProductItem({
     <div className="flex flex-col gap-2">
       <div className="relative overflow-hidden">
         <div className="flex justify-center">
-          <img
-            src="https://hct.com.vn/wp-content/uploads/2020/05/thuoc-elevit-bau-uc-2.jpg"
-            alt="thuốc"
-            className="object-cover h-[200px]"
-          />
+          <img src={image} alt="thuốc" className="object-cover h-[200px]" />
         </div>
         <div className="flex flex-col">
           <h3 className="text-h5 text-black font-medium">{name}</h3>

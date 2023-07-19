@@ -74,6 +74,7 @@ function AccountStaff({ data, reloadParentPage }) {
     const result = await updateAccountStaffService(axiosWithToken, data.id, dataForm);
     if (result.status === 200) {
       toast.success('Cập nhật thông tin thành công!');
+      reloadParentPage((prevState) => !prevState);
     } else {
       toast.error('Hệ thống gặp sự cố khi cập nhật thông tin!');
     }

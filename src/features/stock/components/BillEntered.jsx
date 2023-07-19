@@ -4,21 +4,21 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 function BillEntered({ billID, staffID, staffName, totalImport, totalSell, note }) {
   return (
     <div className="h-[70px] rounded-lg flex justify-between items-center gap-5 px-8 border-2 bg-slate-50">
-      <div className="flex flex-col gap-2 justify-between ">
+      <div className="flex flex-col gap-2 justify-between max-w-[100px]">
         <span className="text-text_primary font-normal">Mã số đơn</span>
         <span>{billID}</span>
       </div>
-      <div className="flex flex-col gap-2 justify-between ">
+      <div className="flex flex-col gap-2 justify-between max-w-[150px]">
         <span className="text-text_primary font-normal">Mã nhân viên</span>
-        <span>{staffID}</span>
+        <span className="truncate">{staffID}</span>
       </div>
       <div className="flex flex-col gap-2 justify-between ">
         <span className="text-text_primary font-normal">Nhân viên</span>
         <span>{staffName}</span>
       </div>
-      <div className="flex flex-col gap-2 justify-between ">
+      <div className="flex flex-col gap-2 justify-between max-w-[150px]">
         <span className="text-text_primary font-normal">Ghi chú đơn nhập</span>
-        <span>{note}</span>
+        <span className="truncate">{note}</span>
       </div>
       <div className="flex flex-col gap-2 justify-between ">
         <span className="text-text_primary font-normal">Tổng nhập</span>

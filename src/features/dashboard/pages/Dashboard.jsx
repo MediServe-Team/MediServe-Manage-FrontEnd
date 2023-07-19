@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react';
 import { getAllCategory } from '../../category/categorySlice';
 import { getAllUnits } from '../../../slices/unitSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend,
-  TimeScale,
-} from 'chart.js';
+// import { Line } from 'react-chartjs-2';
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Filler,
+//   Legend,
+//   TimeScale,
+// } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import { BsPeopleFill, BsHeadset, BsCashCoin } from 'react-icons/bs';
 import { FaRegCalendarTimes } from 'react-icons/fa';
 import { getInventoryStock, getLengthExp } from '../../stock/stockSlice';
@@ -33,7 +35,8 @@ function Dashboard() {
   const [customer, setCustomer] = useState(0);
   const [monthMoney, setMonthMoney] = useState([]);
 
-  ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, TimeScale);
+  // ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend, TimeScale);
+  ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
   const month = [
     'Tháng 1',
@@ -127,7 +130,7 @@ function Dashboard() {
     const filterBills = async () => {
       const currentDate = new Date();
       const initialDate = changeTo12h(new Date());
-      initialDate.setDate(currentDate.getDate() - 30);
+      // initialDate.setDate(currentDate.getDate() - 30);
       try {
         const result = await filterBillService('', '', initialDate, currentDate, 'desc', 1, 1000);
         const { receipts } = result.data;
@@ -226,7 +229,8 @@ function Dashboard() {
         </div>
       </div>
       <div className="h-3/4 w-3/4 flex justify-center items-center">
-        <Line options={options} data={data} />
+        {/* <Line options={options} data={data} /> */}
+        <Bar options={options} data={data} />
       </div>
     </div>
   );

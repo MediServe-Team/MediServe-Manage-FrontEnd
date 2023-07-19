@@ -313,18 +313,17 @@ function BillCreate() {
         {/* Area control button */}
         <div className="w-full flex py-3 px-6 flex-shrink-0">
           {/* Cancel Btn */}
-          <div className="w-1/2">
+          <div className="w-1/2"></div>
+          {/* Preview Btn */}
+          <div className="w-1/2 flex gap-5 justify-end">
+            {/* <Button size="medium" modifier={'dark-primary'} width={120}>
+              Xem trước
+            </Button> */}
             <Button size="medium" modifier={'danger'} width={120} onClick={handleClearBill}>
               Loại bỏ
             </Button>
-          </div>
-          {/* Preview Btn */}
-          <div className="w-1/2 flex gap-5 justify-end">
-            <Button size="medium" modifier={'dark-primary'} width={120}>
-              Xem trước
-            </Button>
             <Button size="medium" modifier={'dark-primary'} onClick={handleCheckout}>
-              Thanh toán và in
+              Thanh toán
             </Button>
           </div>
         </div>
