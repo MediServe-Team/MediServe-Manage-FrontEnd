@@ -318,6 +318,7 @@ function ManageProfile() {
                       src={identityCard}
                       className="absolute top-0 left-0 w-full h-full object-cover"
                       hidden={identityCard ? false : true}
+                      alt=""
                     />
                   </div>
                 </div>
@@ -348,6 +349,7 @@ function ManageProfile() {
                     src={certificate}
                     className="absolute top-0 left-0 w-full h-full object-cover"
                     hidden={certificate ? false : true}
+                    alt=""
                   />
                 </div>
               </div>

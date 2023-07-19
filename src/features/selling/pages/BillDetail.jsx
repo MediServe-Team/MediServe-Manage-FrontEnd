@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 // service
 import { getBillService } from '../billServices';
 import formatToVND from '../../../helpers/formatToVND';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function BillDetail() {
   const [medicines, setMedicines] = useState([]);
@@ -39,6 +41,28 @@ function BillDetail() {
     };
     getBillDetail();
   }, [id]);
+
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Danh sách hóa đơn',
+        slug: '/bills',
+      }),
+    );
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Chi tiết hóa đơn',
+        slug: `/bills/${id}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+      dispatch(removeLastBreadcrumb());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <div className="h-full w-full bg-white rounded-xl flex flex-col ">
