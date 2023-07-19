@@ -12,6 +12,8 @@ import { updateProfileSchema } from '../../../validations/updateProfile';
 import { useAxiosWithToken } from '../../../hooks';
 import { getProfileServices, updateProfileServices } from '../profileServices';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function ManageProfile() {
   //* state:
@@ -28,6 +30,21 @@ function ManageProfile() {
     control,
     formState: { errors },
   } = useForm({ resolver: yupResolver(updateProfileSchema) });
+
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Thông tin cá nhân',
+        slug: '/profile',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   //* fetch api with access token
   const axiosWithToken = useAxiosWithToken();
