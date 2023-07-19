@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import { AccountCustomer, AccountStaff } from '../pages';
+import { useDispatch } from 'react-redux';
+// component
 import StaffItem from '../components/StaffItem';
 import CustomerItem from '../components/CustomerItem';
 import Checkbox from '@mui/material/Checkbox';
-import { BtnAddAcc } from '../components';
-import { Button, EmptyImage } from '../../../components';
-import { AccountCustomer, AccountStaff } from '../pages';
-import { useDispatch } from 'react-redux';
-import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { Button, Modal, EmptyImage } from '../../../components';
+import { FormCreateAccount } from '../../account/components';
 // services
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 import { getAllAccountService, getAccountByIdService } from '../../../services/accountServices';
 import { useAxiosWithToken } from '../../../hooks';
+import { AiOutlineClose } from 'react-icons/ai';
 
 function ManageAccount() {
   // addBreadcrumb
@@ -31,6 +33,7 @@ function ManageAccount() {
   const [filterOption, setFilterOption] = useState('all'); //* option filter in ['none', 'customer', 'staff', 'all']
   const [filterAccounts, setFilterAccounts] = useState([]); //* filter from accounts and display in UI
   const [accountSlected, setAccountSelected] = useState(null);
+  const [opendModalCreateAccount, setOpenModalCreateAccount] = useState(false);
   const [reload, setReload] = useState(false);
   // api with token
   const axiosWithToken = useAxiosWithToken();
@@ -145,7 +148,13 @@ function ManageAccount() {
         </div>
 
         <div className="flex h-1/6 min-h-0 justify-center items-center">
-          <Button size={'medium'} className={'px-5'} modifier={'dark-primary'}>
+          <Button
+            type={'button'}
+            size={'medium'}
+            className={'px-5'}
+            modifier={'dark-primary'}
+            onClick={() => setOpenModalCreateAccount(true)}
+          >
             Thêm tài khoản
           </Button>
         </div>
@@ -165,6 +174,27 @@ function ManageAccount() {
           <AccountStaff data={accountSlected.data} reloadParentPage={setReload} />
         </div>
       )}
+
+      {/* Modal Create Account */}
+      <Modal showModal={opendModalCreateAccount}>
+        <header className="flex items-center justify-between pb-3 border-b-2 border-text_blur/50">
+          <div className="flex flex-col justify-start items-start">
+            <span className="text-text_primary text-h4 font-medium truncate">Tạo mới tài khoản</span>
+            <span className="text-text_blur text-h6 font-normal">Thêm tài khoản mới vào hệ thống</span>
+          </div>
+          <div className="flex items-center justify-end">
+            <button
+              type="button"
+              className="p-2 hover:bg-slate-100 rounded-md"
+              onClick={() => setOpenModalCreateAccount(false)}
+            >
+              <AiOutlineClose size={24} />
+            </button>
+          </div>
+        </header>
+        {/* Body Modal */}
+        <FormCreateAccount onClose={() => setOpenModalCreateAccount(false)} reloadParentPage={setReload} />
+      </Modal>
     </div>
   );
 }
