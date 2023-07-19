@@ -49,7 +49,7 @@ function SearchSelect(
         onClickOutside={() => setVisible(false)}
         render={(attrs) => (
           <div tabIndex="-1" {...attrs}>
-            <div className="bg-white rounded-md shadow-xl">{renderMenuType()}</div>
+            <div className="bg-white rounded-md shadow-md">{renderMenuType()}</div>
           </div>
         )}
       >

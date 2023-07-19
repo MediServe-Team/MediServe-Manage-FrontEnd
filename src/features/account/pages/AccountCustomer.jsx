@@ -1,7 +1,282 @@
-function AccountCustomer() {
+import { TitleShopping, ItemShopping } from '../components';
+import { useState, useEffect } from 'react';
+import { Button, Modal } from '../../../components';
+import { AiOutlineClose } from 'react-icons/ai';
+import DatePicker from 'react-datepicker';
+import { BillPreview } from '../../selling/components/Bill';
+// form
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { updateAccountSchema } from '../../../validations/updateAccount';
+import classNames from 'classnames';
+// services
+import { updateAccountByIdService, deleteAccountService } from '../../../services/accountServices';
+import { getBillOfUserService } from '../../selling/billServices';
+import { useAxiosWithToken } from '../../../hooks';
+import { toast } from 'react-toastify';
+
+function AccountCustomer({ data, reloadParentPage }) {
+  const [preview, setPreview] = useState(false);
+  const [bills, setBills] = useState([]);
+  const [billSelectedId, setBillSelectedId] = useState(null);
+  const axiosWithToken = useAxiosWithToken();
+  //* modal
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  //* form
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(updateAccountSchema) });
+
+  // Set value init in first access
+  useEffect(() => {
+    setValue('name', data?.name);
+    setValue('fullName', data?.fullName);
+    setValue('address', data?.address ?? '');
+    setValue('age', data?.age);
+    if (data?.dateOfBirth) {
+      setValue('dateOfBirth', new Date(data?.dateOfBirth));
+    }
+    setValue('phoneNumber', data?.phoneNumber ?? '');
+
+    //* get all bill of user
+    const getBills = async () => {
+      const result = await getBillOfUserService(data.id);
+      setBills(result?.data ?? []);
+    };
+    getBills();
+  }, [data]);
+
+  const handleUpdateAccount = async (dataForm) => {
+    const result = await updateAccountByIdService(axiosWithToken, data.id, dataForm);
+    console.log(result);
+    if (result.status === 200) {
+      toast.success('Cập nhật thông tin thành công!');
+    } else {
+      toast.error('Hệ thống gặp sự cố khi cập nhật thông tin!');
+    }
+  };
+
+  //* MODAL
+  const handleDeleteAccount = async () => {
+    const result = await deleteAccountService(axiosWithToken, data.id);
+    if (result.status === 200) {
+      toast.success('Xóa tài khoản thành công!');
+      reloadParentPage((prevState) => !prevState);
+    } else {
+      toast.error('Hệ thống gặp sự cố xóa tài khoản!');
+    }
+  };
+
+  //* PREVIEW BILL
+  const handlePreviewBill = (billId) => {
+    setBillSelectedId(billId);
+    setPreview(true);
+  };
+
+  const handleClosePreviewBill = () => {
+    setBillSelectedId(null);
+    setPreview(false);
+  };
+
   return (
-    <div className="h-full w-3/4 bg-white rounded-2xl">
-      <div className="">This is customer page</div>
+    <div className="flex flex-col h-full w-full bg-white rounded-2xl">
+      <div className="flex h-[12.5%] min-h-0">
+        <div className="flex w-[10%] justify-end items-end">
+          <img src={data.avatar} alt="avatar" className="h-14 w-14 rounded-full object-cover" />
+        </div>
+        <div className="flex flex-col w-[90%] justify-end items-start pl-6">
+          <div className="text-black text-h4 font-medium truncate">{data.fullName}</div>
+          <div className="text-text_primary text-h6 font-medium">Khách hàng </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col h-[87.5%] overflow-y-auto w-full items-center">
+        <div className="flex justify-center w-full py-6">
+          <form
+            onSubmit={handleSubmit(handleUpdateAccount)}
+            className="flex flex-col h-full w-[90%] border-text_blur/50 border-2 rounded-xl"
+          >
+            <div className="flex flex-col min-h-0">
+              <div className="flex gap-12 px-6 pb-2 py-3 border-b-2 border-text_blur/50">
+                <p className="w-full text-h6 font-medium pb-1">Thông tin cá nhân</p>
+                <p className="w-full text-h6 font-medium pb-1">Thông tin liên hệ</p>
+              </div>
+
+              <div className="flex gap-12 py-2 px-6 text-h6 min-h-0 min-w-0">
+                <div className="flex flex-col w-1/2 gap-5">
+                  {/* Field name */}
+                  <div className="flex flex-col">
+                    <p className="text-text_primary font-medium">Tên</p>
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.name?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('name')}
+                    />
+                  </div>
+                  {/* Field fullName */}
+                  <div className="flex flex-col">
+                    <p className="text-text_primary font-medium">Tên đầy đủ</p>
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.fullName?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('fullName')}
+                    />
+                  </div>
+                  {/* Field age */}
+                  <div className="flex gap-5">
+                    <div className="flex flex-col flex-1">
+                      <p className="text-text_primary font-medium">Tuổi</p>
+                      <input
+                        className={classNames(
+                          'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                          errors.age?.message ? 'border-danger' : 'border-text_primary/20',
+                        )}
+                        {...register('age')}
+                      />
+                    </div>
+                    {/* Field dateOfBirth */}
+                    <div className="flex flex-col flex-[3]">
+                      <p className="text-text_primary font-medium">Ngày sinh</p>
+                      <Controller
+                        control={control}
+                        name="dateOfBirth"
+                        render={({ field }) => (
+                          <DatePicker
+                            className="border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2"
+                            selected={field?.value}
+                            onChange={(date) => {
+                              return field.onChange(date);
+                            }}
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
+                            maxDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            showYearDropdown
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/* Field phoneNumber */}
+                <div className="flex flex-col w-1/2 gap-5">
+                  <div className="flex flex-col">
+                    <p className="text-text_primary font-medium">Số điện thoại</p>
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.phoneNumber?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('phoneNumber')}
+                    />
+                  </div>
+                  {/* Field email */}
+                  <div className="flex flex-col">
+                    <p className="text-text_primary font-medium">Email</p>
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                      )}
+                      defaultValue={data.email}
+                      disabled
+                    />
+                  </div>
+                  {/* Field address */}
+                  <div className="flex flex-col">
+                    <p className="text-text_primary font-medium">Địa chỉ</p>
+                    <input
+                      className={classNames(
+                        'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                        errors.address?.message ? 'border-danger' : 'border-text_primary/20',
+                      )}
+                      {...register('address')}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex min-h-0 py-4">
+              <div className="flex w-1/2 justify-start items-center min-h-0 min-w-0 text-h6"></div>
+              <div className="flex w-1/2 justify-end items-end min-h-0 min-w-0 pr-4 pb-3 gap-4">
+                <Button type={'button'} size={'medium'} modifier={'danger'} onClick={() => setOpenModalDelete(true)}>
+                  Xóa tài khoản
+                </Button>
+                <Button type={'submit'} size={'medium'} modifier={'dark-primary'} width={120}>
+                  Lưu
+                </Button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* History customer purchase */}
+        {bills && Array.isArray(bills) && bills.length > 0 && (
+          <div className="flex flex-col min-h-[60%] w-[90%] mt-4 mb-6 gap-3">
+            <span className="text-[18px] font-medium min-h-0 mb-">Lịch sử mua hàng</span>
+            <TitleShopping>
+              {bills.map((bill, index) => (
+                <ItemShopping key={index} data={bill}>
+                  <button
+                    className="rounded-xl bg-primary/80 text-white py-1 px-5"
+                    onClick={() => handlePreviewBill(bill.id)}
+                  >
+                    <span className="truncate">Chi tiết</span>
+                  </button>
+                </ItemShopping>
+              ))}
+            </TitleShopping>
+          </div>
+        )}
+      </div>
+
+      {/* Preview bill */}
+      <BillPreview preview={preview} closePreview={handleClosePreviewBill} billId={billSelectedId} />
+
+      {/* Modal Delete */}
+      <Modal showModal={openModalDelete}>
+        <div className="w-[300px] flex flex-col items-center gap-5 relative">
+          {/* Info modal */}
+          <header className="w-full flex justify-between items-center">
+            <div className="flex flex-col">
+              <h3 className="text-text_primary font-bold text-h4">Xác nhận</h3>
+              <p className="text-text_blur text-h6">
+                Bạn chắc chắn xác nhận muốn xóa tài khoản <b className="text-black">{data.fullName}</b> ra khỏi hệ
+                thống?
+              </p>
+            </div>
+            {/* close modal delete */}
+            <button className="outline-none absolute right-0 top-0" onClick={() => setOpenModalDelete(false)}>
+              <AiOutlineClose className="text-[20px] m-auto" />
+            </button>
+          </header>
+          {/* Button control modal*/}
+          <div className="flex justify-between items-center mt-5 gap-5">
+            <Button
+              size={'medium'}
+              styleBtn={'outline'}
+              modifier={'gray'}
+              width={120}
+              type={'button'}
+              onClick={() => setOpenModalDelete(false)}
+            >
+              Hủy
+            </Button>
+            <Button size={'medium'} modifier={'danger'} width={120} type={'button'} onClick={handleDeleteAccount}>
+              Xóa
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

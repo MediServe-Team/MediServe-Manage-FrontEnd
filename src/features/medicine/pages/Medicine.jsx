@@ -1,43 +1,65 @@
 import { useState, useEffect } from 'react';
-import { SubNavigate } from '../../../components';
-import { Outlet } from 'react-router-dom';
+import { SearchOnChange, SubNavigate } from '../../../components';
+import { MedicineGrid } from './SubPage';
+import { useSelector } from 'react-redux';
+import { useDebounce } from '../../.././hooks';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Medicine() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Danh sách thuốc',
+        slug: '/medicines/all',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [navList, setNavList] = useState([]);
+  // Search
+  const [searchValue, setSearchValue] = useState('');
+  const debounced = useDebounce(searchValue, 500);
+  // getCategory
+  const categories = useSelector((state) => state.category.categories);
+
+  const handleSearchValueChange = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
-    const navs = [
-      {
-        name: 'Tất cả',
-        path: 'all',
-      },
-      {
-        name: 'Kê đơn',
-        path: 'prescription',
-      },
-      {
-        name: 'Không kê đơn',
-        path: 'non-prescription',
-      },
-      {
-        name: 'Kiểm soát đặc biệt',
-        path: 'special',
-      },
-    ];
-
+    let navs = categories.filter((category) => category.isMedicine);
+    navs = navs.map((category) => ({ name: category.categoryName, path: `/medicines/${category.id}` }));
+    navs = [
+      { name: 'Tất cả', path: '/medicines/all' },
+      { name: 'Kê đơn', path: '/medicines/prescription' },
+      { name: 'Không kê đơn', path: '/medicines/non-prescription' },
+    ].concat(navs);
     setNavList(navs);
-  }, []);
+  }, [categories]);
 
   return (
     <div className="h-full flex flex-col gap-2">
       <div className="h-[80px] flex justify-between items-center px-5 bg-white rounded-lg flex-shrink-0">
         {/* navigate on page */}
-        <SubNavigate navs={navList} />
+        <div className="overflow-x-auto max-w-full py-[10px] mr-5">
+          <SubNavigate navs={navList} />
+        </div>
         {/* Search */}
-        <div className=" w-[200px] h-[30px] bg-gray-100"></div>
+        <SearchOnChange
+          value={searchValue}
+          onChange={handleSearchValueChange}
+          onClear={() => setSearchValue('')}
+          className={'w-[400px]'}
+        />
       </div>
       {/* Main page */}
-      <Outlet />
+      <MedicineGrid searchValue={debounced} />
     </div>
   );
 }

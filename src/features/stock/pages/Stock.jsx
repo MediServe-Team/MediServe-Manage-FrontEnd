@@ -1,9 +1,44 @@
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { SubNavigate } from '../components';
+import { SearchOnChange } from '../../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { getInventoryStock, getLengthAll, getLengthExp, getLengthPreExp, getLengthPreSoldOut } from '../stockSlice';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Stock() {
   const [navList, setNavList] = useState([]);
+  // Search
+  const [searchValue, setSearchValue] = useState('');
+  // dispatch
+  const dispatch = useDispatch();
+
+  // addBreadcrumb
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Kiểm kho',
+        slug: '/stock/all',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
+  const handleSearchValueChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    //* fetch data inventory stock
+    dispatch(getInventoryStock());
+  }, [dispatch]);
+
+  const lengthAll = useSelector(getLengthAll);
+  const lengthPreSoldOut = useSelector(getLengthPreSoldOut);
+  const lengthPreExp = useSelector(getLengthPreExp);
+  const lengthExp = useSelector(getLengthExp);
 
   useEffect(() => {
     const navs = [
@@ -11,30 +46,30 @@ function Stock() {
         name: 'Tất cả',
         path: '/stock/all',
         color: 'green',
-        quantity: 8,
+        quantity: lengthAll,
       },
       {
         name: 'Sắp hết hàng',
         path: '/stock/prepare-out-of-stock',
         color: 'yellow',
-        quantity: 3,
+        quantity: lengthPreSoldOut,
       },
       {
         name: 'Sắp đến hạn',
         path: '/stock/prepare-expired',
         color: 'red',
-        quantity: 8,
+        quantity: lengthPreExp,
       },
       {
         name: 'Hến hạn',
         path: '/stock/expired',
         color: 'grey',
-        quantity: 2,
+        quantity: lengthExp,
       },
     ];
 
     setNavList(navs);
-  }, []);
+  }, [lengthAll, lengthPreSoldOut, lengthPreExp, lengthExp]);
 
   return (
     <div className="h-full flex flex-col gap-2">
@@ -42,10 +77,15 @@ function Stock() {
         {/* navigate on page */}
         <SubNavigate navs={navList} />
         {/* Search */}
-        <div className=" w-[200px] h-[30px] bg-gray-100"></div>
+        <SearchOnChange
+          value={searchValue}
+          onChange={handleSearchValueChange}
+          onClear={() => setSearchValue('')}
+          className={'w-[400px]'}
+        />
       </div>
       {/* Main page */}
-      <Outlet />
+      <Outlet context={searchValue} />
     </div>
   );
 }

@@ -1,6 +1,19 @@
 import { BsPencilSquare, BsCloudUploadFill } from 'react-icons/bs';
 
-function StaffProfile() {
+function StaffProfile({
+  email,
+  name,
+  fullName,
+  gender,
+  age,
+  dateOfBirth,
+  phoneNumber,
+  avatar,
+  address,
+  certificate,
+  identityCard,
+  numOfPPC,
+}) {
   return (
     <div className="h-full w-full bg-white rounded-xl px-14 py-5 relative">
       <div className="flex">
@@ -56,7 +69,7 @@ function StaffProfile() {
           <div className="flex pr-24 mt-5">
             <div className="w-1/6 pr-8">
               <p className="titleInputProfile">Tuổi</p>
-              <input type="number" className="inputProfile" />
+              <input type="number" className="inputProfile" style={{ paddingInline: '0.5rem' }} />
             </div>
             <div className="w-1/3 pr-8">
               <p className="titleInputProfile">Ngày sinh</p>

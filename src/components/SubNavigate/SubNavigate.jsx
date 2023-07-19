@@ -59,8 +59,8 @@ function SubNavigate({ navs }) {
                 to={item.path}
                 className={({ isActive, isPending }) => styleNavItem(isActive, color)}
               >
-                <span>{item.name}</span>
-                {item.quantity && (
+                <span className="whitespace-nowrap">{item.name}</span>
+                {!isNaN(item.quantity) && (
                   <div
                     className={classNames(
                       ' top-0 right-0 w-[22px] h-[18px] rounded-md flex justify-center items-center',

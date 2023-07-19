@@ -1,45 +1,62 @@
 import { useState, useEffect } from 'react';
-import { SubNavigate } from '../../../components';
-import { Outlet } from 'react-router-dom';
+import { SearchOnChange, SubNavigate } from '../../../components';
+import { ProductGrid } from './SubPage';
+import { useSelector, useDispatch } from 'react-redux';
+import { useDebounce } from '../../.././hooks';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
-function Product() {
+function Medicine() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Danh sách sản phẩm',
+        slug: '/products/all',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
+
   const [navList, setNavList] = useState([]);
+  // Search
+  const [searchValue, setSearchValue] = useState('');
+  const debounced = useDebounce(searchValue, 500);
+  // getCategory
+  const categories = useSelector((state) => state.category.categories);
+
+  const handleSearchValueChange = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
-    const navs = [
-      {
-        name: 'Tất cả',
-        path: 'all',
-      },
-      {
-        name: 'Thực phẩm chức năng',
-        path: 'functional-food',
-      },
-      {
-        name: 'Sữa',
-        path: 'milk',
-      },
-      {
-        name: 'Mỹ phẩm',
-        path: 'cosmetic',
-      },
-    ];
-
+    let navs = categories.filter((category) => !category.isMedicine);
+    navs = navs.map((category) => ({ name: category.categoryName, path: `/products/${category.id}` }));
+    navs = [{ name: 'Tất cả', path: '/products/all' }].concat(navs);
     setNavList(navs);
-  }, []);
+  }, [categories]);
 
   return (
     <div className="h-full flex flex-col gap-2">
       <div className="h-[80px] flex justify-between items-center px-5 bg-white rounded-lg flex-shrink-0">
         {/* navigate on page */}
-        <SubNavigate navs={navList} />
+        <div className="overflow-x-auto max-w-full py-[10px] mr-5">
+          <SubNavigate navs={navList} />
+        </div>
         {/* Search */}
-        <div className=" w-[200px] h-[30px] bg-gray-100"></div>
+        <SearchOnChange
+          value={searchValue}
+          onChange={handleSearchValueChange}
+          onClear={() => setSearchValue('')}
+          className={'w-[400px]'}
+        />
       </div>
       {/* Main page */}
-      <Outlet />
+      <ProductGrid searchValue={debounced} />
     </div>
   );
 }
 
-export default Product;
+export default Medicine;

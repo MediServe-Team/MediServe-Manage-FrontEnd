@@ -1,55 +1,164 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ItemList, MedicineItem, TitleList } from '../components';
-import Tippy from '@tippyjs/react/headless';
-import { SearchToAdd } from '../../../components/SearchToAdd';
+import SearchResultItem from '../../stock/components/SearchResultItem';
+import { Button, SearchOnChange, EmptyImage } from '../../../components';
 import classNames from 'classnames';
-import { SearchResultItem } from '../../stock/components';
-// import Button from '../../../components/Button';
-import { BsSearch, BsXCircleFill } from 'react-icons/bs';
-import Button from '@mui/joy/Button';
-import { Opacity } from '@mui/icons-material';
-
-const TYPES = [
-  {
-    title: 'Thuốc',
-    type: 'medicine',
-  },
-  {
-    title: 'Vật tư Y tế',
-    type: 'medical_supplies',
-  },
-  {
-    title: 'TPCN',
-    type: 'functional_foods',
-  },
-];
+import Tippy from '@tippyjs/react/headless';
+import { filterMedicineServices } from '../../medicine/medicineServices';
+import { useDebounce } from '../../../hooks';
+// handle form data and validate
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { doseNameSchema } from '../../../validations/addMedicineInDose';
+// get user ID
+import { useSelector, useDispatch } from 'react-redux';
+import { getUserId } from '../../Auth/AuthSlice';
+// service call api
+import { createDoseService, filterDoseService } from '../doseServices';
+import { toast } from 'react-toastify';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Dose() {
-  const [listMedicine, setListMedicine] = useState(['1', '2', '3', '4', '5']);
-  const [merchandises, setMerchandises] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [visibleResult, setVisibleResult] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const searchRef = useRef();
-  const [searchDose, setSearchDose] = useState('');
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Liều thuốc',
+        slug: '/doses',
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch]);
 
-  let red = '#D41919',
-    darkBlue = '#064861';
+  const staffId = useSelector(getUserId);
+  const [listMedicine, setListMedicine] = useState([]);
+  const [searchDoseValue, setSearchDoseValue] = useState('');
+  const [listDose, setlistDose] = useState([]);
+  const [searchMedicineValue, setSearchMedicineValue] = useState('');
+  const [visibleMedicineResult, setVisibleMedicineResult] = useState(true);
+  const [searchMedicineResult, setSearchMedicineResult] = useState([]);
+  //* list ref to MedicineItem
+  const medicineItemRefs = useRef([]);
+  //* use Debounce delay value
+  const medicineDebounced = useDebounce(searchMedicineValue, 500);
+  const doseDebounced = useDebounce(searchDoseValue, 500);
+  const [reloadDose, setReloadDose] = useState(false);
+  //* resize width for tippy search result box
+  const searchMedicineBoxRef = useRef(null);
+  useEffect(() => {
+    const searchMedicineResultBox = searchMedicineBoxRef.current;
+    const searchMedicineWrapper = document.querySelector('.search-medicine-wrapper');
+    if (searchMedicineResultBox && searchMedicineWrapper) {
+      const setWidthSearchMedicine = () => {
+        const width = searchMedicineWrapper.offsetWidth;
+        searchMedicineResultBox.style.width = `${width}px`;
+      };
+      setWidthSearchMedicine();
+      window.addEventListener('resize', setWidthSearchMedicine);
+      // clean up fn
+      return () => {
+        window.removeEventListener('resize', setWidthSearchMedicine);
+      };
+    }
+  });
 
-  const handleSelectType = (index) => {
-    setSelectedIndex(index);
+  const {
+    register,
+    getValues,
+    trigger,
+    reset,
+    formState: { errors },
+  } = useForm({ mode: 'onChange', resolver: yupResolver(doseNameSchema) });
+
+  //* Medicine with search
+  useEffect(() => {
+    const filterMedicine = async () => {
+      if (medicineDebounced) {
+        const result = await filterMedicineServices(medicineDebounced);
+        setSearchMedicineResult(result.data);
+      }
+    };
+    filterMedicine();
+  }, [medicineDebounced]);
+
+  const handleSearchMedicineChange = (e) => {
+    const value = e.target.value;
+    setSearchMedicineValue(value);
+    if (!value) setVisibleMedicineResult(false);
+    else setVisibleMedicineResult(true);
   };
 
-  const renderSearchResult = () => {
-    return Array.isArray(searchResults) && searchResults.length > 0 ? (
-      searchResults.map((item, index) => (
+  const clearSearchMedicine = () => {
+    setSearchMedicineValue('');
+    setVisibleMedicineResult(false);
+  };
+
+  //* Handle form create dose
+  const handleCreateDose = async () => {
+    if (medicineItemRefs.current.length > 0 && listMedicine.length > 0) {
+      let checkValidate = true;
+      const listMedicines = await medicineItemRefs.current.reduce(async (acc, curr) => {
+        if (curr) {
+          const data = await curr.getData();
+          if (!data) checkValidate = false;
+          acc = await Promise.resolve(acc);
+          acc.push(data);
+        }
+        return acc;
+      }, []);
+      if (checkValidate) {
+        // console.log(listMedicines);
+        const passValidate = await trigger();
+        if (passValidate) {
+          const data = getValues();
+          data.staffId = staffId;
+          data.isDose = true;
+          data.listMedicines = listMedicines;
+          // call api save new dose
+          const result = await createDoseService(data);
+          if (result.status === 201) {
+            toast.success('Tạo liều thuốc thành công!');
+            setReloadDose(!reloadDose);
+          } else {
+            toast.error('Tạo liều thuốc thất bại!');
+          }
+        }
+      }
+    }
+  };
+
+  const handleClearFormCreateDose = () => {
+    reset({ diagnose: '', note: '' });
+    medicineItemRefs.current = [];
+    setListMedicine([]);
+    setSearchMedicineValue('');
+  };
+
+  const handleAddMedicineToDose = (medicineId, medicineName, packingSpecification, sellUnit) => {
+    const newListMedicine = [...listMedicine, { medicineId, medicineName, packingSpecification, sellUnit }];
+    setListMedicine(newListMedicine);
+  };
+
+  const handleRemoveMedicineFromDose = (id) => {
+    // remove out of refs
+    const removeIndex = medicineItemRefs.current.findIndex((item) => item.id === id);
+    if (removeIndex !== -1) medicineItemRefs.current.splice(removeIndex, 1);
+    // remove out of state
+    const newListMedicine = listMedicine.filter((medicine) => medicine.medicineId !== id);
+    setListMedicine(newListMedicine);
+  };
+
+  const renderSearchMedicineResult = () => {
+    return Array.isArray(searchMedicineResult) && searchMedicineResult.length > 0 ? (
+      searchMedicineResult.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.name}
-          type={item.type}
-          packingSpecification="Hộp 4 vĩ, 30 viên"
-          onClick={() => handleAddMerchandise(item)}
+          name={item.medicineName}
+          packingSpecification={item.packingSpecification}
+          onClick={() => handleAddMedicineToDose(item.id, item.medicineName, item.packingSpecification, item.sellUnit)}
         />
       ))
     ) : (
@@ -57,134 +166,159 @@ function Dose() {
     );
   };
 
-  const handleAddMerchandise = (item) => {
-    setMerchandises([...merchandises, { name: item.name, packingSpecification: 'Hộp 4 vĩ, 30 viên' }]);
-  };
+  // DOSE
+  useEffect(() => {
+    const filterDose = async () => {
+      const doseData = await filterDoseService(doseDebounced);
+      setlistDose(doseData.data);
+    };
+    filterDose();
+  }, [doseDebounced, reloadDose]);
 
-  const handleSearchValueChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    if (value !== 0) setVisibleResult(true);
-    else setVisibleResult(false);
-    setSearchResults([...searchResults, { name: e.target.value, type: TYPES[selectedIndex].title }]);
+  const handleSearchDoseChange = (e) => {
+    setSearchDoseValue(e.target.value);
   };
-
-  const handleClearSearch = () => {
-    setSearchValue('');
-    setSearchResults([]);
-    setVisibleResult(false);
-    searchRef.current.focus();
-  };
-
-  const handleClearSearchDose = () => {
-    setSearchDose('');
-  };
-
-  const handleSearchDose = (e) => {
-    setSearchDose(e.target.value);
-  };
-
-  const [listDose, setlistDose] = useState(['1', '2', '3', '4', '5']);
 
   return (
     <div className="h-full flex gap-3">
       {/* Dose */}
-      <div className="flex flex-col w-2/5 bg-white rounded-lg">
-        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4 ">
-          <h3 className="text-h4 text-dark_primary font-semibold">Tạo liều thuốc</h3>
+      <div className="flex flex-col bg-white rounded-lg h-full">
+        <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50 flex-shrink-0">
+          <h3 className="text-h4 text-text_primary font-semibold">Tạo liều thuốc</h3>
         </header>
-        {/* Search */}
-        <div className="">
-          <Tippy
-            visible={visibleResult && searchResults.length > 0}
-            interactive={true}
-            placement="bottom-start"
-            onClickOutside={() => setVisibleResult(false)}
-            render={(attrs) => (
-              <div tabIndex="-1" {...attrs} className={classNames('w-[600px] max-h-[480px] overflow-y-auto shadow-lg')}>
-                <div className="bg-white rounded-md shadow-xl">{renderSearchResult()}</div>
+
+        <div className="px-5 flex-1 flex flex-col min-h-0">
+          {/* Search */}
+          <div className="mt-5">
+            {/* <h3 className="text-text_primary font-medium">Tìm thuốc:</h3> */}
+            <Tippy
+              visible={visibleMedicineResult && searchMedicineResult.length > 0}
+              interactive={true}
+              placement="bottom-start"
+              onClickOutside={() => setVisibleMedicineResult(false)}
+              render={(attrs) => (
+                <div
+                  tabIndex="-1"
+                  {...attrs}
+                  className={'w-full max-h-[480px] overflow-y-auto shadow-lg'}
+                  ref={searchMedicineBoxRef}
+                >
+                  <div className="bg-white rounded-md shadow-xl">{renderSearchMedicineResult()}</div>
+                </div>
+              )}
+            >
+              <div className="w-full search-medicine-wrapper">
+                <SearchOnChange
+                  className={'w-full'}
+                  value={searchMedicineValue}
+                  placeholder={'Thêm từ khóa tìm kiếm thuốc'}
+                  onChange={handleSearchMedicineChange}
+                  onClear={clearSearchMedicine}
+                />
               </div>
+            </Tippy>
+          </div>
+
+          {/* Name of dose */}
+          <div className="pt-4 pb-1">
+            <h3 className="text-text_primary font-medium">Tên liều thuốc:</h3>
+            <input
+              type="text"
+              className={classNames(
+                'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                errors.diagnose?.message ? 'border-danger' : 'border-text_primary/20',
+              )}
+              placeholder="VD: Liều thuốc cảm cúm cho người lớn"
+              {...register('diagnose')}
+            />
+          </div>
+
+          {/* List medicine */}
+          <div className="flex-1 flex flex-col pt-4 gap-5 overflow-auto min-h-0">
+            {listMedicine && listMedicine.length > 0 ? (
+              listMedicine.map((item, index) => (
+                <MedicineItem
+                  key={index}
+                  ref={(el) => (medicineItemRefs.current[index] = el)}
+                  number={index + 1}
+                  medicineId={item.medicineId}
+                  medicineName={item.medicineName}
+                  packingSpecification={item.packingSpecification}
+                  medicineUnit={item.sellUnit}
+                  onRemove={() => handleRemoveMedicineFromDose(item.medicineId)}
+                />
+              ))
+            ) : (
+              <EmptyImage title={'Chưa có thuốc được thêm để tạo liều'} />
             )}
-          >
-            <div className="w-[330px] pl-12 pt-5">
-              <SearchToAdd
-                ref={searchRef}
-                value={searchValue}
-                onChange={handleSearchValueChange}
-                onClear={handleClearSearch}
-                types={TYPES}
-                typeSelected={selectedIndex}
-                onTypeChange={handleSelectType}
+          </div>
+
+          {/* Button control area */}
+          <div className="flex justify-between items-end gap-5 py-2 flex-shrink-0">
+            {/* Note */}
+            <div className="flex-1 flex flex-col">
+              <h3 className="text-text_primary font-medium">Ghi chú:</h3>
+              <input
+                type="text"
+                className="border-2 w-full h-[44px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+                placeholder="Thêm ghi chú"
+                {...register('note')}
               />
             </div>
-          </Tippy>
-        </div>
-        {/* Name of dose */}
-        <div className="mx-auto pt-5 pb-7">
-          <h3 className="text-h5 font-semibold">Tên liều thuốc:</h3>
-          <input
-            type="text"
-            className="border-dark_primary border-2 rounded-md w-[385px] h-[37px] px-3 mt-2"
-            placeholder="VD: Liều thuốc cảm cúm cho người lớn"
-          />
-        </div>
 
-        {/* List medicine */}
-        <div className="h-1/2 px-5 flex flex-col gap-5 overflow-auto">
-          {listMedicine.map((item, index) => (
-            <MedicineItem key={index} />
-          ))}
-        </div>
-
-        <div className="flex justify-end items-end gap-3 my-auto mx-auto">
-          <Button
-            variant="outlined"
-            style={{ color: red, borderColor: red, borderWidth: 2, paddingInline: '2rem', fontSize: '16px' }}
-          >
-            Hủy
-          </Button>
-          <Button
-            className="hover:opacity-90 active:opacity-100"
-            variant="solid"
-            style={{ backgroundColor: darkBlue, paddingInline: '2rem', fontSize: '16px' }}
-          >
-            Lưu
-          </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                styleBtn={'solid'}
+                modifier={'danger'}
+                size={'medium'}
+                width={100}
+                onClick={handleClearFormCreateDose}
+              >
+                Làm rỗng
+              </Button>
+              <Button
+                styleBtn={'solid'}
+                modifier={'dark_primary'}
+                size={'medium'}
+                width={100}
+                onClick={handleCreateDose}
+              >
+                Lưu
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* List Dose */}
-      <div className="w-3/5 bg-white rounded-lg">
-        <header className="border-b-2 border-text_blur/50 h-[8%] pl-6 pt-4">
-          <h3 className="text-h4 text-dark_primary font-semibold">Danh sách liều thuốc</h3>
+      <div className="w-3/5 flex flex-col bg-white rounded-lg">
+        <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50">
+          <h3 className="text-h4 text-text_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
-        <div className="h-[14%] flex justify-center py-5 relative">
-          <input
-            type="text"
-            className="bg-text_blur/10 w-[84%] h-full pl-12 pr-12 rounded-lg"
-            value={searchDose}
-            onChange={handleSearchDose}
-            placeholder="Tên liều thuốc"
+        <div className="px-10 py-5">
+          <SearchOnChange
+            value={searchDoseValue}
+            onChange={handleSearchDoseChange}
+            placeholder={'Thêm từ khóa tìm kiếm liều thuốc'}
+            onClear={() => setSearchDoseValue('')}
           />
-          <button>
-            <BsSearch className="text-text_blur text-h3 absolute left-[9.75%] top-[35%]" />
-          </button>
-          <button onClick={handleClearSearchDose}>
-            <BsXCircleFill className="text-text_blur text-h3 absolute right-[9.75%] top-[35%]" />
-          </button>
         </div>
-        {/* Table of data */}
-        <div className="">
-          {/* Title */}
-          <div className="px-10">
-            <TitleList>
-              {/* Data */}
-              {listDose.map((item, index) => (
-                <ItemList key={index} />
-              ))}
-            </TitleList>
-          </div>
+        {/* Title */}
+        <div className="px-10 flex-1 overflow-y-auto mb-3">
+          <TitleList>
+            {/* Data */}
+            {listDose.map((dose, index) => (
+              <ItemList
+                key={index}
+                number={index + 1}
+                doseId={dose.id}
+                doseName={dose.diagnose}
+                note={dose.note}
+                setReloadList={() => setReloadDose(!reloadDose)}
+              />
+            ))}
+          </TitleList>
         </div>
       </div>
     </div>

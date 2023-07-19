@@ -3,24 +3,71 @@ import { Button } from '../../../components';
 import { GroupItem, ItemRowReadOnly } from '../components';
 import { useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
+import { getDetailInvoiceServices } from '../stockServices';
+import { useDispatch } from 'react-redux';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function StockIntoDetail() {
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Lịch sử nhập kho',
+        slug: '/stock/history',
+      }),
+    );
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Chi tiết nhập kho',
+        slug: `/stock/invoice/${id}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+      dispatch(removeLastBreadcrumb());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  const [invoice, setInvoice] = useState({});
   const [listMedicine, setListMedicine] = useState([]);
   const [listProduct, setListProduct] = useState([]);
 
-  const productId = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    // filter mechandise and classify medicine, product
-    setListMedicine(mockData);
-    setListProduct(mockData);
-  }, []);
+    const fetchDetailInvoice = async () => {
+      try {
+        const result = await getDetailInvoiceServices(id);
+        return result.data;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDetailInvoice()
+      .then((data) => {
+        const { MedicineIntoStocks, ProductIntoStocks, ...invoiceData } = data;
+        setInvoice(invoiceData);
+        setListMedicine(MedicineIntoStocks);
+        setListProduct(ProductIntoStocks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
 
   const handleExportFile = () => {
     const workBook = XLSX.utils.book_new();
-    const workSheet = XLSX.utils.json_to_sheet(mockData);
-    XLSX.utils.book_append_sheet(workBook, workSheet, 'sheet_01');
-    XLSX.writeFile(workBook, 'detail-stock.xlsx');
+    if (listMedicine && listMedicine.length > 0) {
+      const medicineSheet = XLSX.utils.json_to_sheet(listMedicine);
+      XLSX.utils.book_append_sheet(workBook, medicineSheet, 'Thuốc nhập');
+    }
+    if (listProduct && listProduct.length > 0) {
+      const productSheet = XLSX.utils.json_to_sheet(listProduct);
+      XLSX.utils.book_append_sheet(workBook, productSheet, 'Sản phẩm nhập');
+    }
+    XLSX.writeFile(workBook, `invoice-stock-${id}.xlsx`);
   };
 
   return (
@@ -29,15 +76,17 @@ function StockIntoDetail() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-text_primary text-h5 font-bold">
-            Chi tiết đơn nhập: <span className="text-black">{productId.id}</span>
+            Chi tiết đơn nhập: <span className="text-black">{id}</span>
           </h2>
-          <p className="text-h6 font-medium text-text_blur">Ghi chú: Danh sách thuốc cần bán hết trong vòng 30 ngày</p>
+          <p className="text-h6 font-medium text-text_blur">
+            {' '}
+            <span className="text-text_primary">Ghi chú:</span> {invoice.note}
+          </p>
         </div>
-        <Button size="normal" type="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
+        <Button size="normal" styleBtn="outline" modifier="primary" className="px-6" onClick={handleExportFile}>
           Xuất file
         </Button>
       </div>
-
       {/* Invoice */}
       <div className="flex-1 pt-3 min-h-0">
         <GroupItem>
@@ -46,7 +95,20 @@ function StockIntoDetail() {
             <>
               <h3 className="text-text_primary text-h5 font-bold">Thuốc</h3>
               {listMedicine.map((item, index) => (
-                <ItemRowReadOnly key={index} name={item.name} packingSpecification={item.specifications} />
+                <ItemRowReadOnly
+                  key={index}
+                  name={item.medicine.medicineName}
+                  packingSpecification={item.medicine.packingSpecification}
+                  inputQuantity={item.inputQuantity}
+                  specification={item.specification}
+                  importPrice={item.importPrice}
+                  sellPrice={item.sellPrice}
+                  manufactureDate={item.manufactureDate}
+                  expirationDate={item.expirationDate}
+                  lotNumber={item.lotNumber}
+                  destroyed={item.destroyed}
+                  soldQuantity={item.soldQuantity}
+                />
               ))}
             </>
           )}
@@ -55,7 +117,20 @@ function StockIntoDetail() {
             <>
               <h3 className="text-text_primary text-h5 font-bold">Sản phẩm khác</h3>
               {listProduct.map((item, index) => (
-                <ItemRowReadOnly key={index} name={item.name} packingSpecification={item.specifications} />
+                <ItemRowReadOnly
+                  key={index}
+                  name={item.product.productName}
+                  packingSpecification={item.product.packingSpecification}
+                  inputQuantity={item.inputQuantity}
+                  specification={item.specification}
+                  importPrice={item.importPrice}
+                  sellPrice={item.sellPrice}
+                  manufactureDate={item.manufactureDate}
+                  expirationDate={item.expirationDate}
+                  lotNumber={item.lotNumber}
+                  destroyed={item.destroyed}
+                  soldQuantity={item.soldQuantity}
+                />
               ))}
             </>
           )}
@@ -66,21 +141,3 @@ function StockIntoDetail() {
 }
 
 export default StockIntoDetail;
-
-const mockData = [
-  {
-    id: 1,
-    name: 'nameme',
-    specifications: '1 hộp 23 viên',
-  },
-  {
-    id: 2,
-    name: 'nameme',
-    specifications: '1 hộp 23 viên',
-  },
-  {
-    id: 3,
-    name: 'nameme',
-    specifications: '1 hộp 23 viên',
-  },
-];

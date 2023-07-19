@@ -9,12 +9,14 @@ const routes = {
   historyStockManage: '/stock/history',
   stockIntoDetail: '/stock/invoice/:id',
 
-  medicineManage: '/medicines',
+  medicineManage: '/medicines/:categoryId',
   medicineManageWithFistSubPage: '/medicines/all',
   medicineCreate: '/medicines/add',
+  medicineUpdate: '/medicines/update/:medicineId',
 
-  productManage: '/products',
+  productManage: '/products/:categoryId',
   productCreate: '/products/add',
+  productUpdate: '/products/update/:productId',
   productManageWithFistSubPage: '/products/all',
 
   doseManage: '/doses',
@@ -25,7 +27,8 @@ const routes = {
 
   billManage: '/bills',
   billCreate: '/bills/create',
-  billCreateWithNoPrescription: '/bills/create/no-prescription',
+  billCreateWithFirstPage: '/bills/create/product',
+  billDetail: '/bills/:id',
 
   profile: '/profile',
 };

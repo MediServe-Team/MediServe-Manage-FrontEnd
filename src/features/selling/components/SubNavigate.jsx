@@ -55,12 +55,8 @@ function SubNavigate({ navs }) {
         {navs.map((item, index) => {
           const color = COLORS.includes(item.color) ? item.color : COLORS[0];
           return (
-            <li>
-              <NavLink
-                key={index}
-                to={item.path}
-                className={({ isActive, isPending }) => styleNavItem(isActive, color)}
-              >
+            <li key={index}>
+              <NavLink to={item.path} className={({ isActive, isPending }) => styleNavItem(isActive, color)}>
                 <span className="text-[17px] text-text_primary font-medium">{item.name}</span>
               </NavLink>
             </li>

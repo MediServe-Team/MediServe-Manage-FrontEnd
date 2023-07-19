@@ -4,7 +4,7 @@ import { Autoplay } from 'swiper';
 
 function SliderCarousel({ contents }) {
   return (
-    <div className="w-full min-w-0 relative">
+    <div className="w-auto min-w-0 relative">
       <Swiper
         className="bg-dark_primary rounded-md"
         autoplay={{ delay: 2000, disableOnInteraction: false }}
