@@ -188,8 +188,6 @@ function Dashboard() {
     filterBillsByMonths();
   }, []);
 
-  //addData();
-
   useEffect(() => {
     dispatch(getAllCategory());
     dispatch(getAllUnits());

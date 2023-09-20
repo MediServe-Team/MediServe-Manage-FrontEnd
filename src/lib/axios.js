@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URL = process.env.BASE_URL || 'https://mediserveserver-production.up.railway.app/api';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:5000/api';
 
 export const axiosBase = axios.create({
   baseURL: BASE_URL,
