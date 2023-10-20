@@ -199,8 +199,12 @@ function ProductUpdate() {
                   className="w-2/3 h-[80px] bg-white rounded-md border-2 border-text_primary border-dashed flex flex-col items-center justify-center relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-barcode').click()}
                 >
-                  <IoMdCloudUpload className="text-[30px] text-text_primary" />
-                  <span className="text-text_primary">Nhấn để thêm</span>
+                  {!barcode && (
+                    <>
+                      <IoMdCloudUpload className="text-[30px] text-text_primary" />
+                      <span className="text-text_primary">Nhấn để thêm</span>
+                    </>
+                  )}
                   <input
                     id="upload-barcode"
                     type="file"
