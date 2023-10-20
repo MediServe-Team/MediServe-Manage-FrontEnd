@@ -90,6 +90,10 @@ function ManageProfile() {
     const cardImg = document.querySelector('#card-img');
     cardImg.src = data;
     setIdentityCard(data);
+    const Bs_Image = document.querySelector('#BsCloudUploadFill');
+    Bs_Image.setAttribute('visibility', 'hidden');
+    const Text_cmnd = document.querySelector('#cmnd_cccd');
+    Text_cmnd.setAttribute('visibility', 'hidden');
   };
 
   //todo: upload certificate
@@ -307,11 +311,15 @@ function ManageProfile() {
                   onClick={() => document.querySelector('#upload-card').click()}
                 >
                   <div>
-                    <BsCloudUploadFill
-                      className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
-                      size={50}
-                    />
-                    <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
+                    {!identityCard && (
+                      <>
+                        <BsCloudUploadFill
+                          className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
+                          size={50}
+                        />
+                        <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
+                      </>
+                    )}
                     <input id="upload-card" type="file" accept="image/*" hidden onChange={(e) => handleUploadCard(e)} />
                     <img
                       id="card-img"
@@ -332,11 +340,15 @@ function ManageProfile() {
                   className="h-[150px] w-[220px] bg-light_gray border-dashed border-2 border-text_blur rounded-xl flex flex-col justify-center items-center mt-2 relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-certificate').click()}
                 >
-                  <BsCloudUploadFill
-                    className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
-                    size={50}
-                  />
-                  <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
+                  {!certificate && (
+                    <>
+                      <BsCloudUploadFill
+                        className="text-dark_primary hover:text-dark_primary/80 active:text-dark_primary text-center mx-auto"
+                        size={50}
+                      />
+                      <p className="text-h5 text-dark_primary">Nhấn vào đây để thêm ảnh</p>
+                    </>
+                  )}
                   <input
                     id="upload-certificate"
                     type="file"
