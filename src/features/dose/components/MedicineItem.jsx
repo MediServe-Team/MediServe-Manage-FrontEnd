@@ -14,9 +14,11 @@ function MedicineItem(
     trigger,
     clearErrors,
     getValues,
-    reset,
     formState: { errors },
-  } = useForm({ mode: 'onChange', resolver: yupResolver(addMedicineInDoseSchema) });
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(addMedicineInDoseSchema),
+  });
 
   useImperativeHandle(ref, () => ({
     id: medicineId,
@@ -31,13 +33,6 @@ function MedicineItem(
       return;
     },
   }));
-
-  useEffect(() => {
-    // clean data in form when component unmounted
-    return () => {
-      reset();
-    };
-  }, [medicineId]);
 
   return (
     <form className="flex flex-col border-2 border-text_blur rounded-lg">

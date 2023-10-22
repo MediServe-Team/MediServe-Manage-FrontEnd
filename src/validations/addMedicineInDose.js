@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
 export const addMedicineInDoseSchema = yup.object({
-  morning: yup.number().default(0),
-  noon: yup.number().default(0),
-  night: yup.number().default(0),
+  morning: yup.number().required(),
+  noon: yup.number().required(),
+  night: yup.number().required(),
   quantity: yup.number().required(),
 });
 

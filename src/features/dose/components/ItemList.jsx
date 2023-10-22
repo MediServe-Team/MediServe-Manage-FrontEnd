@@ -116,6 +116,9 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
       }
       return acc;
     }, []);
+
+    //listMedicineGuides.forEach((e) => console.log(e));
+
     if (checkValidate) {
       const passValidate = await trigger();
       if (passValidate) {
