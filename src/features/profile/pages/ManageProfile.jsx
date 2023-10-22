@@ -256,7 +256,7 @@ function ManageProfile() {
             </div>
 
             <div className="flex pr-24 mt-5">
-              <div className="w-1/6 pr-8">
+              <div className="w-1/6 pr-8" hidden>
                 <p className="text-text_primary font-medium">Tuổi</p>
                 <input
                   className={classNames(
