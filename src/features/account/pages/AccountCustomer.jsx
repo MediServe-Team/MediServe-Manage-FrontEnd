@@ -132,7 +132,7 @@ function AccountCustomer({ data, reloadParentPage }) {
                   </div>
                   {/* Field age */}
                   <div className="flex gap-5">
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-col flex-1" style={{ display: 'none' }}>
                       <p className="text-text_primary font-medium">Tuổi</p>
                       <input
                         className={classNames(
