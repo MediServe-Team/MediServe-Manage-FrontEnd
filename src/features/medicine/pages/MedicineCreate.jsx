@@ -158,7 +158,7 @@ function MedicineCreate() {
   const handleClearForm = () => {
     // clear display img barcode
     const barcodeImg = document.querySelector('#barcode-img');
-    barcodeImg.remove();
+    barcodeImg?.remove();
     // clear data
     setListImg([]);
     setBarcode('');
