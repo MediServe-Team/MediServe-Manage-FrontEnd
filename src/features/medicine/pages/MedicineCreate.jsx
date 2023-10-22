@@ -178,7 +178,7 @@ function MedicineCreate() {
   };
 
   return (
-    <div className="w-full h-full rounded-lg bg-white p-5">
+    <div className="w-full h-full rounded-lg bg-white p-5 overflow-y-auto">
       <form
         id="create-medicine-form"
         className="h-full flex justify-between gap-8"
