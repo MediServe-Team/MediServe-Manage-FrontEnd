@@ -31,6 +31,7 @@ function StockIntoDetail() {
   }, [dispatch]);
 
   const [invoice, setInvoice] = useState({});
+  const [listItem, setListItem] = useState([]);
   const [listMedicine, setListMedicine] = useState([]);
   const [listProduct, setListProduct] = useState([]);
 
@@ -47,10 +48,12 @@ function StockIntoDetail() {
     };
     fetchDetailInvoice()
       .then((data) => {
-        const { MedicineIntoStocks, ProductIntoStocks, ...invoiceData } = data;
+        const { ItemInStocks, ...invoiceData } = data;
         setInvoice(invoiceData);
-        setListMedicine(MedicineIntoStocks);
-        setListProduct(ProductIntoStocks);
+
+        setListItem(ItemInStocks);
+        setListMedicine(() => listItem?.filter((item) => item.item.itemType === 'MEDICINE'));
+        setListProduct(() => listItem?.filter((item) => item.item.itemType === 'PRODUCT'));
       })
       .catch((err) => {
         console.log(err);
@@ -97,9 +100,9 @@ function StockIntoDetail() {
               {listMedicine.map((item, index) => (
                 <ItemRowReadOnly
                   key={index}
-                  name={item.medicine.medicineName}
-                  packingSpecification={item.medicine.packingSpecification}
-                  inputQuantity={item.inputQuantity}
+                  name={item.item.itemName}
+                  packingSpecification={item.item.packingSpecification}
+                  importQuantity={item.importQuantity}
                   specification={item.specification}
                   importPrice={item.importPrice}
                   sellPrice={item.sellPrice}
@@ -119,9 +122,9 @@ function StockIntoDetail() {
               {listProduct.map((item, index) => (
                 <ItemRowReadOnly
                   key={index}
-                  name={item.product.productName}
-                  packingSpecification={item.product.packingSpecification}
-                  inputQuantity={item.inputQuantity}
+                  name={item.item.itemName}
+                  packingSpecification={item.item.packingSpecification}
+                  importQuantity={item.importQuantity}
                   specification={item.specification}
                   importPrice={item.importPrice}
                   sellPrice={item.sellPrice}

@@ -9,7 +9,7 @@ import formatToVND from '../../../helpers/formatToVND';
 function ItemRowReadOnly({
   name,
   packingSpecification,
-  inputQuantity,
+  importQuantity,
   specification,
   importPrice,
   sellPrice,
@@ -20,7 +20,7 @@ function ItemRowReadOnly({
   soldQuantity,
 }) {
   const renderTextStatus = () => {
-    const quantity = inputQuantity * specification;
+    const quantity = importQuantity * specification;
     if (destroyed) {
       const destroyQnt = quantity - soldQuantity;
       return <span className="text-danger">Đã tiêu hủy {destroyQnt} viên</span>;
@@ -33,7 +33,7 @@ function ItemRowReadOnly({
   };
 
   const renderIconStatus = () => {
-    const quantity = inputQuantity * specification;
+    const quantity = importQuantity * specification;
     if (destroyed) {
       return (
         <div className="shadow-md w-[16px] h-[16px] rounded-full flex justify-center items-center">
@@ -69,14 +69,14 @@ function ItemRowReadOnly({
           {/* quantity & specifications*/}
           <div className="w-0 flex-[5] flex gap-2 items-center ">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
-              {inputQuantity}
+              {importQuantity}
             </span>
             <span className="text-text_blur">x</span>
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
               {specification}
             </span>
             <span>=</span>
-            <span className="text-h6 whitespace-nowrap">{inputQuantity * specification} (viên)</span>
+            <span className="text-h6 whitespace-nowrap">{importQuantity * specification} (viên)</span>
           </div>
 
           {/* import price */}
@@ -94,7 +94,7 @@ function ItemRowReadOnly({
           </div>
 
           {/* total price */}
-          <span className="w-0 flex-[2]">{formatToVND(inputQuantity * specification * importPrice)}</span>
+          <span className="w-0 flex-[2]">{formatToVND(importQuantity * specification * importPrice)}</span>
 
           {/* manufacture Date */}
           <div className="w-0 flex-[2] flex">
