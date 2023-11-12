@@ -28,10 +28,9 @@ function StockIntoDetail() {
       dispatch(removeLastBreadcrumb());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   const [invoice, setInvoice] = useState({});
-  const [listItem, setListItem] = useState([]);
   const [listMedicine, setListMedicine] = useState([]);
   const [listProduct, setListProduct] = useState([]);
 
@@ -51,9 +50,8 @@ function StockIntoDetail() {
         const { ItemInStocks, ...invoiceData } = data;
         setInvoice(invoiceData);
 
-        setListItem(ItemInStocks);
-        setListMedicine(() => listItem?.filter((item) => item.item.itemType === 'MEDICINE'));
-        setListProduct(() => listItem?.filter((item) => item.item.itemType === 'PRODUCT'));
+        setListMedicine(() => ItemInStocks?.filter((item) => item.item.itemType === 'MEDICINE'));
+        setListProduct(() => ItemInStocks?.filter((item) => item.item.itemType === 'PRODUCT'));
       })
       .catch((err) => {
         console.log(err);
@@ -92,6 +90,7 @@ function StockIntoDetail() {
       </div>
       {/* Invoice */}
       <div className="flex-1 pt-3 min-h-0">
+        {}
         <GroupItem>
           {/* render list medicine */}
           {Array.isArray(listMedicine) && listMedicine.length > 0 && (
