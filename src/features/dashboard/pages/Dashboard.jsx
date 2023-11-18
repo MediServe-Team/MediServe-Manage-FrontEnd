@@ -27,7 +27,6 @@ import formatToVND from '../../../helpers/formatToVND';
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth?.accessToken);
   const lengthExp = useSelector(getLengthExp);
   const [revenue, setRevenue] = useState(0);
   const axiosWithToken = useAxiosWithToken();
@@ -188,11 +187,11 @@ function Dashboard() {
     filterBillsByMonths();
   }, []);
 
-  useEffect(() => {
-    dispatch(getAllCategory());
-    dispatch(getAllUnits());
-    dispatch(getInventoryStock());
-  }, [dispatch, token]);
+  // useEffect(() => {
+  //   dispatch(getAllCategory());
+  //   dispatch(getAllUnits());
+  //   dispatch(getInventoryStock());
+  // }, [dispatch]);
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-lg justify-center items-center">

@@ -17,25 +17,19 @@ function PrepareExpiredProduct() {
       setListProduct(preExpMerchandise);
     } else {
       const filterMerchandise = preExpMerchandise.filter((item) => {
-        if (item.medicine) {
+        if (item.item.itemType === 'MEDICINE') {
           return (
             checkSubString(item.lotNumber, debounced) ||
-            checkSubString(item.medicine.medicineName, debounced) ||
-            checkSubString(item.medicine.packingSpecification, debounced) ||
-            checkSubString(item.medicine.chemicalCode, debounced) ||
-            checkSubString(item.medicine.chemicalName, debounced) ||
-            checkSubString(item.medicine.dosageForm, debounced) ||
-            checkSubString(item.medicine.registrationNumber, debounced)
+            checkSubString(item.item.itemName, debounced) ||
+            checkSubString(item.item.packingSpecification, debounced) ||
+            checkSubString(item.item.registrationNumber, debounced)
           );
-        } else if (item.product) {
+        } else if (item.item.itemType === 'PRODUCT') {
           return (
             checkSubString(item.lotNumber, debounced) ||
-            checkSubString(item.product.productName, debounced) ||
-            checkSubString(item.product.packingSpecification, debounced) ||
-            checkSubString(item.product.chemicalCode, debounced) ||
-            checkSubString(item.product.chemicalName, debounced) ||
-            checkSubString(item.product.dosageForm, debounced) ||
-            checkSubString(item.product.registrationNumber, debounced)
+            checkSubString(item.item.itemName, debounced) ||
+            checkSubString(item.item.packingSpecification, debounced) ||
+            checkSubString(item.item.registrationNumber, debounced)
           );
         }
       });
@@ -51,21 +45,19 @@ function PrepareExpiredProduct() {
           listProduct.map((item, index) => (
             <ProductItem
               key={index}
-              name={item?.medicine ? item.medicine.medicineName : item.product.productName}
-              image={item?.medicine ? item.medicine.medicineImage : item.product.productImage}
-              packingSpecification={
-                item?.medicine ? item.medicine.packingSpecification : item.product.packingSpecification
-              }
-              productId={item?.medicineId ? item.medicineId : item.productId}
+              name={item?.item.itemName}
+              image={item?.item.itemImage}
+              packingSpecification={item?.item.packingSpecification}
+              productId={item?.item.id}
               soldQuantity={item.soldQuantity}
-              inputQuantity={item.inputQuantity}
+              importQuantity={item.importQuantity}
               specification={item.specification}
               manufactureDate={item.manufactureDate}
               expirationDate={item.expirationDate}
               lotNumber={item.lotNumber}
               importPrice={item.importPrice}
               sellPrice={item.sellPrice}
-              invoiceId={item.invoiceIntoStock.id}
+              invoiceId={item.invoiceIntoStockId}
             />
           ))}
       </div>

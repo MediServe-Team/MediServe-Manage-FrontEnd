@@ -10,7 +10,7 @@ function ProductItem({
   packingSpecification,
   productId,
   soldQuantity,
-  inputQuantity,
+  importQuantity,
   specification,
   manufactureDate,
   expirationDate,
@@ -43,7 +43,7 @@ function ProductItem({
               Đã bán: <span className="font-medium text-secondary">{soldQuantity}</span>
             </p>
             <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
+              Còn lại: <span className="font-medium text-primary">{importQuantity * specification - soldQuantity}</span>
             </p>
           </div>
           {/* Date */}
@@ -98,7 +98,7 @@ function ProductItem({
                 </p>
                 <p className="text-text_primary">
                   Còn lại:{' '}
-                  <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
+                  <span className="font-medium text-primary">{importQuantity * specification - soldQuantity}</span>
                 </p>
               </div>
               {/* Date */}
