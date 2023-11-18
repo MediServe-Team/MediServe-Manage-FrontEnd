@@ -28,7 +28,7 @@ function StockIntoDetail() {
       dispatch(removeLastBreadcrumb());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   const [invoice, setInvoice] = useState({});
   const [listMedicine, setListMedicine] = useState([]);
@@ -47,10 +47,11 @@ function StockIntoDetail() {
     };
     fetchDetailInvoice()
       .then((data) => {
-        const { MedicineIntoStocks, ProductIntoStocks, ...invoiceData } = data;
+        const { ItemInStocks, ...invoiceData } = data;
         setInvoice(invoiceData);
-        setListMedicine(MedicineIntoStocks);
-        setListProduct(ProductIntoStocks);
+
+        setListMedicine(() => ItemInStocks?.filter((item) => item.item.itemType === 'MEDICINE'));
+        setListProduct(() => ItemInStocks?.filter((item) => item.item.itemType === 'PRODUCT'));
       })
       .catch((err) => {
         console.log(err);
@@ -89,6 +90,7 @@ function StockIntoDetail() {
       </div>
       {/* Invoice */}
       <div className="flex-1 pt-3 min-h-0">
+        {}
         <GroupItem>
           {/* render list medicine */}
           {Array.isArray(listMedicine) && listMedicine.length > 0 && (
@@ -97,9 +99,9 @@ function StockIntoDetail() {
               {listMedicine.map((item, index) => (
                 <ItemRowReadOnly
                   key={index}
-                  name={item.medicine.medicineName}
-                  packingSpecification={item.medicine.packingSpecification}
-                  inputQuantity={item.inputQuantity}
+                  name={item.item.itemName}
+                  packingSpecification={item.item.packingSpecification}
+                  importQuantity={item.importQuantity}
                   specification={item.specification}
                   importPrice={item.importPrice}
                   sellPrice={item.sellPrice}
@@ -119,9 +121,9 @@ function StockIntoDetail() {
               {listProduct.map((item, index) => (
                 <ItemRowReadOnly
                   key={index}
-                  name={item.product.productName}
-                  packingSpecification={item.product.packingSpecification}
-                  inputQuantity={item.inputQuantity}
+                  name={item.item.itemName}
+                  packingSpecification={item.item.packingSpecification}
+                  importQuantity={item.importQuantity}
                   specification={item.specification}
                   importPrice={item.importPrice}
                   sellPrice={item.sellPrice}
