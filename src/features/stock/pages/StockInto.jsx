@@ -85,10 +85,9 @@ function StockInto() {
     setMerchandises([
       ...merchandises,
       {
-        name: item.productName ? item.productName : item.medicineName,
+        name: item.itemName,
         packingSpecification: item.packingSpecification,
         id: item.id,
-        isMedicine: item.isMedicine,
       },
     ]);
   };
@@ -168,7 +167,7 @@ function StockInto() {
       searchResults.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.productName ? item.productName : item.medicineName}
+          name={item.itemName}
           // type={item.type}
           packingSpecification={item.packingSpecification}
           onClick={() => handleAddMerchandise(item)}
@@ -182,7 +181,7 @@ function StockInto() {
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg px-10 py-3">
-        {/* Search product */}
+        {/* Search item */}
         <div className="flex justify-center bg-inherit pb-3">
           <Tippy
             visible={visibleResult && searchResults.length > 0}
