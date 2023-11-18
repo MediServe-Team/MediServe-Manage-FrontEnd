@@ -11,9 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <React.StrictMode>
         <App />
         <ToastContainer
           position="top-right"
@@ -25,7 +25,7 @@ root.render(
           progress={undefined}
           theme="light"
         />
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>,
+      </React.StrictMode>
+    </PersistGate>
+  </Provider>,
 );
