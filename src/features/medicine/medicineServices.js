@@ -46,7 +46,7 @@ export const deleteMedicineService = async (medicineId) => {
 };
 
 export const getOneMedicineService = async (medicineId) => {
-  const response = await axiosBase.get(`/medicines/${medicineId}`);
+  const response = await axiosBase.get(`/medicines/detail/${medicineId}`);
   return response.data;
 };
 

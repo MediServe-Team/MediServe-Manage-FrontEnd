@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getListUnits } from '../../../slices/unitSlice';
 // import lib handle form
 import { useForm } from 'react-hook-form';
@@ -12,17 +12,34 @@ import classNames from 'classnames';
 import { toast } from 'react-toastify';
 // services
 import { getOneMedicineService, updateMedicineService } from '../medicineServices';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { ClipLoader } from 'react-spinners';
 
 function MedicineUpdate() {
+  const { medicineId } = useParams();
+
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Cập nhật thuốc',
+        slug: `/medicines/update/${medicineId}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch, medicineId]);
+
   const navigate = useNavigate();
   const [medicineImg, setMedicineImg] = useState([]);
   const [barcode, setBarcode] = useState('');
   const [importUnit, setImportUnit] = useState('');
   const [sellUnit, setSellUnit] = useState('');
-  // state isPrescription
-  const [isPrescription, setIsPrescription] = useState(false);
+  const [prescription, setPrescription] = useState();
+
   // getCategory
   const categories = useSelector((state) => state.category.categories);
   const [medicineCategories, setMedicineCategories] = useState([]);
@@ -35,6 +52,7 @@ function MedicineUpdate() {
     sellUnit: '',
     category: '',
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   //* use Form
   const {
@@ -51,8 +69,6 @@ function MedicineUpdate() {
     setMedicineCategories(filtermedicineCategories);
   }, [categories]);
 
-  const { medicineId } = useParams();
-
   //* get data medicine update
   useEffect(() => {
     const getDataMedicineUpdate = async () => {
@@ -62,23 +78,41 @@ function MedicineUpdate() {
       setCategoryId(result.data.categoryId);
       setImportUnit(result.data.inputUnit);
       setSellUnit(result.data.sellUnit);
-      setMedicineImg(result.data.medicineImage);
-      setIsPrescription(result.data.isPrescription);
+      setMedicineImg(result.data.itemImage);
+      setPrescription(result.data.isPrescription);
+
       // set data in form
-      setValue('medicineName', result.data.medicineName);
+      setValue('medicineName', result.data.itemName);
       setValue('registrationNumber', result.data.registrationNumber);
       setValue('dosageForm', result.data.dosageForm);
       setValue('productContent', result.data.productContent);
       setValue('chemicalName', result.data.chemicalName);
       setValue('chemicalCode', result.data.chemicalCode);
       setValue('packingSpecification', result.data.packingSpecification);
-      setValue('medicineFunction', result.data.medicineFunction);
+      setValue('medicineFunction', result.data.itemFunction);
       setValue('applyToAffectedAreaCode', result.data.applyToAffectedAreaCode);
       setValue('applyToAffectedArea', result.data.applyToAffectedArea);
       setValue('note', result.data.note);
     };
     getDataMedicineUpdate();
   }, []);
+
+  //* convert to Base64 string
+  const convertToBase64 = async (url, callback) => {
+    try {
+      await fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+    } catch (err) {
+      console.error('Error converting image to base64: ', err);
+    }
+  };
 
   //* upload medicine img
   const handleUploadMedicineImg = async (e) => {
@@ -144,9 +178,37 @@ function MedicineUpdate() {
     setTrackErrors(newErrors);
   };
 
+  //Check if url is in the base64String's format
+  const checkUrlBeforeUpdate = (url) => {
+    if (Array.isArray(url)) {
+      const lastUrl = url[url.length - 1];
+      if (lastUrl.substring(0, 5) === 'data:') return lastUrl;
+      else {
+        let baseString64 = '';
+        convertToBase64(lastUrl, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    } else {
+      if (url.substring(0, 5) === 'data:') return url;
+      else {
+        let baseString64 = '';
+        convertToBase64(url, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    }
+  };
+
   //* Handle before submit data to create new Medicine
-  const handleSubmitCreateMedicine = async (dataForm) => {
+  const handleSubmitUpdateMedicine = async (dataForm) => {
     if (!trackErrors.passErrs) return;
+
+    // set loading is true
+    setIsUpdating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       medicineName: dataForm.medicineName,
@@ -156,11 +218,11 @@ function MedicineUpdate() {
       chemicalName: dataForm.chemicalName,
       chemicalCode: dataForm.chemicalCode,
       packingSpecification: dataForm.packingSpecification,
-      barCode: barcode,
+      barCode: checkUrlBeforeUpdate(barcode),
       sellUnit: sellUnit,
       inputUnit: importUnit,
       medicineFunction: dataForm.medicineFunction,
-      medicineImage: medicineImg,
+      medicineImage: checkUrlBeforeUpdate(medicineImg),
       applyToAffectedAreaCode: dataForm.applyToAffectedAreaCode,
       applyToAffectedArea: dataForm.applyToAffectedArea,
       isPrescription: dataForm.isPrescription === 'true' ? true : false,
@@ -170,9 +232,13 @@ function MedicineUpdate() {
     const result = await updateMedicineService(medicineId, bodyRequest);
     if (result.status === 200) {
       toast.success('Cập nhật sản phẩm thành công!');
+      // set loading is false
+      setIsUpdating(false);
       navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi cập nhật sẩn phẩm!');
+      // set loading is false
+      setIsUpdating(false);
     }
   };
 
@@ -181,7 +247,7 @@ function MedicineUpdate() {
       <form
         id="create-medicine-form"
         className="h-full flex justify-between gap-8"
-        onSubmit={handleSubmit(handleSubmitCreateMedicine)}
+        onSubmit={handleSubmit(handleSubmitUpdateMedicine)}
       >
         {/* First column */}
         <div className="w-1/3 h-full flex flex-col gap-[10px]">
@@ -365,8 +431,8 @@ function MedicineUpdate() {
                   type="radio"
                   id="radio-prescription"
                   name="type-medicine"
-                  value={true}
-                  checked={isPrescription}
+                  value={'true'}
+                  defaultChecked={prescription}
                   {...register('isPrescription')}
                 />
                 <label htmlFor="radio-prescription">Kê đơn</label>
@@ -376,8 +442,8 @@ function MedicineUpdate() {
                   type="radio"
                   id="radio-non-prescription"
                   name="type-medicine"
-                  value={false}
-                  checked={!isPrescription}
+                  value={'false'}
+                  defaultChecked={!prescription}
                   {...register('isPrescription')}
                 />
                 <label htmlFor="radio-non-prescription">Không kê đơn</label>
@@ -445,8 +511,9 @@ function MedicineUpdate() {
               modifier={'dark-primary'}
               width={150}
               onClick={() => handleTrackErrors()}
+              disabled={isUpdating}
             >
-              Cập nhật
+              {isUpdating ? <ClipLoader color={'#ffffff'} loading={isUpdating} size={30} /> : 'Cập nhật'}
             </Button>
           </div>
         </div>

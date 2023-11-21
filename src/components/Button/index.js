@@ -128,8 +128,9 @@ function Button(
       //   style
       style={{ width: width, height: height, padding: padding }}
       //   event
-      onClick={disabled ? () => {} : onClick}
+      onClick={onClick}
       ref={ref}
+      disabled={disabled}
     >
       {renderText()}
     </button>

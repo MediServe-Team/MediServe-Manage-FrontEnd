@@ -14,6 +14,8 @@ import classNames from 'classnames';
 import { createMedicineServices } from '../medicineServices';
 import { toast } from 'react-toastify';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 function MedicineCreate() {
   // addBreadcrumb
@@ -46,6 +48,8 @@ function MedicineCreate() {
     sellUnit: '',
     category: '',
   });
+  const navigate = useNavigate();
+  const [isCreating, setIsCreating] = useState(false);
 
   //* use Form
   const {
@@ -126,7 +130,10 @@ function MedicineCreate() {
   //* Handle before submit data to create new Medicine
   const handleSubmitCreateMedicine = async (dataForm) => {
     if (!trackErrors.passErrs) return;
-    const imgs = listImg.map((img) => img.data);
+
+    // set loading is true
+    setIsCreating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       medicineName: dataForm.medicineName,
@@ -142,7 +149,7 @@ function MedicineCreate() {
       applyToAffectedAreaCode: dataForm.applyToAffectedAreaCode,
       applyToAffectedArea: dataForm.applyToAffectedArea,
       medicineFunction: dataForm.medicineFunction,
-      medicineImage: imgs,
+      medicineImage: listImg[listImg.length - 1].data,
       isPrescription: dataForm.isPrescription === 'true' ? true : false,
       note: dataForm.note,
     };
@@ -150,8 +157,13 @@ function MedicineCreate() {
     const result = await createMedicineServices(bodyRequest);
     if (result.status === 201) {
       toast.success('Tạo mới sản phẩm thành công!');
+      // set loading is false
+      setIsCreating(false);
+      navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo thuốc!');
+      // set loading is false
+      setIsCreating(false);
     }
   };
 
@@ -439,8 +451,15 @@ function MedicineCreate() {
             >
               Làm rỗng
             </Button>
-            <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
-              Tạo thuốc
+            <Button
+              type={'submit'}
+              styleBtn={'solid'}
+              size={'medium'}
+              width={150}
+              onClick={() => handleTrackErrors()}
+              disabled={isCreating}
+            >
+              {isCreating ? <ClipLoader color={'#ffffff'} loading={isCreating} size={30} /> : 'Tạo thuốc'}
             </Button>
           </div>
         </div>

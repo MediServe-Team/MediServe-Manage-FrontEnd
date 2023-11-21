@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getListUnits } from '../../../slices/unitSlice';
 // import lib handle form
 import { useForm } from 'react-hook-form';
@@ -12,10 +12,27 @@ import classNames from 'classnames';
 import { toast } from 'react-toastify';
 // services
 import { getOneProductService, updateProductService } from '../productServices';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function ProductUpdate() {
+  const { productId } = useParams();
+
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Cập nhật sản phẩm',
+        slug: `/products/update/${productId}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch, productId]);
+
   const navigate = useNavigate();
   const [productImg, setProductImg] = useState([]);
   const [barcode, setBarcode] = useState('');
@@ -33,6 +50,7 @@ function ProductUpdate() {
     sellUnit: '',
     category: '',
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   //* use Form
   const {
@@ -50,8 +68,6 @@ function ProductUpdate() {
     const filterProductCategories = categories.filter((item) => !item.isMedicine);
     setProductCategories(filterProductCategories);
   }, [categories]);
-
-  const { productId } = useParams();
 
   //* get data product update
   useEffect(() => {
@@ -158,7 +174,7 @@ function ProductUpdate() {
     setTrackErrors(newErrors);
   };
 
-  //Check if old url of image or barcode is the same as new url
+  //Check if url is in the base64String's format
   const checkUrlBeforeUpdate = (url) => {
     if (Array.isArray(url)) {
       const lastUrl = url[url.length - 1];
@@ -188,6 +204,9 @@ function ProductUpdate() {
       return;
     }
 
+    // set loading is true
+    setIsUpdating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -209,9 +228,13 @@ function ProductUpdate() {
     console.log(bodyRequest);
     if (result.status === 200) {
       toast.success('Cập nhật sản phẩm thành công!');
+      // set loading is false
+      setIsUpdating(false);
       navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi cập nhật phẩm!');
+      // set loading is false
+      setIsUpdating(false);
     }
   };
 
@@ -432,8 +455,9 @@ function ProductUpdate() {
               modifier={'dark-primary'}
               width={150}
               onClick={() => handleTrackErrors()}
+              disabled={isUpdating}
             >
-              Cập nhật
+              {isUpdating ? <ClipLoader color={'#ffffff'} loading={isUpdating} size={30} /> : 'Cập nhật'}
             </Button>
           </div>
         </div>

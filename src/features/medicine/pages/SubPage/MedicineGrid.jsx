@@ -125,8 +125,8 @@ function MedicineGrid({ searchValue }) {
           medicines.map((medicine, index) => (
             <MedicineItem
               id={medicine.id}
-              medicineImage={medicine.medicineImage}
-              medicineName={medicine.medicineName}
+              medicineImage={medicine.itemImage}
+              medicineName={medicine.itemName}
               registrationNumber={medicine.registrationNumber}
               packingSpecification={medicine.packingSpecification}
               barCode={medicine.barCode}
@@ -166,8 +166,8 @@ function MedicineGrid({ searchValue }) {
               <div className="overflow-y-auto w-full h-full min-h-0 px-5">
                 <div className="h-2/5 relative flex justify-center">
                   <img
-                    src={medicines[selected].medicineImage}
-                    alt={medicines[selected].medicineName}
+                    src={medicines[selected].itemImage}
+                    alt={medicines[selected].itemName}
                     className="h-full object-contain"
                   />
                 </div>
@@ -175,18 +175,14 @@ function MedicineGrid({ searchValue }) {
                 <div className="px-5 py-3 flex flex-col gap-5 flex-1 min-h-0">
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col">
-                      <h3 className="text-h4 text-black font-bold">{medicines[selected].medicineName}</h3>
+                      <h3 className="text-h4 text-black font-bold">{medicines[selected].itemName}</h3>
                       <p className="text-h5 text-text_blur">{medicines[selected].packingSpecification}</p>
                       <p className="text-text_primary">
                         Mã thuốc: <span className="font-medium text-black">{medicines[selected].id}</span>
                       </p>
                     </div>
                     {/* mã vạch */}
-                    <img
-                      src={medicines[selected].barCode}
-                      alt={medicines[selected].medicineName}
-                      className="h-[80px]"
-                    />
+                    <img src={medicines[selected].barCode} alt={medicines[selected].itemName} className="h-[80px]" />
                   </div>
                   {/* grid */}
                   <div className="flex-1 overflow-y-auto min-h-0">
@@ -221,7 +217,7 @@ function MedicineGrid({ searchValue }) {
                     <div className="min-h-0 flex gap-5 pt-5">
                       <div className="flex-[5]">
                         <h3 className="text-blue_dark font-bold text-h5">Chức năng</h3>
-                        <p>{medicines[selected].medicineFunction}</p>
+                        <p>{medicines[selected].itemFunction}</p>
                       </div>
                       <div className="flex-[3]">
                         <h3 className="text-blue_dark font-bold text-h5">Ghi chú thuốc</h3>

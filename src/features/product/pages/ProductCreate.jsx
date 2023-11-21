@@ -14,6 +14,8 @@ import classNames from 'classnames';
 import { createProductServices } from '../productServices';
 import { toast } from 'react-toastify';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { ClipLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 
 function ProductCreate() {
   // addBreadcrumb
@@ -21,7 +23,7 @@ function ProductCreate() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Thêm thuốc',
+        name: 'Thêm sản phẩm',
         slug: '/products/add',
       }),
     );
@@ -46,6 +48,8 @@ function ProductCreate() {
     sellUnit: '',
     category: '',
   });
+  const navigate = useNavigate();
+  const [isCreating, setIsCreating] = useState(false);
 
   //* use Form
   const {
@@ -127,6 +131,9 @@ function ProductCreate() {
   const handleSubmitCreateProduct = async (dataForm) => {
     if (!trackErrors.passErrs) return;
 
+    // set loading is true
+    setIsCreating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -144,13 +151,16 @@ function ProductCreate() {
       note: dataForm.note,
     };
 
-    console.log(bodyRequest);
-
     const result = await createProductServices(bodyRequest);
     if (result.status === 201) {
       toast.success('Tạo mới sản phẩm thành công!');
+      // set loading is false
+      setIsCreating(false);
+      navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo sẩn phẩm!');
+      // set loading is false
+      setIsCreating(false);
     }
   };
 
@@ -383,8 +393,14 @@ function ProductCreate() {
             >
               Làm rỗng
             </Button>
-            <Button styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
-              Tạo sản phẩm
+            <Button
+              styleBtn={'solid'}
+              size={'medium'}
+              width={150}
+              onClick={() => handleTrackErrors()}
+              disabled={isCreating}
+            >
+              {isCreating ? <ClipLoader color={'#ffffff'} loading={isCreating} size={30} /> : 'Tạo sản phẩm'}
             </Button>
           </div>
         </div>
