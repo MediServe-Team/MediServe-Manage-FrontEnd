@@ -62,25 +62,42 @@ function ProductUpdate() {
       setCategoryId(result.data.categoryId);
       setImportUnit(result.data.inputUnit);
       setSellUnit(result.data.sellUnit);
-      setProductImg(result.data.productImage);
+      setProductImg(result.data.itemImage);
       // set data in form
-      setValue('productName', result.data.productName);
+      setValue('productName', result.data.itemName);
       setValue('registrationNumber', result.data.registrationNumber);
       setValue('dosageForm', result.data.dosageForm);
       setValue('productContent', result.data.productContent);
       setValue('chemicalName', result.data.chemicalName);
       setValue('chemicalCode', result.data.chemicalCode);
       setValue('packingSpecification', result.data.packingSpecification);
-      setValue('productFunction', result.data.productFunction);
+      setValue('productFunction', result.data.itemFunction);
       setValue('note', result.data.note);
     };
     getDataProductUpdate();
   }, []);
 
+  //* convert to Base64 string
+  const convertToBase64 = async (url, callback) => {
+    try {
+      await fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+    } catch (err) {
+      console.error('Error converting image to base64: ', err);
+    }
+  };
+
   //* upload product img
   const handleUploadProductImg = async (e) => {
     const file = e.target.files[0];
-    // check cancle file
+    // check cancel file
     if (!file) return;
     // convert file to base64
     const data = await getBase64(file);
@@ -141,9 +158,36 @@ function ProductUpdate() {
     setTrackErrors(newErrors);
   };
 
+  //Check if old url of image or barcode is the same as new url
+  const checkUrlBeforeUpdate = (url) => {
+    if (Array.isArray(url)) {
+      const lastUrl = url[url.length - 1];
+      if (lastUrl.substring(0, 5) === 'data:') return lastUrl;
+      else {
+        let baseString64 = '';
+        convertToBase64(lastUrl, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    } else {
+      if (url.substring(0, 5) === 'data:') return url;
+      else {
+        let baseString64 = '';
+        convertToBase64(url, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    }
+  };
+
   //* Handle before submit data to update Product
   const handleSubmitUpdateProduct = async (dataForm) => {
-    if (!trackErrors.passErrs) return;
+    if (!trackErrors.passErrs) {
+      return;
+    }
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -153,15 +197,16 @@ function ProductUpdate() {
       chemicalName: dataForm.chemicalName,
       chemicalCode: dataForm.chemicalCode,
       packingSpecification: dataForm.packingSpecification,
-      barCode: barcode,
+      barCode: checkUrlBeforeUpdate(barcode),
       sellUnit: sellUnit,
       inputUnit: importUnit,
       productFunction: dataForm.productFunction,
-      productImage: productImg,
+      productImage: checkUrlBeforeUpdate(productImg),
       note: dataForm.note,
     };
 
     const result = await updateProductService(productId, bodyRequest);
+    console.log(bodyRequest);
     if (result.status === 200) {
       toast.success('Cập nhật sản phẩm thành công!');
       navigate(-1);
@@ -189,6 +234,7 @@ function ProductUpdate() {
                 <img id="product-img" src={productImg} className="absolute top-0 left-0 w-full h-full object-cover" />
               )}
             </div>
+            {trackErrors.productImg && <span className="text-danger">Vui lòng thêm ảnh!</span>}
           </div>
           {/* Barcode */}
           <div>

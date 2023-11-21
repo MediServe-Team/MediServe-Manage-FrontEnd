@@ -126,7 +126,7 @@ function ProductCreate() {
   //* Handle before submit data to create new Product
   const handleSubmitCreateProduct = async (dataForm) => {
     if (!trackErrors.passErrs) return;
-    const imgs = listImg.map((img) => img.data);
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -140,9 +140,11 @@ function ProductCreate() {
       sellUnit: sellUnit,
       inputUnit: importUnit,
       productFunction: dataForm.productFunction,
-      productImage: imgs,
+      productImage: listImg[listImg.length - 1].data,
       note: dataForm.note,
     };
+
+    console.log(bodyRequest);
 
     const result = await createProductServices(bodyRequest);
     if (result.status === 201) {

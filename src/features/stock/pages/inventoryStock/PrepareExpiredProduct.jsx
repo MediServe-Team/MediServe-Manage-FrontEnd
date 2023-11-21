@@ -32,6 +32,7 @@ function PrepareExpiredProduct() {
             checkSubString(item.item.registrationNumber, debounced)
           );
         }
+        return false;
       });
       setListProduct(filterMerchandise);
     }

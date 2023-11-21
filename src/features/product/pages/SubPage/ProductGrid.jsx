@@ -125,8 +125,8 @@ function ProductGrid({ searchValue }) {
           products.map((product, index) => (
             <ProductItem
               id={product.id}
-              productImage={product.productImage}
-              productName={product.productName}
+              productImage={product.itemImage}
+              productName={product.itemName}
               registrationNumber={product.registrationNumber}
               packingSpecification={product.packingSpecification}
               barCode={product.barCode}
@@ -166,8 +166,8 @@ function ProductGrid({ searchValue }) {
               <div className="overflow-y-auto w-full h-full min-h-0 px-5">
                 <div className="h-2/5 relative flex justify-center">
                   <img
-                    src={products[selected].productImage}
-                    alt={products[selected].productName}
+                    src={products[selected].itemImage}
+                    alt={products[selected].itemName}
                     className="h-full object-contain"
                   />
                 </div>
@@ -175,14 +175,14 @@ function ProductGrid({ searchValue }) {
                 <div className="px-5 py-3 flex flex-col gap-5 flex-1 min-h-0">
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col">
-                      <h3 className="text-h4 text-black font-bold">{products[selected].productName}</h3>
+                      <h3 className="text-h4 text-black font-bold">{products[selected].itemName}</h3>
                       <p className="text-h5 text-text_blur">{products[selected].packingSpecification}</p>
                       <p className="text-text_primary">
                         Mã sản phẩm: <span className="font-medium text-black">{products[selected].id}</span>
                       </p>
                     </div>
                     {/* mã vạch */}
-                    <img src={products[selected].barCode} alt={products[selected].productName} className="h-[80px]" />
+                    <img src={products[selected].barCode} alt={products[selected].itemName} className="h-[80px]" />
                   </div>
                   {/* grid */}
                   <div className="flex-1 overflow-y-auto min-h-0">
@@ -216,7 +216,7 @@ function ProductGrid({ searchValue }) {
                     <div className="min-h-0 flex gap-5 pt-5">
                       <div className="flex-[5]">
                         <h3 className="text-blue_dark font-bold text-h5">Chức năng</h3>
-                        <p>{products[selected].productFunction}</p>
+                        <p>{products[selected].itemFunction}</p>
                       </div>
                       <div className="flex-[3]">
                         <h3 className="text-blue_dark font-bold text-h5">Ghi chú sản phẩm</h3>

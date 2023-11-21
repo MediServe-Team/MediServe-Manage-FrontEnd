@@ -128,8 +128,11 @@ function SideBar() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     dispatch(logoutAction(axiosWithToken));
+    // localStorage.clear();
+    // navigate('/login');
+    // window.location.reload();
   };
 
   useEffect(() => {
