@@ -156,9 +156,9 @@ function Dose() {
       searchMedicineResult.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.medicineName}
+          name={item.itemName}
           packingSpecification={item.packingSpecification}
-          onClick={() => handleAddMedicineToDose(item.id, item.medicineName, item.packingSpecification, item.sellUnit)}
+          onClick={() => handleAddMedicineToDose(item.id, item.itemName, item.packingSpecification, item.sellUnit)}
         />
       ))
     ) : (
@@ -180,11 +180,11 @@ function Dose() {
   };
 
   return (
-    <div className="h-full flex gap-3">
+    <div className="h-full w-full flex gap-2">
       {/* Dose */}
-      <div className="flex flex-col bg-white rounded-lg h-full">
+      <div className="flex flex-col bg-white rounded-[4px] h-full w-2/5">
         <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50 flex-shrink-0">
-          <h3 className="text-h4 text-text_primary font-semibold">Tạo liều thuốc</h3>
+          <h3 className="text-[18px] text-text_primary font-semibold">Tạo liều thuốc</h3>
         </header>
 
         <div className="px-5 flex-1 flex flex-col min-h-0">
@@ -291,9 +291,9 @@ function Dose() {
       </div>
 
       {/* List Dose */}
-      <div className="w-3/5 flex flex-col bg-white rounded-lg">
+      <div className="w-3/5 flex flex-col bg-white rounded-[4px]">
         <header className="flex items-center h-[50px] pl-6 border-b-2 border-text_blur/50">
-          <h3 className="text-h4 text-text_primary font-semibold">Danh sách liều thuốc</h3>
+          <h3 className="text-[18px] text-text_primary font-semibold">Danh sách liều thuốc</h3>
         </header>
         {/* Search */}
         <div className="px-10 py-5">

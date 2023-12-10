@@ -83,7 +83,7 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
     const result = await getDoseService(doseId);
     const listGuides = result.data.MedicineGuides.map((item) => ({
       medicineId: item.medicineId,
-      medicineName: item.medicine.medicineName,
+      medicineName: item.medicine.itemName,
       packingSpecification: item.medicine.packingSpecification,
       medicineUnit: item.medicine.sellUnit,
       morning: item.morning,
@@ -146,9 +146,9 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
       searchMedicineResult.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.medicineName}
+          name={item.itemName}
           packingSpecification={item.packingSpecification}
-          onClick={() => handleAddMedicineToDose(item.id, item.medicineName, item.packingSpecification, item.sellUnit)}
+          onClick={() => handleAddMedicineToDose(item.id, item.itemName, item.packingSpecification, item.sellUnit)}
         />
       ))
     ) : (
@@ -170,7 +170,7 @@ function ItemList({ number, doseId, doseName, note, setReloadList }) {
 
   return (
     <>
-      <ul className="flex justify-between items-center bg-primary/5 border-2 border-text_primary/10 p-2 rounded-lg gap-3 text-h5 px-2 flex-shrink-0">
+      <ul className="flex justify-between items-center bg-primary/5 border-[1px] border-text_primary/10 p-2 rounded-[4px] gap-3 text-h5 px-2 flex-shrink-0">
         {/* number */}
         <li className="w-[32px] h-[32px] flex justify-center items-center bg-white rounded-md px-1 flex-shrink-0">
           <span className="text-dark_primary">{number}</span>
