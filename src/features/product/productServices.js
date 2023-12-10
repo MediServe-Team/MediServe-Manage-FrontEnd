@@ -28,7 +28,7 @@ export const createProductServices = async (data) => {
 };
 
 export const filterProductService = async (searchValue) => {
-  const response = await axiosBase.get(`/products/filter?searchValue=${searchValue}`);
+  const response = await axiosBase.get(`/item-in-stocks/filter?itemType=PRODUCT&searchValue=${searchValue}`);
   return response.data;
 };
 

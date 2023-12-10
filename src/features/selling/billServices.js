@@ -14,8 +14,12 @@ export const createBillService = async (data) => {
     medicines,
     newPrescriptions,
   };
-  const response = await axiosBase.post('/receipts/create', newReceipt);
-  return response.data;
+  try {
+    const response = await axiosBase.post('/receipts/create', newReceipt);
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
 };
 
 export const filterBillService = async (staffName, customerName, fromDate, toDate, sort, pageNumber, limit) => {
