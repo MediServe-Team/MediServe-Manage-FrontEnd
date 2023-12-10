@@ -72,7 +72,7 @@ function StockIntoDetail() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg px-10 py-4">
+    <div className="h-full flex flex-col bg-white rounded-[4px] px-10 py-4">
       {/* Header page*/}
       <div className="flex justify-between items-center mb-4">
         <div className="flex flex-col gap-1">

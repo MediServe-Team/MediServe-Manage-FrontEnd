@@ -79,7 +79,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
   }, [totalImportPrice, totalSellPrice]);
 
   return (
-    <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-2 rounded-lg">
+    <li className="flex justify-between items-center gap-2 bg-slate-50 px-5 py-2 border-[1px] rounded-[2px]">
       {/* form data ItemRow */}
       <form className="flex flex-1 justify-between items-center gap-2">
         {/* name */}
@@ -96,7 +96,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             type="text"
             {...register('inputQuantity')}
             className={classNames(
-              'min-w-[50px] max-w-[80px] rounded-md border-[1px]  shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              'min-w-[50px] max-w-[80px] rounded-[2px] border-[1px]  shadow-inner py-[3px] text-h6 text-center outline-blue-200',
               errors.inputQuantity?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
@@ -106,7 +106,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             type="text"
             {...register('specification')}
             className={classNames(
-              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              'min-w-[50px] max-w-[80px] rounded-[2px] border-[1px] shadow-inner py-[3px] text-h6 text-center outline-blue-200',
               errors.specification?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
@@ -120,7 +120,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             type="text"
             {...register('importPrice')}
             className={classNames(
-              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              'min-w-[50px] max-w-[80px] rounded-[2px] border-[1px] shadow-inner py-[3px] text-h6 text-center outline-blue-200',
               errors.importPrice?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
@@ -132,7 +132,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             type="text"
             {...register('sellPrice')}
             className={classNames(
-              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              'min-w-[50px] max-w-[80px] rounded-[2px] border-[1px] shadow-inner py-[3px] text-h6 text-center outline-blue-200',
               errors.sellPrice?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />
@@ -149,7 +149,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             render={({ field }) => (
               <DatePicker
                 className={classNames(
-                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
+                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-[2px] py-[3px] text-h6 text-center outline-blue-200',
                   errors.manufactureDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
                 )}
                 selected={field?.value}
@@ -174,7 +174,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             render={({ field }) => (
               <DatePicker
                 className={classNames(
-                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-md py-[3px] text-h6 text-center outline-dark_primary',
+                  'w-[90px] border-[1px] shadow-inner cursor-pointer rounded-[2px] py-[3px] text-h6 text-center outline-blue-200',
                   errors.expirationDate?.message ? 'border-danger border-[2px]' : 'border-primary/20',
                 )}
                 selected={field?.value}
@@ -197,7 +197,7 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             type="text"
             {...register('lotNumber')}
             className={classNames(
-              'min-w-[50px] max-w-[80px] rounded-md border-[1px] shadow-inner py-[3px] text-h6 text-center outline-dark_primary',
+              'min-w-[50px] max-w-[80px] rounded-[2px] border-[1px] shadow-inner py-[3px] text-h6 text-center outline-blue-200',
               errors.lotNumber?.message ? 'border-danger border-[2px]' : 'border-primary/20',
             )}
           />

@@ -16,7 +16,7 @@ import { IoIosExit } from 'react-icons/io';
 import { BsPersonVcardFill } from 'react-icons/bs';
 //
 import { useDispatch, useSelector } from 'react-redux';
-import { getPermitList, logoutAction } from '../../features/Auth/AuthSlice';
+import { getPermitList, getRole, logoutAction } from '../../features/Auth/AuthSlice';
 import { useAxiosWithToken } from '../../hooks';
 
 const MENUS = [
@@ -102,6 +102,7 @@ function SideBar() {
   const axiosWithToken = useAxiosWithToken();
   const [menuPermits, setMenuPermits] = useState();
   const permits = useSelector(getPermitList);
+  const role = useSelector(getRole);
 
   const transition = useTransition(expand, {
     from: { opacity: 0, scale: 0 },
@@ -130,13 +131,14 @@ function SideBar() {
 
   const handleLogout = async () => {
     dispatch(logoutAction(axiosWithToken));
-    // localStorage.clear();
-    // navigate('/login');
-    // window.location.reload();
+    localStorage.clear();
+    navigate('/login');
+    window.location.reload();
   };
 
   useEffect(() => {
-    if (permits) {
+    if (role === 'ADMIN') setMenuPermits(MENUS);
+    else if (permits) {
       const accountPermits = MENUS.filter(
         (item) => permits.includes(item.permitId) || [1, 3, 4, 9].includes(item.permitId),
       );
@@ -154,7 +156,7 @@ function SideBar() {
         <li key={index} onClick={() => handleOpenSubmenu(index, item?.link)}>
           <div
             className={classNames(
-              'flex gap-5 items-center px-2 py-2 mx-3 cursor-pointer text-h5 rounded-lg text-dark_primary hover:bg-primary hover:text-white transition-all active:scale-95 active:bg-primary/80  overflow-hidden',
+              'flex gap-5 items-center px-2 py-2 mx-3 cursor-pointer text-h5 rounded-md hover:shadow-md text-dark_primary hover:bg-primary hover:text-white transition-all active:scale-95 active:bg-primary/80  overflow-hidden',
             )}
           >
             <Icon className="text-[22px] flex-shrink-0 " />
@@ -192,7 +194,7 @@ function SideBar() {
   return (
     <div
       className={classNames(
-        'flex flex-col justify-between h-full rounded-2xl shadow-[0_35px_40px_-15px_rgba(0,0,0,0.3)] bg-[#f9f9f9]/30  relative z-10 transition-all duration-700 delay-700 overflow-hidden',
+        'flex flex-col justify-between h-full rounded-md shadow-[10px_11px_10px_-9px_rgba(0,0,0,0.53)] bg-[#f9f9f9]/30  relative z-10 transition-all duration-700 delay-700 overflow-hidden',
         expand ? 'w-[260px]' : 'w-16',
       )}
     >

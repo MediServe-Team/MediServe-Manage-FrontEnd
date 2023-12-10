@@ -87,6 +87,7 @@ export const { resetState } = AuthSlice.actions;
 export const getUserData = (state) => state.auth.user;
 export const getUserId = (state) => state.auth.user?.id;
 export const getPermitList = (state) => state.auth.user?.permitList;
+export const getRole = (state) => state.auth.user?.role;
 export const getAccessToken = (state) => state.auth.accessToken;
 
 export default AuthSlice.reducer;

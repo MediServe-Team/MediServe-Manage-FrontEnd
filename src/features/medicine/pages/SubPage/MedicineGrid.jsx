@@ -8,7 +8,7 @@ import { getMedicinesService } from '../../medicineServices';
 import { Button, Modal } from '../../../../components';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { getPermitList } from '../../../Auth/AuthSlice';
+import { getPermitList, getRole } from '../../../Auth/AuthSlice';
 import { AiOutlineClose } from 'react-icons/ai';
 // service
 import { deleteMedicineService } from '../../medicineServices';
@@ -70,9 +70,10 @@ function MedicineGrid({ searchValue }) {
   const [openModalDelete, setOpenModalDelete] = useState(false);
   // check permit
   const permits = useSelector(getPermitList);
+  const role = useSelector(getRole);
   const [checkPermit, setCheckPermit] = useState(false);
   useEffect(() => {
-    if (permits && Array.isArray(permits)) setCheckPermit(permits.includes(3));
+    if (permits && Array.isArray(permits)) setCheckPermit(permits.includes(3) || role === 'ADMIN');
   }, [permits]);
 
   useEffect(() => {

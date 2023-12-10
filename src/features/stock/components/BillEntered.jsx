@@ -3,7 +3,7 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 
 function BillEntered({ billID, staffID, staffName, totalImport, totalSell, note }) {
   return (
-    <div className="h-[70px] rounded-lg flex justify-between items-center gap-5 px-8 border-2 bg-slate-50">
+    <div className="h-[70px] rounded-[2px] flex justify-between items-center gap-5 px-8 border-[1px] bg-slate-50">
       <div className="flex flex-col gap-2 justify-between max-w-[100px]">
         <span className="text-text_primary font-normal">Mã số đơn</span>
         <span>{billID}</span>

@@ -56,7 +56,7 @@ function ItemRowReadOnly({
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 px-5 py-2 border-2 rounded-lg ">
+    <div className="flex flex-col bg-slate-50 px-5 py-2 border-[1px] rounded-[2px] ">
       <div className="flex justify-between items-center gap-2 ">
         {/* Item info */}
         <div className="flex flex-1 justify-between items-center gap-2">

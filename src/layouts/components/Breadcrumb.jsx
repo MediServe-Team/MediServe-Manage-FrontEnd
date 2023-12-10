@@ -9,8 +9,8 @@ function Breadcrumb() {
       ? list.map((tab, index) =>
           index !== list.length - 1 ? (
             <div className="flex items-center" key={index}>
-              <div className="flex border-2 border-gray-400 bg-light_gray rounded-md px-2">
-                <Link to={tab.slug} className="font-medium text-h6 whitespace-nowrap">
+              <div className="flex border-[1px] border-gray-400 bg-light_gray rounded-sm px-2 opacity-70">
+                <Link to={tab.slug} className="font-normal text-h6 whitespace-nowrap">
                   {tab.name}
                 </Link>
               </div>
@@ -18,8 +18,8 @@ function Breadcrumb() {
             </div>
           ) : (
             <div className="flex items-center" key={index}>
-              <div className="flex border-2 border-gray-400 bg-light_gray rounded-md px-2">
-                <span className="font-medium text-h6 whitespace-nowrap">{tab.name}</span>
+              <div className="flex border-[1px] border-gray-400 bg-light_gray rounded-sm px-2 opacity-70">
+                <span className="font-normal text-h6 whitespace-nowrap">{tab.name}</span>
               </div>
               {!(index >= list.length - 1) && <GoChevronRight />}
             </div>

@@ -2,7 +2,7 @@ function GroupItem({ children, title, isDrug }) {
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* heading */}
-      <ul className="flex justify-between items-center gap-2 bg-primary/30 rounded-lg text-h5 font-medium px-5 py-[10px]">
+      <ul className="flex justify-between items-center gap-2 bg-primary/30 rounded-[4px] text-h5 font-medium px-5 py-[10px]">
         <li className="flex-[4] ">
           <span className="text-text_primary">Tên loại hàng</span>
         </li>
