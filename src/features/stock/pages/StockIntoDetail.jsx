@@ -110,6 +110,7 @@ function StockIntoDetail() {
                   lotNumber={item.lotNumber}
                   destroyed={item.destroyed}
                   soldQuantity={item.soldQuantity}
+                  sellUnit={item.item.sellUnit}
                 />
               ))}
             </>
@@ -132,6 +133,7 @@ function StockIntoDetail() {
                   lotNumber={item.lotNumber}
                   destroyed={item.destroyed}
                   soldQuantity={item.soldQuantity}
+                  sellUnit={item.item.sellUnit}
                 />
               ))}
             </>

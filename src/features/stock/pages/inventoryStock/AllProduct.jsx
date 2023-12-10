@@ -59,6 +59,7 @@ function AllProduct() {
               importPrice={item.importPrice}
               sellPrice={item.sellPrice}
               invoiceId={item.invoiceIntoStockId}
+              sellUnit={item?.item.sellUnit}
             />
           ))}
       </div>

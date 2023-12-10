@@ -84,7 +84,7 @@ function AddMedicine() {
         />
       </div>
       {/* List medicines filter */}
-      <div className="flex-1 overflow-y-auto mb-3">
+      <div className="flex-1 overflow-y-auto mb-3 flex flex-col gap-2">
         {results && results.length > 0 ? (
           results.map((data, index) => {
             return (
@@ -93,6 +93,7 @@ function AddMedicine() {
                 name={data.item.itemName}
                 sellUnit={data.item.sellUnit}
                 sellPrice={data.sellPrice}
+                quantity={Number(data.importQuantity * data.specification) - Number(data.soldQuantity)}
                 onClick={() => handleOpenModal(data)}
               />
             );

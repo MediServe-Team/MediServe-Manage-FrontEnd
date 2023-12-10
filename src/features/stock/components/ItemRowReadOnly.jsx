@@ -18,17 +18,26 @@ function ItemRowReadOnly({
   lotNumber,
   destroyed,
   soldQuantity,
+  sellUnit,
 }) {
   const renderTextStatus = () => {
     const quantity = importQuantity * specification;
     if (destroyed) {
       const destroyQnt = quantity - soldQuantity;
-      return <span className="text-danger">Đã tiêu hủy {destroyQnt} viên</span>;
+      return (
+        <span className="text-danger">
+          Đã tiêu hủy {destroyQnt} {sellUnit}
+        </span>
+      );
     } else if (quantity === soldQuantity) {
       return <span className="text-green">Đã bán hết</span>;
     } else if (quantity > soldQuantity) {
       const restQnt = quantity - soldQuantity;
-      return <span className="text-yellow-500">Còn lại {restQnt} viên</span>;
+      return (
+        <span className="text-yellow-500">
+          Còn lại {restQnt} {sellUnit}
+        </span>
+      );
     }
   };
 
@@ -76,7 +85,9 @@ function ItemRowReadOnly({
               {specification}
             </span>
             <span>=</span>
-            <span className="text-h6 whitespace-nowrap">{importQuantity * specification} (viên)</span>
+            <span className="text-h6 whitespace-nowrap">
+              {importQuantity * specification} ({sellUnit})
+            </span>
           </div>
 
           {/* import price */}
