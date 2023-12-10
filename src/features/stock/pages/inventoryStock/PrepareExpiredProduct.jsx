@@ -39,7 +39,7 @@ function PrepareExpiredProduct() {
   }, [debounced, preExpMerchandise]);
 
   return (
-    <div className="flex-1 flex flex-col bg-white rounded-lg px-5 py-3 min-h-0 ">
+    <div className="flex-1 flex flex-col bg-white rounded-[4px] px-5 py-3 min-h-0 ">
       <div className="flex-1 grid grid-cols-4 gap-x-4 gap-y-10 pb-[60px] overflow-y-auto px-5">
         {Array.isArray(listProduct) &&
           listProduct.length > 0 &&

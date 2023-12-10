@@ -120,7 +120,7 @@ function ProductGrid({ searchValue }) {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-white rounded-lg px-5 py-3 min-h-0 relative overflow-hidden">
+    <div className="flex-1 flex flex-col bg-white rounded-[4px] px-5 py-3 min-h-0 relative overflow-hidden">
       <div className="flex-1 grid grid-cols-4 gap-x-4 gap-y-10 pb-[60px] px-5 overflow-y-auto">
         {products.length > 0 &&
           products.map((product, index) => (

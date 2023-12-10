@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { SubNavigate } from '../components';
 import { SearchOnChange } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLengthAll, getLengthExp, getLengthPreExp, getLengthPreSoldOut } from '../stockSlice';
+import { getInventoryStock, getLengthAll, getLengthExp, getLengthPreExp, getLengthPreSoldOut } from '../stockSlice';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function Stock() {
@@ -29,6 +29,11 @@ function Stock() {
   const handleSearchValueChange = (e) => {
     setSearchValue(e.target.value);
   };
+
+  useEffect(() => {
+    //* fetch data inventory stock
+    dispatch(getInventoryStock());
+  }, [dispatch]);
 
   const lengthAll = useSelector(getLengthAll);
   const lengthPreSoldOut = useSelector(getLengthPreSoldOut);
@@ -68,7 +73,7 @@ function Stock() {
 
   return (
     <div className="h-full flex flex-col gap-2">
-      <div className="h-[80px] flex justify-between items-center px-5 bg-white rounded-lg flex-shrink-0">
+      <div className="h-[60px] flex justify-between items-center px-5 bg-white rounded-[4px] flex-shrink-0">
         {/* navigate on page */}
         <SubNavigate navs={navList} />
         {/* Search */}
