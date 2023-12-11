@@ -2,7 +2,7 @@ import { BsX } from 'react-icons/bs';
 import { TitleListPre, ItemListPre } from '../../components';
 import formatToVND from '../../../../helpers/formatToVND';
 
-function DoseInBill({ diagnose, listMedicines, note, totalPrice, quantity, onRemove }) {
+function DoseInBill({ diagnose, listMedicines, note, totalPrice, onRemove }) {
   return (
     <div className="px-2 text-h5">
       <div className="flex flex-col bg-text_blur/5 rounded-md py-2 px-4 border-2 border-text_blur/30">
@@ -36,9 +36,7 @@ function DoseInBill({ diagnose, listMedicines, note, totalPrice, quantity, onRem
         <div className="pt-3 pb-1 flex flex-col">
           {note && <i>ghi chú: {note}</i>}
           <div className="flex justify-between">
-            <span>
-              số lượng: x <b>{quantity}</b>
-            </span>
+            <span></span>
             <span className=" font-medium">
               Tổng giá: <span className="text-secondary font-normal">{formatToVND(totalPrice)}</span>
             </span>

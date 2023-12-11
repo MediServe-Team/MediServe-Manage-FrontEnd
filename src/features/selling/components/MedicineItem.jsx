@@ -56,10 +56,10 @@ function MedicineItem(
   }, [medicineId]);
 
   return (
-    <form className="flex flex-col border-2 border-text_blur rounded-lg">
+    <form className="flex flex-shrink-0 flex-col border-[1px] border-text_blur rounded-[4px] overflow-hidden">
       <input type="hidden" value={medicineId} {...register('medicineId')} />
       {/* header item */}
-      <div className="flex items-center bg-secondary/20 p-2">
+      <div className="flex items-center bg-[#c6e8ff] p-2">
         {/* number */}
         <div className="w-[32px] h-[32px] flex justify-center items-center bg-secondary/80 rounded-md flex-shrink-0">
           <span className="text-white">#{number}</span>
@@ -73,7 +73,7 @@ function MedicineItem(
               type="text"
               defaultValue={morning}
               className={classNames(
-                'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.morning?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('morning')}
@@ -86,7 +86,7 @@ function MedicineItem(
               type="text"
               defaultValue={noon}
               className={classNames(
-                'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.noon?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('noon')}
@@ -99,7 +99,7 @@ function MedicineItem(
               type="text"
               defaultValue={night}
               className={classNames(
-                'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.night?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('night')}
@@ -122,7 +122,7 @@ function MedicineItem(
               type="text"
               defaultValue={quantity}
               className={classNames(
-                'border-2 rounded-md outline-none focus:border-text_primary transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.quantity?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('quantity')}

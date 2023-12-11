@@ -52,7 +52,7 @@ function MedicineItem(
               type="text"
               defaultValue={morning}
               className={classNames(
-                'rounded-[3px] outline-blue-200 transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.morning?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('morning')}
@@ -65,7 +65,7 @@ function MedicineItem(
               type="text"
               defaultValue={noon}
               className={classNames(
-                'rounded-[3px] outline-blue-200 transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.noon?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('noon')}
@@ -78,7 +78,7 @@ function MedicineItem(
               type="text"
               defaultValue={night}
               className={classNames(
-                'rounded-[3px] outline-blue-200 transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.night?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('night')}
@@ -101,7 +101,7 @@ function MedicineItem(
               type="text"
               defaultValue={quantity}
               className={classNames(
-                'rounded-[3px] outline-blue-200 transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
+                'rounded-[3px] outline-blue-200 border-[1px] transition-all duration-200 max-w-[80px] h-[30px] min-w-0 px-2 text-center',
                 errors.quantity?.message ? 'border-danger' : 'border-text_primary/20',
               )}
               {...register('quantity')}

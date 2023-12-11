@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import MedicineItem from '../../components/MedicineItem';
+import { MedicineItem, SearchResultMedicine } from '../../components';
 import { Button, EmptyImage, SearchOnChange, Modal } from '../../../../components';
-import SearchResultItem from '../../../stock/components/SearchResultItem';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { doseNameSchema } from '../../../../validations/addMedicineInDose';
@@ -20,7 +19,6 @@ function AddDose() {
   const [searchMedicineValue, setSearchMedicineValue] = useState('');
   // modal
   const [openModal, setOpenModal] = useState(false);
-  const [quantity, setQuantity] = useState(1);
   // useOutlet context
   const { setDoses } = useOutletContext();
   // debounce
@@ -139,8 +137,8 @@ function AddDose() {
             return acc + Number(curr.sellPrice) * Number(curr.quantity);
           }, 0);
           data.listMedicines = listMedicines;
-          data.quantity = Number(quantity);
-          data.totalPrice = totalPrice * Number(quantity);
+          data.totalPrice = totalPrice;
+          data.quantity = 1;
           setOpenModal(false);
           setDoses((prev) => {
             return [...prev, data];
@@ -162,18 +160,19 @@ function AddDose() {
   //* fn: render list medicine in dose
   const renderSearchMedicineResult = () => {
     return Array.isArray(searchMedicineResult) && searchMedicineResult.length > 0 ? (
-      searchMedicineResult.map((item, index) => (
-        <SearchResultItem
+      searchMedicineResult.map((data, index) => (
+        <SearchResultMedicine
           key={index}
-          name={item.medicine.medicineName}
-          packingSpecification={item.medicine.packingSpecification}
+          name={data.item.itemName}
+          packingSpecification={data.item.packingSpecification}
+          quantity={Number(data.importQuantity * data.specification) - Number(data.soldQuantity)}
           onClick={() =>
             handleAddMedicineToDose(
-              item.medicine.id,
-              item.medicine.medicineName,
-              item.medicine.packingSpecification,
-              item.medicine.sellUnit,
-              item.sellPrice,
+              data.itemInStockId,
+              data.item.itemName,
+              data.item.packingSpecification,
+              data.item.sellUnit,
+              data.sellPrice,
             )
           }
         />
@@ -186,7 +185,6 @@ function AddDose() {
   //* modal: close
   const handleCloseModal = () => {
     setOpenModal(false);
-    setQuantity(1);
   };
 
   //* modal: open
@@ -312,21 +310,14 @@ function AddDose() {
         <div className="w-[300px] flex flex-col items-center gap-5">
           <header className="w-full flex justify-between items-center">
             <div className="flex flex-col">
-              <h3 className="text-text_primary font-bold text-h4">Nhập số lượng</h3>
-              <p className="text-text_blur text-h6">Thêm số lượng cho thuốc</p>
+              <h3 className="text-text_primary font-bold text-h4">Thêm vào hóa đơn</h3>
+              <p className="text-text_blur text-h6">Bạn chắc chắn muốn kê đơn thuốc này vào hóa đơn?</p>
             </div>
             {/* close modal update */}
             <button className="w-[40px] h-full flex outline-none" onClick={handleCloseModal}>
               <AiOutlineClose className="text-[20px] m-auto" />
             </button>
           </header>
-          {/* input */}
-          <input
-            type="text"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            className="text-center border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
-          />
           {/* Button */}
           <Button size={'medium'} width={140} modifier={'dark-primary'} onClick={handleCreateDose}>
             Xác nhận

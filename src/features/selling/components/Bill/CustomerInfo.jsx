@@ -144,8 +144,8 @@ function CustomerInfor({}, ref) {
         >
           <div
             className={classNames(
-              'w-[200px] h-[40px] rounded-md flex justify-evenly items-center cursor-pointer hover:opacity-90',
-              isGuest ? 'bg-tertiary' : 'bg-secondary/40',
+              'w-[200px] h-[40px] rounded-md flex justify-evenly items-center cursor-pointer hover:opacity-90 shadow-[0px_3px_4px_-1px_rgba(0,0,0,0.25)]',
+              isGuest ? 'bg-[#c1fcff]' : 'bg-secondary/40',
             )}
             onClick={() => setVisibleSelectCustomer(true)}
           >
@@ -156,15 +156,15 @@ function CustomerInfor({}, ref) {
       </div>
       {isGuest ? (
         //*  Customer not have account:
-        <div className="flex gap-5 border-2 border-text_primary/20 rounded-md p-5 bg-text_blur/5">
-          <div className="flex flex-col gap-5 w-3/5">
+        <div className="flex gap-4 border-[1px] border-text_primary/20 rounded-[4px] p-5 bg-text_blur/5">
+          <div className="flex flex-col gap-4 w-3/5">
             {/* Name customer */}
             <input
               type="text"
               {...register('fullName')}
               placeholder="Họ tên khách hàng"
               className={classNames(
-                'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                'border-2 w-full h-[40px] outline-none rounded-md focus:border-[#89acb4] transition-all duration-200 px-2',
                 errors.fullName?.message ? 'border-danger' : 'border-text_primary/20',
               )}
             />
@@ -173,7 +173,7 @@ function CustomerInfor({}, ref) {
               type="text"
               {...register('address')}
               placeholder="Địa chỉ"
-              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-text_primary transition-all duration-200 px-2"
+              className="border-2 w-full h-[40px] outline-none rounded-md border-text_primary/20 focus:border-[#89acb4] transition-all duration-200 px-2"
             />
           </div>
           {/* Age */}
@@ -183,7 +183,7 @@ function CustomerInfor({}, ref) {
               {...register('age')}
               placeholder="Tuổi"
               className={classNames(
-                'border-2 w-full h-[40px] outline-none rounded-md focus:border-text_primary transition-all duration-200 px-2',
+                'border-2 w-full h-[40px] outline-none rounded-md focus:border-[#89acb4] transition-all duration-200 px-2',
                 errors.age?.message ? 'border-danger' : 'border-text_primary/20',
               )}
             />

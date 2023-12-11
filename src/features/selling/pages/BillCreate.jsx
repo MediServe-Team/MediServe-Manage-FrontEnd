@@ -307,7 +307,7 @@ function BillCreate() {
                   rows="3"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="w-full rounded-md border-text_primary/20 focus:border-text_primary outline-none transition-colors duration-300 border-2 p-2"
+                  className="w-full rounded-md border-text_primary/20 focus:border-[#89acb4] outline-none transition-colors duration-300 border-2 p-2 bg-text_blur/10"
                 ></textarea>
               </div>
             </div>
