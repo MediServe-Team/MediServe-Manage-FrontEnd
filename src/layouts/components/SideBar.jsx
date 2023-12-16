@@ -6,14 +6,15 @@ import { useTransition, animated } from 'react-spring';
 import logoFull from '../../assets/images/logo-full.png';
 import logo from '../../assets/images/logo.png';
 import { TbSquareRoundedArrowRightFilled } from 'react-icons/tb';
-import { MdAddHomeWork, MdKeyboardArrowDown } from 'react-icons/md';
-import { FaWarehouse } from 'react-icons/fa';
+import { MdAddHomeWork, MdKeyboardArrowDown, MdFactCheck } from 'react-icons/md';
+import { FaWarehouse, FaUserCheck } from 'react-icons/fa';
 import { GiMedicines } from 'react-icons/gi';
 import { RiShoppingBag3Fill, RiBillFill, RiAccountBoxFill, RiShoppingCartFill } from 'react-icons/ri';
 import { TbCategory2 } from 'react-icons/tb';
 import { BsFillQuestionCircleFill } from 'react-icons/bs';
 import { IoIosExit } from 'react-icons/io';
-import { BsPersonVcardFill } from 'react-icons/bs';
+import { BsPersonVcardFill, BsChatRightText } from 'react-icons/bs';
+import { SiBloglovin } from 'react-icons/si';
 //
 import { useDispatch, useSelector } from 'react-redux';
 import { getPermitList, getRole, logoutAction } from '../../features/Auth/AuthSlice';
@@ -90,6 +91,34 @@ const MENUS = [
     icon: ({ className }) => <BsPersonVcardFill className={className} />,
     link: routes.profile,
     permitId: 9,
+  },
+  {
+    title: 'Điểm danh',
+    icon: ({ className }) => <FaUserCheck className={className} />,
+    link: routes.checkin,
+    permitId: 10,
+  },
+  {
+    title: 'Chấm công',
+    icon: ({ className }) => <MdFactCheck className={className} />,
+    link: routes.timeKeeping,
+    permitId: 11,
+  },
+  {
+    title: 'Nhắn tin',
+    icon: ({ className }) => <BsChatRightText className={className} />,
+    link: routes.chat,
+    permitId: 12,
+  },
+  {
+    title: 'Quản lý bài đăng',
+    icon: ({ className }) => <SiBloglovin className={className} />,
+    submenu: true,
+    submenuItem: [
+      { title: 'Danh sách lưu trữ', link: routes.blog },
+      { title: 'Tạo bài đăng', link: routes.blogCreate },
+    ],
+    permitId: 13,
   },
 ];
 
