@@ -58,7 +58,7 @@ const CheckinPage = () => {
       {/* RIGHT PANEL */}
       <div className="w-2/3 h-full">
         {/* List historical checkin */}
-        <div class="text-gray-900 bg-gray-200">
+        <div class="text-gray-900 bg-[#bed9f444]">
           <div class="px-4 pt-4 flex justify-between">
             <h2 className="font-medium text-h4">Tháng 3, 2023</h2>
             <div class="flex gap-2">
