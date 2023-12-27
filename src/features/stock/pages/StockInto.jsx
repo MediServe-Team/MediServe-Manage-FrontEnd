@@ -85,10 +85,9 @@ function StockInto() {
     setMerchandises([
       ...merchandises,
       {
-        name: item.productName ? item.productName : item.medicineName,
+        name: item.itemName,
         packingSpecification: item.packingSpecification,
         id: item.id,
-        isMedicine: item.isMedicine,
       },
     ]);
   };
@@ -168,7 +167,7 @@ function StockInto() {
       searchResults.map((item, index) => (
         <SearchResultItem
           key={index}
-          name={item.productName ? item.productName : item.medicineName}
+          name={item.itemName}
           // type={item.type}
           packingSpecification={item.packingSpecification}
           onClick={() => handleAddMerchandise(item)}
@@ -181,8 +180,8 @@ function StockInto() {
 
   return (
     <div className="flex flex-col gap-2 h-full">
-      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg px-10 py-3">
-        {/* Search product */}
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-[4px] px-10 py-3">
+        {/* Search item */}
         <div className="flex justify-center bg-inherit pb-3">
           <Tippy
             visible={visibleResult && searchResults.length > 0}
@@ -230,7 +229,7 @@ function StockInto() {
       </div>
 
       {/* note box */}
-      <div className="flex justify-between items-center h-[80px] bg-white rounded-lg px-10">
+      <div className="flex justify-between items-center h-[80px] bg-white rounded-[4px] px-10">
         <div className="flex flex-col w-[400px] gap-1 pb-1">
           <h5 className="font-medium">Ghi chú</h5>
           <input
@@ -239,14 +238,14 @@ function StockInto() {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Thêm ghi chú"
-            className="border rounded-md p-2 text-h6"
+            className="border rounded-[2px] outline-blue-200 p-2 text-h6"
           />
         </div>
 
         {/* Total import price */}
         <div className="flex flex-col gap-1">
           <h5 className="font-medium">Tổng giá nhập</h5>
-          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-red-300 text-red-600">
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-[4px] p-3 bg-red-100 text-red-700">
             <MdOutlineInput className="text-[22px]" />
             <span className="font-bold">{formatToVND(totalImportPrice)}</span>
           </div>
@@ -255,7 +254,7 @@ function StockInto() {
         {/* Total sell price */}
         <div className="flex flex-col gap-1">
           <h5 className="font-medium">Tổng giá bán</h5>
-          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-lg p-3 bg-lime-200 text-green-600">
+          <div className="flex justify-between gap-2 items-center min-w-[150px] h-[40px] rounded-[4px] p-3 bg-lime-100 text-emerald-500">
             <span className="font-bold">{formatToVND(totalSellPrice)}</span>
             <MdOutlineOutput className="text-[22px]" />
           </div>

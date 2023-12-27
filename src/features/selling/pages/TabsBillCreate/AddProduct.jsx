@@ -46,10 +46,10 @@ function AddProduct() {
     setOpenModal(false);
     const totalPrice = Number(quantity) * Number(productSelected.sellPrice);
     const newdata = {
-      productId: productSelected.product.id,
-      productName: productSelected.product.productName,
-      packingSpecification: productSelected.product.packingSpecification,
-      sellUnit: productSelected.product.sellUnit,
+      productId: productSelected.itemInStockId,
+      productName: productSelected.item.itemName,
+      packingSpecification: productSelected.item.packingSpecification,
+      sellUnit: productSelected.item.sellUnit,
       sellPrice: productSelected.sellPrice,
       quantity: Number(quantity),
       totalPrice,
@@ -84,16 +84,17 @@ function AddProduct() {
         />
       </div>
       {/* List products filter */}
-      <div className="flex-1 overflow-y-auto mb-3">
+      <div className="flex-1 overflow-y-auto mb-3 flex flex-col gap-2">
         {results && results.length > 0 ? (
-          results.map((item, index) => {
+          results.map((data, index) => {
             return (
               <AddSellItem
                 key={index}
-                name={item.product.productName}
-                sellUnit={item.product.sellUnit}
-                sellPrice={item.sellPrice}
-                onClick={() => handleOpenModal(item)}
+                name={data.item.itemName}
+                sellUnit={data.item.sellUnit}
+                sellPrice={data.sellPrice}
+                quantity={Number(data.importQuantity * data.specification) - Number(data.soldQuantity)}
+                onClick={() => handleOpenModal(data)}
               />
             );
           })

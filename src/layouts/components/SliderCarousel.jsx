@@ -6,7 +6,7 @@ function SliderCarousel({ contents }) {
   return (
     <div className="w-auto min-w-0 relative">
       <Swiper
-        className="bg-dark_primary rounded-md"
+        className="bg-dark_primary rounded-sm opacity-80"
         autoplay={{ delay: 2000, disableOnInteraction: false }}
         modules={[Autoplay]}
         loop={true}

@@ -41,6 +41,18 @@ import { Profile } from '../features/profile/pages';
 import { AddProduct, AddMedicine, AddDose, AddAvailableDose } from '../features/selling/pages/TabsBillCreate';
 import { BillDetail } from '../features/selling/pages';
 
+// Checkin
+import { CheckinPage } from '../features/checkin/pages';
+// Time keeping
+import { TimeKeepingPage } from '../features/timeKeeping/pages';
+
+// Blog
+import { BlogManagePage, BlogCreatePage, BlogUpdatePage } from '../features/blog/pages';
+import { AllPostPanel, PublicPostPanel, PrivatePostPanel } from '../features/blog/pages/subPages';
+
+// Chat
+import { ChatPage } from '../features/chat/pages';
+
 const publicRouters = [{ path: routes.login, component: Login, layout: null }];
 
 const privateRouters = [
@@ -96,7 +108,28 @@ const privateRouters = [
   },
   { path: routes.billDetail, component: BillDetail },
 
+  // profile
   { path: routes.profile, component: Profile },
+
+  // checkin
+  { path: routes.checkin, component: CheckinPage },
+  { path: routes.timeKeeping, component: TimeKeepingPage },
+
+  // chat
+  { path: routes.chat, component: ChatPage },
+
+  // blog manage
+  {
+    path: routes.blog,
+    component: BlogManagePage,
+    children: [
+      { path: 'all', component: AllPostPanel },
+      { path: 'public', component: PublicPostPanel },
+      { path: 'private', component: PrivatePostPanel },
+    ],
+  },
+  { path: routes.blogCreate, component: BlogCreatePage },
+  { path: routes.blogUpdate, component: BlogUpdatePage },
 ];
 
 export { publicRouters, privateRouters };

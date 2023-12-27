@@ -31,12 +31,12 @@ export const createMedicineServices = async (data) => {
 };
 
 export const filterMedicineServices = async (searchValue) => {
-  const response = await axiosBase.get(`/medicines/filter?searchValue=${searchValue}`);
+  const response = await axiosBase.get(`/items/filter?itemType=MEDICINE&searchValue=${searchValue}`);
   return response.data;
 };
 
 export const filterMedicineStockService = async (searchValue) => {
-  const response = await axiosBase.get(`/medicines/filter-stock?searchValue=${searchValue}`);
+  const response = await axiosBase.get(`/item-in-stocks/filter?itemType=MEDICINE&searchValue=${searchValue}`);
   return response.data;
 };
 
@@ -46,7 +46,7 @@ export const deleteMedicineService = async (medicineId) => {
 };
 
 export const getOneMedicineService = async (medicineId) => {
-  const response = await axiosBase.get(`/medicines/${medicineId}`);
+  const response = await axiosBase.get(`/medicines/detail/${medicineId}`);
   return response.data;
 };
 

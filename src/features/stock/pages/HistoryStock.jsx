@@ -70,7 +70,7 @@ function HistoryStock() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg px-10 py-4">
+    <div className="h-full flex flex-col bg-white rounded-[4px] px-10 py-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-text_primary text-h5 font-bold">Lịch sử nhập kho</h2>
 

@@ -9,7 +9,7 @@ import formatToVND from '../../../helpers/formatToVND';
 function ItemRowReadOnly({
   name,
   packingSpecification,
-  inputQuantity,
+  importQuantity,
   specification,
   importPrice,
   sellPrice,
@@ -18,22 +18,31 @@ function ItemRowReadOnly({
   lotNumber,
   destroyed,
   soldQuantity,
+  sellUnit,
 }) {
   const renderTextStatus = () => {
-    const quantity = inputQuantity * specification;
+    const quantity = importQuantity * specification;
     if (destroyed) {
       const destroyQnt = quantity - soldQuantity;
-      return <span className="text-danger">Đã tiêu hủy {destroyQnt} viên</span>;
+      return (
+        <span className="text-danger">
+          Đã tiêu hủy {destroyQnt} {sellUnit}
+        </span>
+      );
     } else if (quantity === soldQuantity) {
       return <span className="text-green">Đã bán hết</span>;
     } else if (quantity > soldQuantity) {
       const restQnt = quantity - soldQuantity;
-      return <span className="text-yellow-500">Còn lại {restQnt} viên</span>;
+      return (
+        <span className="text-yellow-500">
+          Còn lại {restQnt} {sellUnit}
+        </span>
+      );
     }
   };
 
   const renderIconStatus = () => {
-    const quantity = inputQuantity * specification;
+    const quantity = importQuantity * specification;
     if (destroyed) {
       return (
         <div className="shadow-md w-[16px] h-[16px] rounded-full flex justify-center items-center">
@@ -56,7 +65,7 @@ function ItemRowReadOnly({
   };
 
   return (
-    <div className="flex flex-col bg-slate-50 px-5 py-2 border-2 rounded-lg ">
+    <div className="flex flex-col bg-slate-50 px-5 py-2 border-[1px] rounded-[2px] ">
       <div className="flex justify-between items-center gap-2 ">
         {/* Item info */}
         <div className="flex flex-1 justify-between items-center gap-2">
@@ -69,14 +78,16 @@ function ItemRowReadOnly({
           {/* quantity & specifications*/}
           <div className="w-0 flex-[5] flex gap-2 items-center ">
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
-              {inputQuantity}
+              {importQuantity}
             </span>
             <span className="text-text_blur">x</span>
             <span className="flex-1 min-w-[60px] max-w-[80px]  h-[28px] rounded-md text-text_primary font-normal py-[3px] text-h6 text-center outline-none bg-white">
               {specification}
             </span>
             <span>=</span>
-            <span className="text-h6 whitespace-nowrap">{inputQuantity * specification} (viên)</span>
+            <span className="text-h6 whitespace-nowrap">
+              {importQuantity * specification} ({sellUnit})
+            </span>
           </div>
 
           {/* import price */}
@@ -94,7 +105,7 @@ function ItemRowReadOnly({
           </div>
 
           {/* total price */}
-          <span className="w-0 flex-[2]">{formatToVND(inputQuantity * specification * importPrice)}</span>
+          <span className="w-0 flex-[2]">{formatToVND(importQuantity * specification * importPrice)}</span>
 
           {/* manufacture Date */}
           <div className="w-0 flex-[2] flex">

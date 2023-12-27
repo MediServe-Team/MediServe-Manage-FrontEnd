@@ -73,7 +73,7 @@ function Stock() {
 
   return (
     <div className="h-full flex flex-col gap-2">
-      <div className="h-[80px] flex justify-between items-center px-5 bg-white rounded-lg flex-shrink-0">
+      <div className="h-[60px] flex justify-between items-center px-5 bg-white rounded-[4px] flex-shrink-0">
         {/* navigate on page */}
         <SubNavigate navs={navList} />
         {/* Search */}

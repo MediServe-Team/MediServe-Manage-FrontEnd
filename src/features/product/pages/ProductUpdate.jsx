@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import getBase64 from '../../../helpers/getBase64';
 import { Button, SelectUnit, SelectCategory } from '../../../components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getListUnits } from '../../../slices/unitSlice';
 // import lib handle form
 import { useForm } from 'react-hook-form';
@@ -12,10 +12,27 @@ import classNames from 'classnames';
 import { toast } from 'react-toastify';
 // services
 import { getOneProductService, updateProductService } from '../productServices';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
 
 function ProductUpdate() {
+  const { productId } = useParams();
+
+  // addBreadcrumb
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      addNewBreadcrumb({
+        name: 'Cập nhật sản phẩm',
+        slug: `/products/update/${productId}`,
+      }),
+    );
+    return () => {
+      dispatch(removeLastBreadcrumb());
+    };
+  }, [dispatch, productId]);
+
   const navigate = useNavigate();
   const [productImg, setProductImg] = useState([]);
   const [barcode, setBarcode] = useState('');
@@ -33,6 +50,7 @@ function ProductUpdate() {
     sellUnit: '',
     category: '',
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   //* use Form
   const {
@@ -51,8 +69,6 @@ function ProductUpdate() {
     setProductCategories(filterProductCategories);
   }, [categories]);
 
-  const { productId } = useParams();
-
   //* get data product update
   useEffect(() => {
     const getDataProductUpdate = async () => {
@@ -62,25 +78,42 @@ function ProductUpdate() {
       setCategoryId(result.data.categoryId);
       setImportUnit(result.data.inputUnit);
       setSellUnit(result.data.sellUnit);
-      setProductImg(result.data.productImage);
+      setProductImg(result.data.itemImage);
       // set data in form
-      setValue('productName', result.data.productName);
+      setValue('productName', result.data.itemName);
       setValue('registrationNumber', result.data.registrationNumber);
       setValue('dosageForm', result.data.dosageForm);
       setValue('productContent', result.data.productContent);
       setValue('chemicalName', result.data.chemicalName);
       setValue('chemicalCode', result.data.chemicalCode);
       setValue('packingSpecification', result.data.packingSpecification);
-      setValue('productFunction', result.data.productFunction);
+      setValue('productFunction', result.data.itemFunction);
       setValue('note', result.data.note);
     };
     getDataProductUpdate();
   }, []);
 
+  //* convert to Base64 string
+  const convertToBase64 = async (url, callback) => {
+    try {
+      await fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+    } catch (err) {
+      console.error('Error converting image to base64: ', err);
+    }
+  };
+
   //* upload product img
   const handleUploadProductImg = async (e) => {
     const file = e.target.files[0];
-    // check cancle file
+    // check cancel file
     if (!file) return;
     // convert file to base64
     const data = await getBase64(file);
@@ -141,9 +174,39 @@ function ProductUpdate() {
     setTrackErrors(newErrors);
   };
 
+  //Check if url is in the base64String's format
+  const checkUrlBeforeUpdate = (url) => {
+    if (Array.isArray(url)) {
+      const lastUrl = url[url.length - 1];
+      if (lastUrl.substring(0, 5) === 'data:') return lastUrl;
+      else {
+        let baseString64 = '';
+        convertToBase64(lastUrl, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    } else {
+      if (url.substring(0, 5) === 'data:') return url;
+      else {
+        let baseString64 = '';
+        convertToBase64(url, (base) => {
+          baseString64 = base;
+        });
+        return baseString64;
+      }
+    }
+  };
+
   //* Handle before submit data to update Product
   const handleSubmitUpdateProduct = async (dataForm) => {
-    if (!trackErrors.passErrs) return;
+    if (!trackErrors.passErrs) {
+      return;
+    }
+
+    // set loading is true
+    setIsUpdating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -153,25 +216,30 @@ function ProductUpdate() {
       chemicalName: dataForm.chemicalName,
       chemicalCode: dataForm.chemicalCode,
       packingSpecification: dataForm.packingSpecification,
-      barCode: barcode,
+      barCode: checkUrlBeforeUpdate(barcode),
       sellUnit: sellUnit,
       inputUnit: importUnit,
       productFunction: dataForm.productFunction,
-      productImage: productImg,
+      productImage: checkUrlBeforeUpdate(productImg),
       note: dataForm.note,
     };
 
     const result = await updateProductService(productId, bodyRequest);
+    console.log(bodyRequest);
     if (result.status === 200) {
       toast.success('Cập nhật sản phẩm thành công!');
+      // set loading is false
+      setIsUpdating(false);
       navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi cập nhật phẩm!');
+      // set loading is false
+      setIsUpdating(false);
     }
   };
 
   return (
-    <div className="w-full h-full rounded-lg bg-white p-5">
+    <div className="w-full h-full rounded-lg bg-white p-5 overflow-y-auto">
       <form
         id="create-product-form"
         className="h-full flex justify-between gap-8"
@@ -189,6 +257,7 @@ function ProductUpdate() {
                 <img id="product-img" src={productImg} className="absolute top-0 left-0 w-full h-full object-cover" />
               )}
             </div>
+            {trackErrors.productImg && <span className="text-danger">Vui lòng thêm ảnh!</span>}
           </div>
           {/* Barcode */}
           <div>
@@ -199,8 +268,12 @@ function ProductUpdate() {
                   className="w-2/3 h-[80px] bg-white rounded-md border-2 border-text_primary border-dashed flex flex-col items-center justify-center relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-barcode').click()}
                 >
-                  <IoMdCloudUpload className="text-[30px] text-text_primary" />
-                  <span className="text-text_primary">Nhấn để thêm</span>
+                  {!barcode && (
+                    <>
+                      <IoMdCloudUpload className="text-[30px] text-text_primary" />
+                      <span className="text-text_primary">Nhấn để thêm</span>
+                    </>
+                  )}
                   <input
                     id="upload-barcode"
                     type="file"
@@ -382,8 +455,9 @@ function ProductUpdate() {
               modifier={'dark-primary'}
               width={150}
               onClick={() => handleTrackErrors()}
+              disabled={isUpdating}
             >
-              Cập nhật
+              {isUpdating ? <ClipLoader color={'#ffffff'} loading={isUpdating} size={30} /> : 'Cập nhật'}
             </Button>
           </div>
         </div>

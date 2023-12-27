@@ -14,6 +14,8 @@ import classNames from 'classnames';
 import { createProductServices } from '../productServices';
 import { toast } from 'react-toastify';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { ClipLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 
 function ProductCreate() {
   // addBreadcrumb
@@ -21,7 +23,7 @@ function ProductCreate() {
   useEffect(() => {
     dispatch(
       addNewBreadcrumb({
-        name: 'Thêm thuốc',
+        name: 'Thêm sản phẩm',
         slug: '/products/add',
       }),
     );
@@ -46,6 +48,8 @@ function ProductCreate() {
     sellUnit: '',
     category: '',
   });
+  const navigate = useNavigate();
+  const [isCreating, setIsCreating] = useState(false);
 
   //* use Form
   const {
@@ -126,7 +130,10 @@ function ProductCreate() {
   //* Handle before submit data to create new Product
   const handleSubmitCreateProduct = async (dataForm) => {
     if (!trackErrors.passErrs) return;
-    const imgs = listImg.map((img) => img.data);
+
+    // set loading is true
+    setIsCreating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       productName: dataForm.productName,
@@ -140,22 +147,27 @@ function ProductCreate() {
       sellUnit: sellUnit,
       inputUnit: importUnit,
       productFunction: dataForm.productFunction,
-      productImage: imgs,
+      productImage: listImg[listImg.length - 1].data,
       note: dataForm.note,
     };
 
     const result = await createProductServices(bodyRequest);
     if (result.status === 201) {
       toast.success('Tạo mới sản phẩm thành công!');
+      // set loading is false
+      setIsCreating(false);
+      navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo sẩn phẩm!');
+      // set loading is false
+      setIsCreating(false);
     }
   };
 
   const handleClearForm = () => {
     // clear display img barcode
     const barcodeImg = document.querySelector('#barcode-img');
-    barcodeImg.remove();
+    barcodeImg?.remove();
     // clear data
     setListImg([]);
     setBarcode('');
@@ -175,7 +187,7 @@ function ProductCreate() {
   };
 
   return (
-    <div className="w-full h-full rounded-lg bg-white p-5">
+    <div className="w-full h-full rounded-lg bg-white p-5 overflow-y-auto">
       <form
         id="create-product-form"
         className="h-full flex justify-between gap-8"
@@ -197,8 +209,12 @@ function ProductCreate() {
                   className="w-2/3 h-[80px] bg-white rounded-md border-2 border-text_primary border-dashed flex flex-col items-center justify-center relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-barcode').click()}
                 >
-                  <IoMdCloudUpload className="text-[30px] text-text_primary" />
-                  <span className="text-text_primary">Nhấn để thêm</span>
+                  {!barcode && (
+                    <>
+                      <IoMdCloudUpload className="text-[30px] text-text_primary" />
+                      <span className="text-text_primary">Nhấn để thêm</span>
+                    </>
+                  )}
                   <input
                     id="upload-barcode"
                     type="file"
@@ -377,8 +393,14 @@ function ProductCreate() {
             >
               Làm rỗng
             </Button>
-            <Button styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
-              Tạo sản phẩm
+            <Button
+              styleBtn={'solid'}
+              size={'medium'}
+              width={150}
+              onClick={() => handleTrackErrors()}
+              disabled={isCreating}
+            >
+              {isCreating ? <ClipLoader color={'#ffffff'} loading={isCreating} size={30} /> : 'Tạo sản phẩm'}
             </Button>
           </div>
         </div>

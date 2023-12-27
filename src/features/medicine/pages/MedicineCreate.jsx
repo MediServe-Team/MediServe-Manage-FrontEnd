@@ -14,6 +14,8 @@ import classNames from 'classnames';
 import { createMedicineServices } from '../medicineServices';
 import { toast } from 'react-toastify';
 import { addNewBreadcrumb, removeLastBreadcrumb } from '../../../slices/breadcrumbSlice';
+import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 function MedicineCreate() {
   // addBreadcrumb
@@ -46,6 +48,8 @@ function MedicineCreate() {
     sellUnit: '',
     category: '',
   });
+  const navigate = useNavigate();
+  const [isCreating, setIsCreating] = useState(false);
 
   //* use Form
   const {
@@ -126,7 +130,10 @@ function MedicineCreate() {
   //* Handle before submit data to create new Medicine
   const handleSubmitCreateMedicine = async (dataForm) => {
     if (!trackErrors.passErrs) return;
-    const imgs = listImg.map((img) => img.data);
+
+    // set loading is true
+    setIsCreating(true);
+
     const bodyRequest = {
       categoryId: categoryId,
       medicineName: dataForm.medicineName,
@@ -142,7 +149,7 @@ function MedicineCreate() {
       applyToAffectedAreaCode: dataForm.applyToAffectedAreaCode,
       applyToAffectedArea: dataForm.applyToAffectedArea,
       medicineFunction: dataForm.medicineFunction,
-      medicineImage: imgs,
+      medicineImage: listImg[listImg.length - 1].data,
       isPrescription: dataForm.isPrescription === 'true' ? true : false,
       note: dataForm.note,
     };
@@ -150,15 +157,20 @@ function MedicineCreate() {
     const result = await createMedicineServices(bodyRequest);
     if (result.status === 201) {
       toast.success('Tạo mới sản phẩm thành công!');
+      // set loading is false
+      setIsCreating(false);
+      navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo thuốc!');
+      // set loading is false
+      setIsCreating(false);
     }
   };
 
   const handleClearForm = () => {
     // clear display img barcode
     const barcodeImg = document.querySelector('#barcode-img');
-    barcodeImg.remove();
+    barcodeImg?.remove();
     // clear data
     setListImg([]);
     setBarcode('');
@@ -178,7 +190,7 @@ function MedicineCreate() {
   };
 
   return (
-    <div className="w-full h-full rounded-lg bg-white p-5">
+    <div className="w-full h-full rounded-lg bg-white p-5 overflow-y-auto">
       <form
         id="create-medicine-form"
         className="h-full flex justify-between gap-8"
@@ -200,8 +212,12 @@ function MedicineCreate() {
                   className="w-2/3 h-[80px] bg-white rounded-md border-2 border-text_primary border-dashed flex flex-col items-center justify-center relative cursor-pointer"
                   onClick={() => document.querySelector('#upload-barcode').click()}
                 >
-                  <IoMdCloudUpload className="text-[30px] text-text_primary" />
-                  <span className="text-text_primary">Nhấn để thêm</span>
+                  {!barcode && (
+                    <>
+                      <IoMdCloudUpload className="text-[30px] text-text_primary" />
+                      <span className="text-text_primary">Nhấn để thêm</span>
+                    </>
+                  )}
                   <input
                     id="upload-barcode"
                     type="file"
@@ -435,8 +451,15 @@ function MedicineCreate() {
             >
               Làm rỗng
             </Button>
-            <Button type={'submit'} styleBtn={'solid'} size={'medium'} width={150} onClick={() => handleTrackErrors()}>
-              Tạo thuốc
+            <Button
+              type={'submit'}
+              styleBtn={'solid'}
+              size={'medium'}
+              width={150}
+              onClick={() => handleTrackErrors()}
+              disabled={isCreating}
+            >
+              {isCreating ? <ClipLoader color={'#ffffff'} loading={isCreating} size={30} /> : 'Tạo thuốc'}
             </Button>
           </div>
         </div>

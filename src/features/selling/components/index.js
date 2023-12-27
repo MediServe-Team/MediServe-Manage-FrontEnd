@@ -10,3 +10,5 @@ export { default as Prescription } from './Prescription';
 export { default as Dose } from './Dose';
 export { default as AddSellItem } from './AddSellItem';
 export { default as AddDoseItem } from './AddDoseItem';
+export { default as MedicineItem } from './MedicineItem';
+export { default as SearchResultMedicine } from './SearchResultMedicine';

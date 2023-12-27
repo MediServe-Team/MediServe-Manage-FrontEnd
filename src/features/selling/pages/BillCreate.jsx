@@ -123,7 +123,11 @@ function BillCreate() {
     if (result.status === 201) {
       toast.success('Tạo hóa đơn thành công');
       handleClearBill();
-    } else toast.error('Hóa đơn chưa được tạo thành công');
+    } else if (result.status === 400) {
+      toast.error(result.message);
+    } else {
+      toast.error('Không thể thực hiện tạo hóa đơn');
+    }
   };
 
   //* handle clear bill
@@ -148,9 +152,9 @@ function BillCreate() {
   }, [products, medicines, doses]);
 
   return (
-    <div className="h-full flex gap-3">
+    <div className="h-full flex gap-2">
       {/*//* Subpage left */}
-      <div className="flex flex-col justify-between px-5 bg-white rounded-xl w-[40%]">
+      <div className="flex flex-col justify-between px-5 bg-white rounded-md w-[40%]">
         {/* navigate on page */}
         <div className="flex justify-start pt-3 flex-shrink-0">
           <SubNavigate navs={navList} />
@@ -162,7 +166,7 @@ function BillCreate() {
       </div>
 
       {/*//* Sub page right */}
-      <div className="flex flex-col h-full w-[60%] bg-white rounded-xl">
+      <div className="flex flex-col h-full w-[60%] bg-white rounded-md">
         {/* header */}
         <header className="border-b-2 border-text_blur/50 pl-6 pt-4 pb-1 w-full">
           <h3 className="text-h4 text-text_primary font-bold">Tạo hóa đơn</h3>
@@ -303,7 +307,7 @@ function BillCreate() {
                   rows="3"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="w-full rounded-md border-text_primary/20 focus:border-text_primary outline-none transition-colors duration-300 border-2 p-2"
+                  className="w-full rounded-md border-text_primary/20 focus:border-[#89acb4] outline-none transition-colors duration-300 border-2 p-2 bg-text_blur/10"
                 ></textarea>
               </div>
             </div>

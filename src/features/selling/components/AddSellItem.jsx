@@ -1,10 +1,10 @@
 import { MdOutlineAddCircleOutline } from 'react-icons/md';
 import formatToVND from '../../../helpers/formatToVND';
 
-function AddSellItem({ name, sellUnit, sellPrice, onClick }) {
+function AddSellItem({ name, sellUnit, sellPrice, quantity, onClick }) {
   return (
     <div
-      className="flex justify-between items-center px-4 py-2 hover:bg-text_blur/10 text-h5 cursor-pointer"
+      className="flex justify-between items-center px-4 py-2 hover:bg-text_blur/10 text-h5 cursor-pointer border-[1px] rounded-[4px] bg-[#f7fefe]"
       onClick={onClick}
     >
       <div className="flex gap-5 items-center">
@@ -16,7 +16,9 @@ function AddSellItem({ name, sellUnit, sellPrice, onClick }) {
           <i className="font-normal text-gray-700">({sellUnit})</i>
         </div>
       </div>
-      <span>{formatToVND(sellPrice)}</span>
+      <span>
+        còn <b className="text-secondary"> {quantity}</b>
+      </span>
     </div>
   );
 }

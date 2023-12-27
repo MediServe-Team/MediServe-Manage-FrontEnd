@@ -3,16 +3,25 @@ import { privateRouters, publicRouters } from './routes/routes';
 import { DefaultLayout } from './layouts';
 import NotFound from './pages/NotFound.jsx';
 import { Fragment, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getUserId } from './features/Auth/AuthSlice';
+import { getInventoryStock } from './features/stock/stockSlice.js';
+import { getAllCategory } from './features/category/categorySlice.js';
+import { getAllUnits } from './slices/unitSlice.js';
 
 function App() {
   const userId = useSelector(getUserId);
-  const [isLogin, setIsLogin] = useState(userId != null);
+  const [isLogin, setIsLogin] = useState(userId !== null);
+  const dispatch = useDispatch();
 
   // check user login
   useEffect(() => {
-    setIsLogin(userId != null);
+    setIsLogin(userId !== null);
+    if (userId !== null) {
+      dispatch(getAllCategory());
+      dispatch(getAllUnits());
+      dispatch(getInventoryStock());
+    }
   }, [userId]);
 
   return (

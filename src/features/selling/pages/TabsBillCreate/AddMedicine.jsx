@@ -46,10 +46,10 @@ function AddMedicine() {
     setOpenModal(false);
     const totalPrice = Number(quantity) * Number(medicineSelected.sellPrice);
     const newdata = {
-      medicineId: medicineSelected.medicine.id,
-      medicineName: medicineSelected.medicine.medicineName,
-      packingSpecification: medicineSelected.medicine.packingSpecification,
-      sellUnit: medicineSelected.medicine.sellUnit,
+      medicineId: medicineSelected.itemInStockId,
+      medicineName: medicineSelected.item.itemName,
+      packingSpecification: medicineSelected.item.packingSpecification,
+      sellUnit: medicineSelected.item.sellUnit,
       sellPrice: medicineSelected.sellPrice,
       quantity: Number(quantity),
       totalPrice,
@@ -84,16 +84,17 @@ function AddMedicine() {
         />
       </div>
       {/* List medicines filter */}
-      <div className="flex-1 overflow-y-auto mb-3">
+      <div className="flex-1 overflow-y-auto mb-3 flex flex-col gap-2">
         {results && results.length > 0 ? (
-          results.map((item, index) => {
+          results.map((data, index) => {
             return (
               <AddSellItem
                 key={index}
-                name={item.medicine.medicineName}
-                sellUnit={item.medicine.sellUnit}
-                sellPrice={item.sellPrice}
-                onClick={() => handleOpenModal(item)}
+                name={data.item.itemName}
+                sellUnit={data.item.sellUnit}
+                sellPrice={data.sellPrice}
+                quantity={Number(data.importQuantity * data.specification) - Number(data.soldQuantity)}
+                onClick={() => handleOpenModal(data)}
               />
             );
           })

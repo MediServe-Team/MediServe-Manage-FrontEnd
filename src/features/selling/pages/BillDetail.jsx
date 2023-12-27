@@ -22,9 +22,14 @@ function BillDetail() {
     const getBillDetail = async () => {
       const result = await getBillService(id);
       //* detach data:
-      const { note, totalPayment, givenByCustomer } = result.data;
-      const { DetailReceiptMedicines } = result.data;
-      const { DetailReceiptProducts } = result.data;
+      const { note, totalPayment, givenByCustomer, DetailReceiptItems } = result.data;
+      const DetailReceiptMedicines = [];
+      const DetailReceiptProducts = [];
+      DetailReceiptItems.map((data) => {
+        if (data.itemInStock.item.itemType === 'MEDICINE') DetailReceiptMedicines.push(data);
+        else DetailReceiptProducts.push(data);
+      });
+
       const { DetailReceiptPrescriptions } = result.data;
       const { customer, guest } = result.data;
       const billData = { note, totalPayment, givenByCustomer };
@@ -58,7 +63,6 @@ function BillDetail() {
       }),
     );
     return () => {
-      dispatch(removeLastBreadcrumb());
       dispatch(removeLastBreadcrumb());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,11 +120,11 @@ function BillDetail() {
                   <ItemListMP
                     key={index}
                     number={index + 1}
-                    name={product?.product?.productName}
-                    unit={product?.product?.sellUnit}
+                    name={product?.itemInStock?.item?.itemName}
+                    unit={product?.itemInStock?.item?.sellUnit}
                     quantity={product?.quantity}
                     totalPrice={product?.totalPrice}
-                    sellPrice={Number(product?.totalPrice) / Number(product?.quantity)}
+                    sellPrice={Number(product.itemInStock.sellPrice)}
                   />
                 ))}
               </TitleListMP>
@@ -143,11 +147,11 @@ function BillDetail() {
                   <ItemListMP
                     key={index}
                     number={index + 1}
-                    name={medicine?.medicine?.medicineName}
-                    unit={medicine?.medicine?.sellUnit}
+                    name={medicine?.itemInStock?.item?.itemName}
+                    unit={medicine?.itemInStock?.item?.sellUnit}
                     quantity={medicine?.quantity}
                     totalPrice={medicine?.totalPrice}
-                    sellPrice={Number(medicine?.totalPrice) / Number(medicine?.quantity)}
+                    sellPrice={Number(medicine.itemInStock.sellPrice)}
                   />
                 ))}
               </TitleListMP>
@@ -174,16 +178,16 @@ function BillDetail() {
                   <div className="pt-3">
                     <TitleListPre>
                       {/* Data */}
-                      {presciption.prescription.MedicineGuides.map((guide, index) => (
+                      {presciption.prescription.MedicineGuideSells.map((guide, index) => (
                         <ItemListPre
                           key={index}
-                          medicineName={guide?.medicine?.medicineName}
+                          medicineName={guide?.medicine?.item?.itemName}
                           morning={guide.morning}
                           noon={guide.noon}
                           night={guide.night}
                           quantity={guide.quantity}
-                          sellPrice={guide.totalPrice ? Number(guide.totalPrice) / Number(guide.quantity) : 0}
-                          sellUnit={guide?.medicine?.sellUnit}
+                          sellPrice={guide.medicine.sellPrice}
+                          sellUnit={guide?.medicine?.item?.sellUnit}
                         />
                       ))}
                     </TitleListPre>
@@ -192,9 +196,7 @@ function BillDetail() {
                   <div className="pt-3 pb-1 flex flex-col">
                     {presciption.note && <i>ghi chú: {presciption.note}</i>}
                     <div className="flex justify-between">
-                      <span>
-                        số lượng: x <b>{presciption.quantity}</b>
-                      </span>
+                      <span>{/* số lượng: x <b>{presciption.quantity}</b> */}</span>
                       <span className=" font-medium">
                         Tổng giá:{' '}
                         <span className="text-secondary font-normal">{formatToVND(presciption.totalPrice)}</span>

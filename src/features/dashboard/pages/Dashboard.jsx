@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getAllCategory } from '../../category/categorySlice';
-import { getAllUnits } from '../../../slices/unitSlice';
 import { useDispatch, useSelector } from 'react-redux';
 // import { Line } from 'react-chartjs-2';
 // import {
@@ -19,7 +17,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Bar } from 'react-chartjs-2';
 import { BsPeopleFill, BsHeadset, BsCashCoin } from 'react-icons/bs';
 import { FaRegCalendarTimes } from 'react-icons/fa';
-import { getInventoryStock, getLengthExp } from '../../stock/stockSlice';
+import { getLengthExp } from '../../stock/stockSlice';
 import { filterBillService } from '../../selling/billServices';
 import { useAxiosWithToken } from '../../../hooks';
 import { getAllAccountService } from '../../../services/accountServices';
@@ -27,7 +25,6 @@ import formatToVND from '../../../helpers/formatToVND';
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth?.accessToken);
   const lengthExp = useSelector(getLengthExp);
   const [revenue, setRevenue] = useState(0);
   const axiosWithToken = useAxiosWithToken();
@@ -187,14 +184,6 @@ function Dashboard() {
     };
     filterBillsByMonths();
   }, []);
-
-  //addData();
-
-  useEffect(() => {
-    dispatch(getAllCategory());
-    dispatch(getAllUnits());
-    dispatch(getInventoryStock());
-  }, [dispatch, token]);
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-lg justify-center items-center">

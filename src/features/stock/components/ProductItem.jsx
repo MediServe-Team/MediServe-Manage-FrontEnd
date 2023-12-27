@@ -10,7 +10,7 @@ function ProductItem({
   packingSpecification,
   productId,
   soldQuantity,
-  inputQuantity,
+  importQuantity,
   specification,
   manufactureDate,
   expirationDate,
@@ -18,6 +18,7 @@ function ProductItem({
   importPrice,
   sellPrice,
   invoiceId,
+  sellUnit,
 }) {
   const [y, setY] = useState(400);
   const [opacity, setOpacity] = useState(0.3);
@@ -43,7 +44,11 @@ function ProductItem({
               Đã bán: <span className="font-medium text-secondary">{soldQuantity}</span>
             </p>
             <p className="text-text_primary">
-              Còn lại: <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
+              Còn lại:{' '}
+              <span className="font-medium text-primary">
+                {importQuantity * specification - soldQuantity}{' '}
+                <span className="font-normal text-black"> ({sellUnit})</span>
+              </span>
             </p>
           </div>
           {/* Date */}
@@ -98,7 +103,10 @@ function ProductItem({
                 </p>
                 <p className="text-text_primary">
                   Còn lại:{' '}
-                  <span className="font-medium text-primary">{inputQuantity * specification - soldQuantity}</span>
+                  <span className="font-medium text-primary">
+                    {importQuantity * specification - soldQuantity}{' '}
+                    <span className="font-normal text-black"> ({sellUnit})</span>
+                  </span>
                 </p>
               </div>
               {/* Date */}

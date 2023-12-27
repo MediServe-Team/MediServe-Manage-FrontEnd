@@ -72,7 +72,7 @@ function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center flex-shrink-0  px-10 rounded-2xl shadow-[0_35px_40px_-15px_rgba(0,0,0,0.3)] bg-[#f9f9f9]/30 backdrop-blur-md h-16 relative z-50">
+    <div className="flex justify-between items-center flex-shrink-0  px-10 rounded-md shadow-[0px_14px_10px_-10px_rgba(0,0,0,0.53)] bg-[#f9f9f9]/30 backdrop-blur-md h-[50px] relative z-50">
       <div className=""></div>
       <div className="flex items-center gap-10">
         {/* Notify */}

@@ -31,6 +31,13 @@ const routes = {
   billDetail: '/bills/:id',
 
   profile: '/profile',
+
+  checkin: '/checkin',
+  timeKeeping: '/time-keeping',
+  chat: '/chat',
+  blog: '/blog',
+  blogCreate: '/blog/create',
+  blogUpdate: '/blog/update/:blogId',
 };
 
 export default routes;

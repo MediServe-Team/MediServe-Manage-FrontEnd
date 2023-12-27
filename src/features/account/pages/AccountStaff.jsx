@@ -1,17 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  CustomSwitch,
-  TitleShopping,
-  ItemShopping,
-  TitleStock,
-  ItemStock,
-  TitleDose,
-  ItemDose,
-  PermissionItem,
-} from '../components';
-import { BiXCircle } from 'react-icons/bi';
-// import { Modal, ModalClose, ModalDialog } from '@mui/joy';
-import { Medicine, Prescription, Dose } from '../../selling/components';
+import { PermissionItem } from '../components';
 import { BsImage, BsPlusCircle, BsX } from 'react-icons/bs';
 // component
 import { Button, Modal } from '../../../components';
@@ -158,7 +146,7 @@ function AccountStaff({ data, reloadParentPage }) {
                   </div>
                   {/* Field Age */}
                   <div className="flex gap-5">
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-col flex-1" style={{ display: 'none' }}>
                       <p className="text-text_primary font-medium">Tuổi</p>
                       <input
                         className={classNames(

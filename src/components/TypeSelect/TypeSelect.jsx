@@ -42,7 +42,7 @@ function TypeSelect({ typeList, selectedIndex, onChange }) {
     >
       <div
         onClick={() => setVisible(!visible)}
-        className="flex justify-center items-center h-8 px-5 bg-secondary/70 rounded-xl cursor-pointer hover:bg-secondary/90 active:bg-secondary/50 active:border-secondary/70 active:border-2 select-none shadow-lg transition-all"
+        className="flex justify-center items-center h-8 px-5 bg-secondary/70 rounded-md cursor-pointer hover:bg-secondary/90 active:bg-secondary/50 active:border-secondary/70 active:border-2 select-none shadow-lg transition-all"
       >
         <span className="text-white">{categoryNameSelected()}</span>
       </div>

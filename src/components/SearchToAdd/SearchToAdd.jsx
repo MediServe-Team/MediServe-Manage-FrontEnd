@@ -23,8 +23,8 @@ function SearchToAdd({ value, onChange, types, typeSelected, onClear, onTypeChan
     <div className={classNames('relative', className)}>
       <div
         className={classNames(
-          'flex gap-1 items-center  rounded-lg h-[40px] shadow-sm bg-slate-100 ',
-          isFocus && 'border-[1px]',
+          'flex gap-1 items-center  rounded-lg h-[40px] shadow-sm bg-slate-100 border-[1px]',
+          isFocus && 'c border-blue-400',
         )}
       >
         <input
