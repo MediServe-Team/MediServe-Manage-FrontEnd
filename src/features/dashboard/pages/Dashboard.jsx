@@ -187,34 +187,49 @@ function Dashboard() {
 
   return (
     <div className="flex flex-col h-full w-full bg-white rounded-lg justify-center items-center">
-      <div className="h-1/4 w-full flex flex-row gap-9 py-3 px-14">
-        <div className="bg-[#028ffa]/30 text-[#028ffa] h-full w-[22%] rounded-2xl flex flex-col px-2">
-          <div className="h-2/3 w-full flex gap-6 justify-center items-center text-[50px] font-semibold">
-            <BsPeopleFill />
-            <span className="text-[38px]">{customer}</span>
+      <div className="h-1/4 w-full flex flex-row justify-between gap-5 py-3 px-5">
+        {/* Total customer today */}
+        <div className="bg-white shadow-[0px_3px_5px_1px_rgba(0,0,0,0.8)] text-[#028ffa] h-[110px] w-[22%] rounded-md px-2 flex gap-3 items-center">
+          <div className="w-[60px] h-[50px] bg-[#028ffa]/30 flex justify-center items-center rounded-full flex-shrink-0">
+            <BsPeopleFill className="text-[30px]" />
           </div>
-          <div className="h-1/3 w-full justify-center text-[17px]  font-medium flex">Số khách hàng hôm nay</div>
+          <div className="">
+            <span className="text-[26px] font-bold text-text_primary">{customer}</span>
+            <div className="h-1/3 w-full justify-center text-[14px]  font-medium flex">Số khách hàng hôm nay</div>
+          </div>
         </div>
-        <div className="bg-[#f5982c]/30 text-[#f5982c] h-full w-[22%] rounded-2xl flex flex-col px-2">
-          <div className="h-2/3 w-full flex gap-6 justify-center items-center text-[50px] font-semibold">
-            <BsHeadset />
-            <span className="text-[38px]">{staff}</span>
+
+        {/* Total Staff */}
+        <div className="bg-white shadow-[0px_3px_5px_1px_rgba(0,0,0,0.8)] text-[#f5982c] h-[110px] w-[22%] rounded-md px-2 flex gap-3 items-center">
+          <div className="w-[60px] h-[50px] bg-[#f5982c]/30 flex justify-center items-center rounded-full flex-shrink-0">
+            <BsHeadset className="text-[30px]" />
           </div>
-          <div className="h-1/3 w-full justify-center text-[17px]  font-medium flex">Tổng số nhân viên</div>
+          <div className="">
+            <span className="text-[26px] font-bold text-text_primary">{staff}</span>
+            <div className="h-1/3 w-full justify-center text-[14px]  font-medium flex">Tổng số nhân viên</div>
+          </div>
         </div>
-        <div className="bg-[#0fb806]/30 text-[#0fb806] h-full w-[31%] rounded-2xl flex flex-col px-2">
-          <div className="h-2/3 w-full flex gap-6 justify-center items-center text-[50px] font-semibold">
-            <BsCashCoin />
-            <span className="text-[38px]">{formatToVND(revenue)}</span>
+
+        {/* Revenue Today */}
+        <div className="bg-white shadow-[0px_3px_5px_1px_rgba(0,0,0,0.8)] text-[#0fb806] h-[110px] w-[22%] rounded-md px-2 flex gap-3 items-center">
+          <div className="w-[60px] h-[50px] bg-[#0fb806]/30 flex justify-center items-center rounded-full flex-shrink-0">
+            <BsCashCoin className="text-[30px]" />
           </div>
-          <div className="h-1/3 w-full justify-center text-[17px]  font-medium flex">Doanh thu hôm nay</div>
+          <div className="">
+            <span className="text-[26px] font-bold text-text_primary">{formatToVND(revenue)}</span>
+            <div className="h-1/3 w-full justify-center text-[14px]  font-medium flex">Doanh thu hôm nay</div>
+          </div>
         </div>
-        <div className="bg-[#fa342d]/30 text-[#fa342d] h-full w-[25%] rounded-2xl flex flex-col px-2">
-          <div className="h-2/3 w-full flex gap-6 justify-center items-center text-[50px] font-semibold">
-            <FaRegCalendarTimes />
-            <span className="text-[38px]">{lengthExp}</span>
+
+        {/* Product expired */}
+        <div className="bg-white shadow-[0px_3px_5px_1px_rgba(0,0,0,0.8)] text-[#fa342d] h-[110px] w-[22%] rounded-md px-2 flex gap-3 items-center">
+          <div className="w-[60px] h-[50px] bg-[#fa342d]/30 flex justify-center items-center rounded-full flex-shrink-0">
+            <FaRegCalendarTimes className="text-[30px]" />
           </div>
-          <div className="h-1/3 w-full justify-center text-[17px] font-medium flex">Số loại sản phẩm đã hết hạn</div>
+          <div className="">
+            <span className="text-[26px] font-bold text-text_primary">{lengthExp}</span>
+            <div className="h-1/3 w-full justify-center text-[14px]  font-medium flex">Sản phẩm đã hết hạn</div>
+          </div>
         </div>
       </div>
       <div className="h-3/4 w-3/4 flex justify-center items-center">

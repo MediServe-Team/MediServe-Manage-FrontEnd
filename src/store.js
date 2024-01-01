@@ -8,6 +8,7 @@ import stockSlice from './features/stock/stockSlice';
 import unitSlice from './slices/unitSlice';
 import breadcrumbSlice from './slices/breadcrumbSlice';
 import profileSlice from './features/profile/profileSlice';
+import storeSlice from './slices/storeSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   unit: unitSlice,
   breadcrumb: breadcrumbSlice,
   profile: profileSlice,
+  store: storeSlice,
 });
 
 const persistConfig = {

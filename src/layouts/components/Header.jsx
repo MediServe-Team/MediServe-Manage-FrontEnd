@@ -4,6 +4,9 @@ import SearchSelect from '../../components/SearchSelect/SearchSelect';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 import { getUserData } from '../../features/Auth/AuthSlice';
+import { useDispatch } from 'react-redux';
+import { getStoreActivity, setStoreActivity } from '../../slices/storeSlice';
+import { Button } from '../../components';
 
 const TYPES = [
   {
@@ -21,12 +24,14 @@ const TYPES = [
 ];
 
 function Header() {
+  const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState('');
   const searchInput = useRef();
   const [selectedTypeIndex, setSelectedTypeIndex] = useState(0);
   const [visibleResult, setVisibleResult] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const userData = useSelector(getUserData);
+  const isStoreOpen = useSelector(getStoreActivity);
 
   const handleClear = () => {
     setSearchValue('');
@@ -72,8 +77,17 @@ function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center flex-shrink-0  px-10 rounded-md shadow-[0px_14px_10px_-10px_rgba(0,0,0,0.53)] bg-[#f9f9f9]/30 backdrop-blur-md h-[50px] relative z-50">
-      <div className=""></div>
+    <div className="flex justify-between items-center flex-shrink-0  px-10 rounded-md shadow-[0px_14px_10px_-10px_rgba(0,0,0,0.53)] bg-[#f9f9f9]/30 backdrop-blur-md h-[50px] z-50">
+      <Button
+        className="-ml-5"
+        width={110}
+        height={30}
+        onClick={() => {
+          dispatch(setStoreActivity(!isStoreOpen));
+        }}
+      >
+        {isStoreOpen === false ? 'Mở cửa' : 'Đóng cửa'}
+      </Button>
       <div className="flex items-center gap-10">
         {/* Notify */}
         {/* <div className="relative">

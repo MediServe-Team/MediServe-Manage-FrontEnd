@@ -8,6 +8,7 @@ import { getUserId } from './features/Auth/AuthSlice';
 import { getInventoryStock } from './features/stock/stockSlice.js';
 import { getAllCategory } from './features/category/categorySlice.js';
 import { getAllUnits } from './slices/unitSlice.js';
+import { getStoreInfor } from './slices/storeSlice.js';
 
 function App() {
   const userId = useSelector(getUserId);
@@ -21,6 +22,7 @@ function App() {
       dispatch(getAllCategory());
       dispatch(getAllUnits());
       dispatch(getInventoryStock());
+      dispatch(getStoreInfor());
     }
   }, [userId]);
 
