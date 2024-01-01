@@ -18,13 +18,13 @@ function BillPreview({ billId, preview, closePreview }) {
         const result = await getBillService(billId);
         //* detach data:
         const { note, totalPayment, givenByCustomer } = result.data;
-        const { DetailReceiptMedicines } = result.data;
-        const { DetailReceiptProducts } = result.data;
+        const { DetailReceiptItems } = result.data;
         const { DetailReceiptPrescriptions } = result.data;
         const { customer, guest } = result.data;
         const billData = { note, totalPayment, givenByCustomer };
-        const medicinesData = [...DetailReceiptMedicines];
-        const productsData = [...DetailReceiptProducts];
+
+        const medicinesData = DetailReceiptItems.filter((item) => item.itemInStock.item.itemType === 'MEDICINE');
+        const productsData = DetailReceiptItems.filter((item) => item.itemInStock.item.itemType === 'PRODUCT');
         const prescriptionsData = [...DetailReceiptPrescriptions];
 
         setBill(billData);

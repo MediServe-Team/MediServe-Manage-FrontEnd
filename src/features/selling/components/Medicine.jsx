@@ -58,29 +58,15 @@ export default function Medicine({ title, data }) {
           Array.isArray(data) &&
           data.length > 0 &&
           data.map((item, index) => (
-            <>
-              {item?.medicine ? (
-                <Item
-                  key={index}
-                  name={item?.medicine?.medicineName}
-                  unit={item?.medicine?.sellUnit}
-                  packingSpecification={item?.medicine?.packingSpecification}
-                  quantity={item?.quantity}
-                  totalPrice={item?.totalPrice}
-                  sellPrice={Number(item?.totalPrice) / Number(item?.quantity)}
-                />
-              ) : (
-                <Item
-                  key={index}
-                  name={item?.product?.productName}
-                  unit={item?.product?.sellUnit}
-                  packingSpecification={item?.product?.packingSpecification}
-                  quantity={item?.quantity}
-                  totalPrice={item?.totalPrice}
-                  sellPrice={Number(item?.totalPrice) / Number(item?.quantity)}
-                />
-              )}
-            </>
+            <Item
+              key={index}
+              name={item?.itemInStock?.item.itemName}
+              unit={item?.itemInStock?.item.sellUnit}
+              packingSpecification={item?.itemInStock?.item.packingSpecification}
+              quantity={item?.quantity}
+              totalPrice={item?.totalPrice}
+              sellPrice={Number(item?.totalPrice) / Number(item?.quantity)}
+            />
           ))}
       </Title>
     </div>

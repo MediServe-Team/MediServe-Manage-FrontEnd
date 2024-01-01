@@ -64,17 +64,17 @@ export default function Prescription({ data }) {
           <div key={index}>
             <Title diagnose={detailPrescription?.prescription?.diagnose}>
               {/* Data */}
-              {detailPrescription?.prescription?.MedicineGuides &&
-                detailPrescription?.prescription?.MedicineGuides.map((item, index) => (
+              {detailPrescription?.prescription?.MedicineGuideSells &&
+                detailPrescription?.prescription?.MedicineGuideSells.map((item, index) => (
                   <Item
                     key={index}
-                    medicineName={item?.medicine?.medicineName}
+                    medicineName={item?.medicine?.item.itemName}
                     morning={item?.morning}
                     noon={item?.noon}
                     night={item?.night}
                     quantity={item?.quantity}
-                    sellPrice={item.totalPrice ? Number(item.totalPrice) / Number(item.quantity) : 0}
-                    sellUnit={item?.medicine?.sellUnit}
+                    sellPrice={item?.medicine.sellPrice}
+                    sellUnit={item?.medicine?.item.sellUnit}
                   />
                 ))}
               <div className="flex gap-2">
@@ -86,7 +86,7 @@ export default function Prescription({ data }) {
                 <span className="italic"> {detailPrescription?.prescription?.note}</span>
               </div>
               <div className="text-end font-medium">
-                Tổng giá đơn thuốc: <span>{formatToVND(detailPrescription?.prescription?.totalPrice)}</span>
+                Tổng giá đơn thuốc: <span>{formatToVND(detailPrescription?.totalPrice)}</span>
               </div>
             </Title>
           </div>

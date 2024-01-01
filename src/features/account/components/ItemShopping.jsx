@@ -17,7 +17,7 @@ export default function ItemList({ data, children }) {
         </div>
       </li>
       <li className="flex-[14] text-center flex justify-center">
-        <span className="truncate">{data?.note}</span>
+        <span className="truncate whitespace-nowrap text-ellipsis overflow-hidden max-w-[100px]">{data?.note}</span>
       </li>
       <li className="flex-[14] text-center flex justify-center">
         <span className="truncate">{dateToString(data?.updatedAt)}</span>
