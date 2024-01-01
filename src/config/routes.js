@@ -36,6 +36,7 @@ const routes = {
   timeKeeping: '/time-keeping',
   chat: '/chat',
   blog: '/blog',
+  blogManageWithFistSubPage: '/blog/all',
   blogCreate: '/blog/create',
   blogUpdate: '/blog/update/:blogId',
 };
