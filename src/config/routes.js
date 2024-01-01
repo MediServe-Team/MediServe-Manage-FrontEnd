@@ -1,5 +1,7 @@
 const routes = {
   login: '/login',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password/:token',
 
   dashboard: '/',
 

@@ -5,6 +5,8 @@ import routes from '../config/routes.js';
 
 // General Page
 import Login from '../pages/Login.jsx';
+import ForgetPassword from '../pages/ForgotPassword.jsx';
+import ResetPassword from '../pages/ResetPassword.jsx';
 
 // Private Page
 import { Dashboard } from '../features/dashboard/pages';
@@ -53,7 +55,11 @@ import { AllPostPanel, PublicPostPanel, PrivatePostPanel } from '../features/blo
 // Chat
 import { ChatPage } from '../features/chat/pages';
 
-const publicRouters = [{ path: routes.login, component: Login, layout: null }];
+const publicRouters = [
+  { path: routes.login, component: Login, layout: null },
+  { path: routes.forgotPassword, component: ForgetPassword, layout: null },
+  { path: routes.resetPassword, component: ResetPassword, layout: null },
+];
 
 const privateRouters = [
   { path: routes.dashboard, component: Dashboard },

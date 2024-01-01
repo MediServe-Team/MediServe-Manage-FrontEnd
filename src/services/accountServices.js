@@ -66,3 +66,25 @@ export const createAccountService = async (axiosWithToken, data) => {
     });
   return response;
 };
+
+export const forgotPasswordService = async (email) => {
+  try {
+    const response = await axiosBase.put(`/me/forgot-password`, {
+      email,
+    });
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
+export const resetPasswordService = async (token, password) => {
+  try {
+    const response = await axiosBase.put(`/me/reset-password/${token}`, {
+      password,
+    });
+    return response;
+  } catch (err) {
+    return err.response.data;
+  }
+};

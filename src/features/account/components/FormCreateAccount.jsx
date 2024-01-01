@@ -66,7 +66,7 @@ function FormCreateAccount({ onClose, reloadParentPage }) {
             </div>
             {/* Field Age */}
             <div className="flex gap-5">
-              <div className="flex flex-col flex-1">
+              {/* <div className="flex flex-col flex-1">
                 <p className="text-text_primary font-medium">Tuổi</p>
                 <input
                   className={classNames(
@@ -75,7 +75,7 @@ function FormCreateAccount({ onClose, reloadParentPage }) {
                   )}
                   {...register('age')}
                 />
-              </div>
+              </div> */}
 
               {/* Field dateOfBirth */}
               <div className="flex flex-col flex-[3]">

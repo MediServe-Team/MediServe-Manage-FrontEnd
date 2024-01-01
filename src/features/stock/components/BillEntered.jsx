@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import formatToVND from '../../../helpers/formatToVND';
 
 function BillEntered({ billID, staffID, staffName, totalImport, totalSell, note }) {
   return (
@@ -24,14 +25,14 @@ function BillEntered({ billID, staffID, staffName, totalImport, totalSell, note 
         <span className="text-text_primary font-normal">Tổng nhập</span>
         <div className="flex gap-1 items-center text-danger font-bold">
           <IoMdArrowDropdown className="text-[24px]" />
-          <span>{totalImport}</span>
+          <span>{formatToVND(totalImport)}</span>
         </div>
       </div>
       <div className="flex flex-col gap-2 justify-between ">
         <span className="text-text_primary font-normal">Tổng bán</span>
         <div className="flex gap-1 items-center text-tertiary font-bold">
           <IoMdArrowDropdown className="text-[24px] rotate-180" />
-          <span>{totalSell}</span>
+          <span>{formatToVND(totalSell)}</span>
         </div>
       </div>
       <div className="flex flex-col gap-2 justify-between font-bold underline text-text_primary">
