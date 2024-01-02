@@ -1,39 +1,39 @@
 import { useState, useEffect } from 'react';
 import { useDebounce } from '../../../../hooks';
-import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router';
-import checkSubString from '../../../../helpers/checkSubString';
 import BlogItem from '../../components/BlogItem';
-import { getAllBlog } from '../../blogSlice';
 import { Pagination } from '../../../../components';
+import useBlog from '../../hooks/useBlog';
 
-export default function AllPostPanel() {
+function AllPostPanel() {
   const searchValue = useOutletContext();
   const debounced = useDebounce(searchValue, 500);
-  const [listBlog, setListBlog] = useState([]);
-  // const allBlog = useSelector(getAllBlog);
-  const allBlog = getAllBlog;
-
-  const [pageLength, setPageLength] = useState(8);
-  const [pageNumber, setPageNumber] = useState(1);
+  const { listBlogs, pageLength, pageNumber, setPageNumber, setSearch, setStatus } = useBlog();
 
   useEffect(() => {
-    if (!searchValue) {
-      setListBlog(allBlog);
-    } else {
-      const filterBlog = allBlog.filter((item) => {
-        return checkSubString(item.title, debounced) || checkSubString(item.nameAuthor, debounced);
-      });
-      setListBlog(filterBlog);
-    }
-  }, [debounced, allBlog]);
+    setStatus(null);
+  }, []);
+
+  useEffect(() => {
+    setSearch(debounced);
+  }, [debounced]);
 
   return (
     <div className="flex-1 flex flex-col bg-white rounded-[4px] px-3 py-6 min-h-0">
       <div className="flex-1 grid grid-cols-4 gap-x-4 gap-y-7 overflow-y-auto px-5">
-        {Array.isArray(listBlog) &&
-          listBlog.length > 0 &&
-          listBlog.map((item, index) => <BlogItem key={index} info={item} />)}
+        {Array.isArray(listBlogs) &&
+          listBlogs.length > 0 &&
+          listBlogs.map((item, index) => (
+            <BlogItem
+              authorName={item?.user.fullName}
+              avatar={item?.user.avatar}
+              createdDate={item?.updatedAt}
+              image={item?.image}
+              title={item?.title}
+              visibility={item?.visibility}
+              key={index}
+            />
+          ))}
       </div>
 
       {/* Pagination */}
@@ -47,3 +47,5 @@ export default function AllPostPanel() {
     </div>
   );
 }
+
+export default AllPostPanel;

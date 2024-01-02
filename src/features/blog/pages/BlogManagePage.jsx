@@ -29,15 +29,6 @@ export default function BlogManagePage() {
     };
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   //* fetch data inventory stock
-  //   dispatch(getInventoryStock());
-  // }, [dispatch]);
-
-  // const lengthAll = useSelector(getLengthAll);
-  // const lengthPublic = useSelector(getLengthPublic);
-  // const lengthPrivate = useSelector(getLengthPrivate);
-
   useEffect(() => {
     const navs = [
       {
