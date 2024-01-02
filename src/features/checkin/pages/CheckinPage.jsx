@@ -24,14 +24,17 @@ const CheckinPage = () => {
     const currentYear = currentDate.getFullYear();
     setMonth(currentMonth);
     setYear(currentYear);
+    const callApiGetCheckinToday = async () => {
+      const todayCheckin = await getCheckinToday(axiosWithToken);
+      setCheckinToday(todayCheckin.data);
+    };
+    callApiGetCheckinToday();
   }, []);
 
   useEffect(() => {
     const getCheckins = async () => {
       const result = await getMyCheckinServices(axiosWithToken, month, year);
-      const todayCheckin = await getCheckinToday(axiosWithToken);
       // set value
-      setCheckinToday(todayCheckin.data);
       setListCheckins(result.data);
     };
     getCheckins();
@@ -52,27 +55,48 @@ const CheckinPage = () => {
   };
 
   const handleCheckin = async () => {
-    const result = await checkin(axiosWithToken);
-    if (result.status == 200) {
-      toast.success(`Bạn đã checkin vào lúc ${formatTime(result?.data?.checkinTime)}`);
-      setCheckinToday(result.data);
-    } else {
-      toast.error('checkin thất bại.');
+    if (checkinToday === null) {
+      const result = await checkin(axiosWithToken);
+      if (result.status == 200) {
+        toast.success(`Bạn đã checkin vào lúc ${formatTime(result?.data?.checkinTime)}`);
+        setCheckinToday(result.data);
+      } else {
+        toast.error('checkin thất bại.');
+      }
     }
   };
 
+  const isCheckout = () => {
+    if (checkinToday !== null) {
+      // Date
+      const currentDate = new Date();
+      const checkoutDbDate = new Date(checkinToday.checkoutTime);
+      const checkoutTimeDefault = new Date('2024-12-27T17:30:00.000Z');
+      // Time
+      const currentTime = currentDate.getHours() * 3600 + currentDate.getMinutes() * 60 + currentDate.getSeconds();
+      const checkoutDbTime =
+        checkoutDbDate.getUTCHours() * 3600 + checkoutDbDate.getMinutes() * 60 + checkoutDbDate.getSeconds();
+      const defaultTime =
+        checkoutTimeDefault.getUTCHours() * 3600 +
+        checkoutTimeDefault.getMinutes() * 60 +
+        checkoutTimeDefault.getSeconds();
+      // return check
+      return currentTime <= defaultTime && checkoutDbTime === defaultTime;
+    }
+    return false;
+  };
+
   const handleCheckout = async () => {
-    const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 7);
-    const currentTime = currentDate.getTime();
-    const defaultCheckoutTime = new Date('2023-12-27T17:30:00.000Z').getTime();
-    // check checkout time after 17h30
-    if (currentTime <= defaultCheckoutTime) {
+    if (isCheckout() === true) {
       const result = await checkout(axiosWithToken);
+
       if (result.status == 200) {
         toast.success('Bạn đã chekout thành công.');
         const result = await getMyCheckinServices(axiosWithToken, month, year);
         setListCheckins(result.data);
+        // re get checkin today
+        const todayCheckin = await getCheckinToday(axiosWithToken);
+        setCheckinToday(todayCheckin.data);
       } else {
         toast.error('checkout thất bại.');
       }
@@ -114,8 +138,7 @@ const CheckinPage = () => {
             <div
               className={classNames(
                 `w-[280px] h-[150px]  rounded-lg flex active:opacity-80`,
-                checkinToday?.checkoutTime &&
-                  new Date(checkinToday.checkoutTime).getTime() === new Date('2023-12-27T17:30:00.000Z').getTime()
+                isCheckout() == true
                   ? 'bg-[#346CD9] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.44)] hover:shadow-none cursor-pointer'
                   : 'bg-[#e0dede]',
               )}

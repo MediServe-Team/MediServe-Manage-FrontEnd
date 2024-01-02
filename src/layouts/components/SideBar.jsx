@@ -115,7 +115,7 @@ const MENUS = [
     icon: ({ className }) => <SiBloglovin className={className} />,
     submenu: true,
     submenuItem: [
-      { title: 'Danh sách lưu trữ', link: routes.blog },
+      { title: 'Danh sách bài đăng', link: routes.blogManageWithFistSubPage },
       { title: 'Tạo bài đăng', link: routes.blogCreate },
     ],
     permitId: 13,
