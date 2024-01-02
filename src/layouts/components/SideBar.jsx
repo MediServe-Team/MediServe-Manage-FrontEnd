@@ -99,7 +99,7 @@ const MENUS = [
     permitId: 10,
   },
   {
-    title: 'Chấm công',
+    title: 'Lịch sử điểm danh',
     icon: ({ className }) => <MdFactCheck className={className} />,
     link: routes.timeKeeping,
     permitId: 11,

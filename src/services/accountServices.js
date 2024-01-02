@@ -88,3 +88,8 @@ export const resetPasswordService = async (token, password) => {
     return err.response.data;
   }
 };
+
+export const getAllStaffAccountService = async (axiosWithToken) => {
+  const response = await axiosWithToken.get('/users/all?role=STAFF');
+  return response.data;
+};

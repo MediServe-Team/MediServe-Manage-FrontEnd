@@ -164,7 +164,7 @@ const CheckinPage = () => {
             <div class="flex gap-2">
               <button
                 type="button"
-                class="bg-gray-400 text-white rounded-l-md border-r border-gray-100 py-2 hover:bg-[#307dd5] hover:text-black px-3"
+                class="bg-gray-400 rounded-l-md border-r border-gray-100 py-2 hover:bg-[#307dd5] hover:text-white px-3"
               >
                 <div class="flex flex-row align-middle" onClick={prevMonth}>
                   <svg class="w-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -179,7 +179,7 @@ const CheckinPage = () => {
               </button>
               <button
                 type="button"
-                class="bg-gray-400 text-white rounded-r-md py-2 border-l border-gray-200 hover:bg-[#307dd5] hover:text-black px-3"
+                class="bg-gray-400 rounded-r-md py-2 border-l border-gray-200 hover:bg-[#307dd5] hover:text-white px-3"
               >
                 <div class="flex flex-row align-middle" onClick={nextMonth}>
                   <span class="mr-2">Next</span>
