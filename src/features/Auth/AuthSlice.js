@@ -18,12 +18,16 @@ export const loginAction = createAsyncThunk('auth/login', async ({ email, passwo
   }
 });
 
-export const logoutAction = createAsyncThunk('auth/logout', async (axiosWithToken, thunkAPI) => {
-  try {
-    await logoutService(axiosWithToken);
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err);
-  }
+// export const logoutAction = createAsyncThunk('auth/logout', async (axiosWithToken, thunkAPI) => {
+//   try {
+//     await logoutService(axiosWithToken);
+//   } catch (err) {
+//     return thunkAPI.rejectWithValue(err);
+//   }
+// });
+
+export const logoutAction = createAsyncThunk('auth/logout', () => {
+  // logout
 });
 
 export const AuthSlice = createSlice({

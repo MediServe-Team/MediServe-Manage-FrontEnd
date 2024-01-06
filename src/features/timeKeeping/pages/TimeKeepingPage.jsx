@@ -221,7 +221,7 @@ function TimeKeepingPage() {
                       <td className="px-5 py-2 bg-white text-sm">{index + 1}</td>
                       <td className="px-5 py-2 bg-white text-sm flex gap-3">
                         <img className="w-[28px] h-[28px] rounded-full" src={staffSelected?.avatar} alt="avatar" />
-                        <p className="text-gray-900 whitespace-no-wrap">Văn Phúc</p>
+                        <p className="text-gray-900 whitespace-no-wrap">{staffSelected?.name}</p>
                       </td>
                       <td className="px-5 py-2 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">{dateToString(item?.dateCheckin)}</p>

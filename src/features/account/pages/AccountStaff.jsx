@@ -24,6 +24,9 @@ const _PERMITS = [
   { name: 'Quản lý liều', permitId: 5 },
   { name: 'Quản lý danh mục', permitId: 6 },
   { name: 'Bán hàng', permitId: 7 },
+  { name: 'Lịch sử điểm danh', permitId: 11 },
+  { name: 'Nhắn tin', permitId: 12 },
+  { name: 'Quản lý bài đăng', permitId: 13 },
 ];
 
 function AccountStaff({ data, reloadParentPage }) {

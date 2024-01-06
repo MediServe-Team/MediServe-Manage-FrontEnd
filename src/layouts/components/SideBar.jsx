@@ -159,17 +159,18 @@ function SideBar() {
   };
 
   const handleLogout = async () => {
-    dispatch(logoutAction(axiosWithToken));
+    // dispatch(logoutAction(axiosWithToken));
+    dispatch(logoutAction());
     localStorage.clear();
     navigate('/login');
     window.location.reload();
   };
 
   useEffect(() => {
-    if (role === 'ADMIN') setMenuPermits(MENUS);
+    if (role === 'ADMIN') setMenuPermits(MENUS.filter((item) => item.permitId !== 10));
     else if (permits) {
       const accountPermits = MENUS.filter(
-        (item) => permits.includes(item.permitId) || [1, 3, 4, 9].includes(item.permitId),
+        (item) => permits.includes(item.permitId) || [1, 3, 4, 9, 10].includes(item.permitId),
       );
       setMenuPermits(accountPermits);
     }
