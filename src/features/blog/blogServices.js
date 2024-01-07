@@ -11,3 +11,13 @@ export const createBlogService = async (axiosPrivate, data) => {
   const response = await axiosPrivate.post('/blogs/create', data);
   return response.data;
 };
+
+export const updateBlogService = async (axiosPrivate, id, data) => {
+  const response = await axiosPrivate.put(`/blogs/update/${id}`, data);
+  return response.data;
+};
+
+export const getBlogById = async (id) => {
+  const response = await axiosBase.get(`/blogs/detail/${id}`);
+  return response.data;
+};

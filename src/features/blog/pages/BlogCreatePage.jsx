@@ -139,7 +139,14 @@ export default function BlogCreatePage() {
     setIsCreating(false);
   };
 
-  const handleClearForm = () => {};
+  //* Handle clear form
+  const handleClearForm = () => {
+    setContent('');
+    setTitle('');
+    setPublic(false);
+    setImagePreview(null);
+    setImages([]);
+  };
 
   //* ITEM COMPONENT
   const PublicItem = () => (

@@ -25,6 +25,7 @@ function AllPostPanel() {
           listBlogs.length > 0 &&
           listBlogs.map((item, index) => (
             <BlogItem
+              id={item?.id}
               authorName={item?.user.fullName}
               avatar={item?.user.avatar}
               createdDate={item?.updatedAt}

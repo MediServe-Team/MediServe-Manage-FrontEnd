@@ -2,11 +2,13 @@ import React from 'react';
 import { BsPencilSquare } from 'react-icons/bs';
 import dateToString from '../../../helpers/dateToString';
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
 
-export default function BlogItem({ createdDate, avatar, authorName, image, images, title, content, visibility }) {
-  // handle edit post
-  const handleEditPost = () => {
-    console.log('Click Edit');
+export default function BlogItem({ id, createdDate, avatar, authorName, image, images, title, content, visibility }) {
+  const navigate = useNavigate();
+
+  const handleUpdatePost = () => {
+    navigate(`/blog/update/${id}`);
   };
 
   const BG_IMG_COLORS = {
@@ -32,7 +34,7 @@ export default function BlogItem({ createdDate, avatar, authorName, image, image
           </div>
         </div>
 
-        <div className="flex justify-center items-center" onClick={handleEditPost}>
+        <div className="flex justify-center items-center" onClick={handleUpdatePost}>
           <BsPencilSquare size={20} color="rgba(254, 167, 64, 1)" />
         </div>
       </div>
