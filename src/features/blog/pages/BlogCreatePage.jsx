@@ -12,6 +12,8 @@ import classNames from 'classnames';
 import { CiCirclePlus } from 'react-icons/ci';
 import { TbCircleOff } from 'react-icons/tb';
 import { IoIosCloseCircle } from 'react-icons/io';
+import { createBlogService } from '../blogServices';
+import { axiosPrivate } from '../../../lib/axios';
 
 export default function BlogCreatePage() {
   const dispatch = useDispatch();
@@ -123,19 +125,18 @@ export default function BlogCreatePage() {
       bgColor: imagePreview?.type === 'div' ? imagePreview.value : null,
     };
 
-    console.log(bodyRequest);
     //* CALL API
-    setIsCreating(true);
-    // const result = await createBlogServices(bodyRequest);
-    const result = { status: 201 };
+    // setIsCreating(true);
+
+    const result = await createBlogService(axiosPrivate, bodyRequest);
     if (result.status === 201 || result.status === 200) {
       toast.success('Tạo bài đăng thành công!');
-      setIsCreating(false);
       // navigate(-1);
     } else {
       toast.error('Hệ thống gặp sự cố khi tạo bài đăng!');
       setIsCreating(false);
     }
+    setIsCreating(false);
   };
 
   const handleClearForm = () => {};

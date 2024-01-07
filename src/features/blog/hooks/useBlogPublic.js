@@ -1,10 +1,10 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { getAllBlogService } from '../blogServices';
 
-const useBlog = () => {
+const useBlogPrivate = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageLength, setPageLength] = useState(0);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(true);
   const [search, setSearch] = useState('');
   const [listBlogs, setListBlogs] = useState([]);
 
@@ -41,4 +41,4 @@ const useBlog = () => {
   };
 };
 
-export default useBlog;
+export default useBlogPrivate;

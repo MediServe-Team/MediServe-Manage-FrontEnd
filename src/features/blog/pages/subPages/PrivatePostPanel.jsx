@@ -29,7 +29,9 @@ function AllPostPanel() {
               avatar={item?.user.avatar}
               createdDate={item?.updatedAt}
               image={item?.image}
+              images={item?.BlogImages}
               title={item?.title}
+              content={item?.content}
               visibility={item?.visibility}
               key={index}
             />

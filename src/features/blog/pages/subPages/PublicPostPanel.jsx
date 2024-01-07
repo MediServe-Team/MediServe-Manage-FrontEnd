@@ -3,16 +3,12 @@ import { useDebounce } from '../../../../hooks';
 import { useOutletContext } from 'react-router';
 import BlogItem from '../../components/BlogItem';
 import { Pagination } from '../../../../components';
-import useBlog from '../../hooks/useBlog';
+import useBlog from '../../hooks/useBlogPublic';
 
 export default function PrivatePostPanel() {
   const searchValue = useOutletContext();
   const debounced = useDebounce(searchValue, 500);
   const { listBlogs, pageLength, pageNumber, setPageNumber, setSearch, setStatus } = useBlog();
-
-  // useEffect(() => {
-  //   setStatus(true);
-  // }, []);
 
   useEffect(() => {
     setSearch(debounced);
@@ -29,7 +25,9 @@ export default function PrivatePostPanel() {
               avatar={item?.user.avatar}
               createdDate={item?.updatedAt}
               image={item?.image}
+              images={item?.BlogImages}
               title={item?.title}
+              content={item?.content}
               visibility={item?.visibility}
               key={index}
             />
