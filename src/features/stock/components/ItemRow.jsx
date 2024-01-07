@@ -111,7 +111,9 @@ function ItemRow({ onRemove, handleChangeField, ...props }, ref) {
             )}
           />
           <span>=</span>
-          <span className="text-h6 whitespace-nowrap">{totalQnt} viên</span>
+          <span className="text-h6 whitespace-nowrap">
+            {totalQnt} {props.inputUnit}
+          </span>
         </div>
 
         {/* import price */}

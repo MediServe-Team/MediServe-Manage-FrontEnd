@@ -88,6 +88,7 @@ function StockInto() {
         name: item.itemName,
         packingSpecification: item.packingSpecification,
         id: item.id,
+        inputUnit: item.inputUnit,
       },
     ]);
   };
